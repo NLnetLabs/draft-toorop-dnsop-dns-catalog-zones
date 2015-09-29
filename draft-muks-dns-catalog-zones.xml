@@ -186,7 +186,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields (as
 	defined in <xref target="RFC1035" />) are used during zone
-	transfer. A catalog zone's SOA SERIAL field SHOULD increase when
+	transfer. A catalog zone's SOA SERIAL field MUST increase when
 	an update is made to the catalog zone's contents. Otherwise,
 	slave nameservers may not notice updates to the catalog zone's
 	contents.</t>
