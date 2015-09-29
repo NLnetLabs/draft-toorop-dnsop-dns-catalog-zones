@@ -41,7 +41,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <!-- end of list of popular I-D processing instructions -->
 <?rfc comments="no" ?>
 <?rfc inline="yes" ?>
-<rfc category="exp" docName="draft-muks-dnsop-dns-catalog-zones-00" ipr="trust200902">
+<rfc category="exp" docName="draft-muks-dnsop-dns-catalog-zones-01" ipr="trust200902">
 
   <front>
 
@@ -509,6 +509,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    draft-muks-dnsop-dns-catalog-zones-00
             <vspace/>
             Initial draft based on internal documents.
+          </t>
+
+          <t>
+	    draft-muks-dnsop-dns-catalog-zones-01
+            <vspace/>
+            FIXME.
           </t>
 
         </list>
