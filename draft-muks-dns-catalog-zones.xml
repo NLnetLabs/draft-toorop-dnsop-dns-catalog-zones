@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+There has to be one entity for each item to be referenced.
+An alternate method (rfc include) is described in the references. -->
+
+<!ENTITY RFC1035 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2606 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2606.xml">
+<!ENTITY RFC2782 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2782.xml">
+<!ENTITY RFC2845 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2845.xml">
+
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+(Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<?rfc tocappendix="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="3"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+(using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<?rfc comments="no" ?>
+<?rfc inline="yes" ?>
+<rfc category="exp" docName="draft-muks-dns-catalog-zones-00" ipr="trust200902">
+
+  <front>
+
+    <title>DNS catalog zones</title>
+
+    <author fullname="Stephen Morris" initials="S." surname="Morris">
+      <organization>Internet Systems Consortium</organization>
+      <address>
+        <postal>
+          <street>950 Charter Street</street>
+          <city>Redwood City</city>
+          <code>94063</code>
+          <region>CA</region>
+          <country>US</country>
+        </postal>
+        <email>stephen@isc.org</email>
+        <uri>http://www.isc.org/</uri>
+      </address>
+    </author>
+
+    <author fullname="Mukund Sivaraman" initials="M." surname="Sivaraman">
+      <organization>Internet Systems Consortium</organization>
+      <address>
+        <postal>
+          <street>950 Charter Street</street>
+          <city>Redwood City</city>
+          <code>94063</code>
+          <region>CA</region>
+          <country>US</country>
+        </postal>
+        <email>muks@isc.org</email>
+        <uri>http://www.isc.org/</uri>
+      </address>
+    </author>
+
+    <date/>
+
+    <!-- Meta-data Declarations -->
+
+    <area>Internet Area</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+
+    <!-- <keyword>dns</keyword> -->
+
+    <abstract>
+      <t>This document describes a method for automatic zone catalog
+      provisioning and synchronization among DNS master and slave
+      nameservers by storing and transferring the catalogs as regular
+      DNS zones.</t>
+    </abstract>
+
+  </front>
+
+  <middle>
+
+    <section title="Introduction">
+      <t>DNS nameservers implement AXFR and IXFR for zone data
+      synchronization among a master and its slaves, but the list of
+      zones served (called a catalog in <xref target="RFC1035" />) is
+      not automatically synchronized. The administrator of a DNS
+      nameserver farm has to manually, or via an additional layer of
+      scripting, synchronize such zone catalogs among masters and their
+      slaves. This can be inconvenient, error-prone and dependent on the
+      nameserver implementation.</t>
+
+      <t>A method for automatic zone catalog provisioning and
+      synchronization is useful, so that the zone catalog can be
+      maintained in one master location by an administrator, similar to
+      zone data.</t>
+
+      <t>This document describes one such method, where the catalog is
+      represented as a regular DNS zone called a "catalog zone", and
+      transferred using zone transfers. The representation of catalogs
+      in DNS zones is specified and nameserver requirements are listed
+      so that DNS implementations can support catalog zones.</t>
+
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+      NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
+      in this document are to be interpreted as described in <xref
+      target="RFC2119" />.</t>
+    </section>
+
+    <section title="Catalog zones" anchor="sec-catzones">
+      <section title="Description">
+	<t>A catalog zone is a specially crafted DNS zone that contains,
+	as DNS zone data, a list of DNS zones (called member zones) and
+	associated template zone configuration common to all member
+	zones. A catalog zone can also include other catalog zones, but
+	template zone configuration present in a catalog zone only
+	applies to its immediate member zones. A catalog zone is meant
+	to be used to provision DNS catalogs to nameservers via zone
+	transfers, for the purpose of setting up member zones to be
+	served from these nameservers.</t>
+
+	<t>The contents and representation of catalog zones are
+	described in this section. Nameserver behavior is described in
+	<xref target="sec-impl" />.</t>
+
+	<t>A catalog zone overrides the meanings of various RR types to
+	achieve its purpose. Though this may be controversial, the
+	situation is not different from other similar zone-based
+	representations such as response-policy zones <xref target="RPZ"
+	/>. Other than participating in zone transfers, catalog zones
+	are not directly visible in the DNS.</t>
+	
+	<t>***FIXME*** Transitive catalogs</t>
+
+	<t>***FIXME*** Case-sensitivity of property keys</t>
+      </section>
+
+      <section title="Resource record fields">
+	<t>A catalog zone contains various resource records (RRs). They
+	have NAME, TYPE, CLASS, TTL, RDLENGTH and RDATA as fields (as
+	defined in <xref target="RFC1035" />).</t>
+
+	<t>The NAME field contains the owner name of the respective
+	RR. As with all DNS zones, the owner name must be a child of the
+	catalog zone name.</t>
+
+	<t>The TYPE field depends on the type of catalog zone data being
+	represented. <xref target="sec-catzones" /> describes the
+	various types that can be used.</t>
+
+	<t>The CLASS field of the RR MUST be set to the value 1 (IN) as
+	defined in <xref target="RFC1035" />.</t>
+
+	<t>The TTL field, though it must be present, is not used as
+	these RRs are never served via DNS QUERY. Any value can be used
+	here and it will be ignored. A non-zero value is
+	recommended.</t>
+
+	<t>The RDLENGTH field contains the length of the RDATA field.</t>
+
+	<t>The RDATA field depends on the catalog zone data being
+	represented in this RR.</t>
+      </section>
+
+      <section title="SOA and NS records at apex">
+	<t>As for any other DNS zone, a catalog zone would be expected
+	to have a syntactically correct SOA record and one or more NS
+	records at its apex.</t>
+
+	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields (as
+	defined in <xref target="RFC1035" />) are used during zone
+	transfer. A catalog zone's SOA SERIAL field SHOULD increase when
+	an update is made to the catalog zone's contents. Otherwise,
+	slave nameservers may not notice updates to the catalog zone's
+	contents.</t>
+	
+	<t>The SOA record's MINIMUM field (as defined in <xref
+	target="RFC1035" />) is supposed to contain a minimum TTL value
+	which is not applicable to catalog zones. It MUST be set to 1 in
+	all catalog zones. Master and slave nameservers SHOULD NOT use
+	catalog zones with an unexpected value in the SOA MINIMUM
+	field.</t>
+
+	<t>As catalog zones are not part of the DNS, NS records at the
+	apex are not used. No parent delegation for the catalog zone is
+	required. Any valid DNS name can be used in the NSDNAME field of
+	such NS records (as defined in <xref target="RFC1035" />) and
+	they will be ignored. A single NS RR with an NSDNAME field
+	containing the absolute name "invalid." is recommended (see
+	<xref target="RFC2606" />).</t>
+      </section>
+
+      <section title="Data types">
+	<section title="Single name" anchor="sec-sname">
+	  <t>A property containing a single name as value is specified
+	  using a CNAME RR (as defined in <xref target="RFC1035" />)
+	  with owner name set to the name of the propery as a sub-domain
+	  of the catalog zone name, and RDATA set to the property
+	  value.</t>
+	  
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "prop1" with
+	  value "val1.example.com.", the corresponding RR may look as
+	  follows:</t>
+	  
+	  <figure>
+	    <artwork>
+	prop1.catalog1.example.org. 3600 IN CNAME val1.example.com.
+	    </artwork>
+	  </figure>
+
+	  <t>Here, "prop1" can only contain one name. It cannot be a
+	  list of names. It is restricted by the use of the CNAME RR
+	  type.</t>
+	</section>
+
+	<section title="Unordered list of names" anchor="sec-unolist">
+	  <t>Let N be an absolute name formed by concatenating a random
+	  label, the name of the property and the catalog zone name in
+	  that order, such that N is a unique owner name in the catalog
+	  zone.</t>
+	  
+	  <t>Then, a property containing an unordered list of names as
+	  value is specified using multiple PTR RRs (as defined in <xref
+	  target="RFC1035" />) with owner name set to N, and RDATA set
+	  to each name in the list of the property's value
+	  respectively.</t>
+	  
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "prop2" with
+	  its value being an unordered list of two names
+	  "a.example.com." and "b.example.com.", the corresponding RRs
+	  may look as follows:</t>
+	  
+	  <figure>
+	    <artwork>
+	r324.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
+	r117.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
+	    </artwork>
+	  </figure>
+
+	  <t>The property can contain one or more names as its
+	  value.</t>
+	</section>
+
+	<section title="Ordered list of names" anchor="sec-olist">
+	  <t>Let N be an absolute name formed by concatenating a random
+	  label, the name of the property and the catalog zone name in
+	  that order, such that N is a unique owner name in the catalog
+	  zone.</t>
+	  
+	  <t>Then, a property containing an ordered list of names as
+	  value is specified using multiple SRV RRs (as defined in <xref
+	  target="RFC2782" />) with owner name set to N. The RDATA of
+	  SRV RRs contains the Priority, Weight, Port and Target
+	  fields. Over multiple RRs, the Target field should be set to
+	  each name in the list of the property's value
+	  respectively. The &lt;Priority, Weight, Port&gt; fields in
+	  that sequence form a sort ordering, and their values should be
+	  set to numbers that represents this name's relative order (in
+	  ascending order) in the ordered list of names. As Priority,
+	  Weight and Port are 16-bit fields, it's possible to order
+	  1&lt;&lt;48 different names within a single property.</t>
+	  
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "prop3" with
+	  its value being an ordered list of three names
+	  "n1.example.com.", "n2.example.com." and "n3.example.com." in
+	  that order, the corresponding RRs may look as follows:</t>
+	  
+	  <figure>
+	    <artwork>
+	r446.prop3.catalog1.example.org. 3600 IN SRV 0 0 1 n1.example.com.
+	r617.prop3.catalog1.example.org. 3600 IN SRV 0 0 2 n2.example.com.
+	r121.prop3.catalog1.example.org. 3600 IN SRV 0 0 3 n3.example.com.
+	    </artwork>
+	  </figure>
+
+	  <t>The property can contain one or more names as its
+	  value.</t>
+	</section>
+	
+	<section title="Hosts" />
+	<section title="Networks" />
+	<section title="Comments" />
+      </section>
+      <section title="Zone configuration properties">
+	<section title="zone-soa-default-serial" />
+	<section title="zone-soa-default-refresh" />
+      </section>
+
+      <section title="List of member zones">
+	<t>The list of member zones are specified as an unordered list
+	(see <xref target="sec-unolist" />) of names under the owner
+	name "zones" where "zones" is a sub-domain of the catalog
+	zone.</t>
+
+	<t>For example, if a catalog zone is named
+	"catalog1.example.org." and lists 3 zones "example.com.",
+	"example.net." and "example.org.", the RRs may look as
+	follows:</t>
+	
+	<figure>
+	  <artwork>
+	r998.zones.catalog1.example.org. 3600 IN PTR example.com.
+	r387.zones.catalog1.example.org. 3600 IN PTR example.net.
+	r617.zones.catalog1.example.org. 3600 IN PTR example.org.
+	  </artwork>
+	</figure>
+      </section>
+
+      <section title="TKEY record">
+      </section>
+      <section title="Examples of catalog zones">
+      </section>
+    </section>
+
+    <section title="Nameserver behavior and requirements" anchor="sec-impl">
+      <t>Explain nameserver behavior briefly here.</t>
+
+      <t>As it is a regular DNS zone, a catalog zone can be
+      transferred using DNS zone transfers among nameservers. Catalog
+      zones are not part of the DNS, so they SHOULD NOT be served via
+      DNS QUERY. It may be impractical to serve some contents of
+      catalog zones via DNS queries anyway due to message size
+      constraints.</t>
+      
+      <t>Catalog updates should be automatic, i.e., when a nameserver
+      that supports catalog zones completes a zone transfer for a
+      catalog zone, it SHOULD apply changes to the catalog within the
+      running nameserver automatically without any manual
+      intervention.</t>
+      
+      <t>As with regular zones, master and slave nameservers for a
+      catalog zone may be operated by different administrators. The
+      slave nameservers may be configured to synchronize catalog zones
+      from the master, but the master's administrators may not have
+      any administrative access to the slaves.</t>
+      
+      <t>A catalog zone can be updated via DNS UPDATE on a master, or
+      via zone transfers. Nameservers MAY allow broken zones with
+      incorrect catalog zone syntax (as they are treated as regular
+      zones), but nameservers MUST NOT process such broken zones as
+      catalog zones. For the purpose of catalog processing, the broken
+      catalogs MUST be ignored.</t>
+      
+      <t>When zones are introduced into a catalog, a master MUST first
+      make the new zones available for transfers before making the
+      updated catalog zone available for transfer, or sending NOTIFY
+      for the catalog zone to slaves.</t>
+      
+      <t>Transfers of the catalog zone MUST be protected via TSIG (as
+      defined in <xref target="RFC2845" />). A master MUST NOT serve a
+      catalog zone without TSIG and a slave MUST abandon an update to
+      a catalog zone that was received without TSIG.</t>
+      
+      <t>***FIXME*** Transitive master-slave relationships</t>
+      
+    </section>
+    
+    <section title="Open issues and discussion">
+      <t><list style="numbers">
+	<t>Config options
+	<vspace blankLines="1"/>
+	We want catalog zones to be adopted by multiple DNS
+	implementations. Towards this, we have to generalize zone
+	config options and adopt a minimal set that we can expect
+	most implementations to support.
+	</t>
+	<t>Zone name clashes
+	<vspace blankLines="1"/>
+	Further discussion is required on how to handle zone name
+	clashes within a nameserver. Zone names in a catalog zone
+	may clash with statically configured zone names, and also
+	with zone names from other catalog zones. It may be
+	necessary to treat these cases differently. A particular
+	concern is the absolute trust that a catalog zone's slave
+	has for any names the master puts in the catalog zone.
+	</t>
+	<t>Catalog zone and member zones on different masters
+	<vspace blankLines="1"/>
+	Will it be possible to setup a catalog zone on one
+	nameserver as master, and allow its member zones to be
+	served by different master namesservers?
+	</t>
+	<t>Transitive relationships
+	<vspace blankLines="1"/>
+	For a catalog zone, a slave may be a master to a different
+	nameservers in a nameserver farm. In these transitive
+	relationships, zone configuration options (such as
+	also-notify and allow-transfer) may differ based on the
+	location of the master in the hierarchy. It may not be
+	possible to specify this within a catalog zone.
+	</t>
+	<t>DNSSEC and catalog zones
+	<vspace blankLines="1"/>
+	Catalog zones do not need to be signed. Their zone transfers
+	are authenticated by TSIG. Are there any reasons why signing
+	catalog zones would be useful?
+	</t>
+	<t>Templates
+	<vspace blankLines="1"/>
+	Are support for config and zone data templates useful at
+	this level? They would add complexity across
+	implementations. If added, it would be better to restrict
+	templates at the master and let the slave receive regular
+	expanded zones.
+	</t>
+	<t>Overriding controls
+	<vspace blankLines="1"/>
+	A way to override zone config options (as prescribed by the
+	catalog zones) on slaves was requested. As this would be
+	configured outside catalog zones, it may be better to leave
+	this to implementations.
+	</t>
+      </list></t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>Thanks to **FIXME** for reviewing previous draft proposals and
+      providing support, comments and suggestions.</t>
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references title="References">
+      &RFC1035;
+      &RFC2119;
+      &RFC2606;
+      &RFC2782;
+      &RFC2845;
+      <reference anchor="RPZ" target="http://ftp.isc.org/isc/dnsrpz/isc-tn-2010-1.txt">
+	<front>
+	  <title>DNS Response Policy Zones (DNS RPZ)</title>
+	  <author fullname="Paul Vixie" initials="P." surname="Vixie" />
+	  <author fullname="Vernon Schryver" initials="V." surname="Schryver" />
+	  <date year="2010" />
+	</front>
+      </reference>
+    </references>
+
+    <section title="Change History">
+      <t>
+        <list style="symbols">
+
+          <t>
+	    draft-muks-dns-catalog-zones-00
+            <vspace/>
+            Initial draft based on internal documents.
+          </t>
+
+        </list>
+      </t>
+    </section>
+
+  </back>
+</rfc>
