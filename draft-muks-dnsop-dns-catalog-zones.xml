@@ -199,12 +199,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	field.</t>
 
 	<t>As catalog zones are not part of the DNS, NS records at the
-	apex are not used. No parent delegation for the catalog zone is
-	required. Any valid DNS name can be used in the NSDNAME field of
-	such NS records (as defined in <xref target="RFC1035" />) and
-	they will be ignored. A single NS RR with an NSDNAME field
-	containing the absolute name "invalid." is recommended (see
-	<xref target="RFC2606" />).</t>
+	apex are not used but they are still required so that catalog
+	zones are valid DNS zones. No parent delegation for the catalog
+	zone is required. Any valid DNS name can be used in the NSDNAME
+	field of such NS records (as defined in <xref target="RFC1035"
+	/>) and they will be ignored. A single NS RR with an NSDNAME
+	field containing the absolute name "invalid." is recommended
+	(see <xref target="RFC2606" />).</t>
       </section>
 
       <section title="Data types">
