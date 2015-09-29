@@ -140,8 +140,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	served from these nameservers.</t>
 
 	<t>The contents and representation of catalog zones are
-	described in this section. Nameserver behavior is described in
-	<xref target="sec-impl" />.</t>
+	described under the parent section. Nameserver behavior is
+	described in <xref target="sec-impl" />.</t>
 
 	<t>A catalog zone overrides the meanings of various RR types to
 	achieve its purpose. Though this may be controversial, the
@@ -149,6 +149,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	representations such as response-policy zones <xref target="RPZ"
 	/>. Other than participating in zone transfers, catalog zones
 	are not directly visible in the DNS.</t>
+
+	<t>Member zone configuration is specified as a set of zone
+	properties. Each zone property has a name, a data type and an
+	associated value. Zone property data types are described in
+	<xref target="sec-types" />. Each property is of one data type
+	only. A list of allowed property names and their data types is
+	given in <xref target="sec-properties" />.</t>
 	
 	<t>***FIXME*** Transitive catalogs</t>
 
@@ -210,7 +217,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	(see <xref target="RFC2606" />).</t>
       </section>
 
-      <section title="Data types">
+      <section title="Data types" anchor="sec-types">
 	<section title="Single name" anchor="sec-sname">
 	  <t>A property containing a single name as value is specified
 	  using a CNAME RR (as defined in <xref target="RFC1035" />)
@@ -306,7 +313,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<section title="Networks" />
 	<section title="Comments" />
       </section>
-      <section title="Zone configuration properties">
+      <section title="Zone configuration properties" anchor="sec-properties">
 	<section title="zone-soa-default-serial" />
 	<section title="zone-soa-default-refresh" />
       </section>
