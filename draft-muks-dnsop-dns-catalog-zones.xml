@@ -363,6 +363,11 @@ please see http://xml.resource.org/authoring/README.html. -->
       zones), but nameservers MUST NOT process such broken zones as
       catalog zones. For the purpose of catalog processing, the broken
       catalogs MUST be ignored.</t>
+
+      <t>If there is a clash between an existing member zone's name and
+      an incoming member zone's name (via transfer or update), the new
+      instance of the zone MUST be ignored and an error SHOULD be
+      logged.</t>
       
       <t>When zones are introduced into a catalog, a master MUST first
       make the new zones available for transfers before making the
@@ -386,16 +391,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 	implementations. Towards this, we have to generalize zone
 	config options and adopt a minimal set that we can expect
 	most implementations to support.
-	</t>
-	<t>Zone name clashes
-	<vspace blankLines="1"/>
-	Further discussion is required on how to handle zone name
-	clashes within a nameserver. Zone names in a catalog zone
-	may clash with statically configured zone names, and also
-	with zone names from other catalog zones. It may be
-	necessary to treat these cases differently. A particular
-	concern is the absolute trust that a catalog zone's slave
-	has for any names the master puts in the catalog zone.
 	</t>
 	<t>Catalog zone and member zones on different masters
 	<vspace blankLines="1"/>
