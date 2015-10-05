@@ -147,8 +147,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	achieve its purpose. Though this may be controversial, the
 	situation is not different from other similar zone-based
 	representations such as response-policy zones <xref target="RPZ"
-	/>. Other than participating in zone transfers, catalog zones
-	are not directly visible in the DNS.</t>
+	/>. Other than being transmitted via zone transfers, catalog
+	zones are not directly visible in the DNS and are not meant to
+	be served via DNS QUERY (<xref target="RFC1035" />).</t>
 
 	<t>Member zone configuration is specified as a set of zone
 	properties. Each zone property has a name, a data type and an
