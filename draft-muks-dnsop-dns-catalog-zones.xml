@@ -262,8 +262,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  
 	  <figure>
 	    <artwork>
-	c6bcbcc10bc122e9e8d868f152c30e78cbe47213.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
-	d870a4892c306a457b8e6d486fcc79e0d1c13262.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
+	&lt;hash&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
+	&lt;hash&gt;.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
 	    </artwork>
 	  </figure>
 
@@ -299,9 +299,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  
 	  <figure>
 	    <artwork>
-	15af6c8b7a68a7c5711dd1d81c26ff02ffe8727d.prop3.catalog1.example.org. 3600 IN SRV 0 0 1 n1.example.com.
-	76dd3ad658efc8a153355c0a12d257ceba7bcb0c.prop3.catalog1.example.org. 3600 IN SRV 0 0 2 n2.example.com.
-	ec62f1dbefdfa3b4e0b3e5351513b35f0bcb60ab.prop3.catalog1.example.org. 3600 IN SRV 0 0 3 n3.example.com.
+	&lt;hash&gt;.prop3.catalog1.example.org. 3600 IN SRV 0 0 1 n1.example.com.
+	&lt;hash&gt;.prop3.catalog1.example.org. 3600 IN SRV 0 0 2 n2.example.com.
+	&lt;hash&gt;.prop3.catalog1.example.org. 3600 IN SRV 0 0 3 n3.example.com.
 	    </artwork>
 	  </figure>
 
@@ -331,9 +331,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	
 	<figure>
 	  <artwork>
-	036b8ce567644ea622f960e0e38446fa0d554dd7.zones.catalog1.example.org. 3600 IN PTR example.com.
-	665cb4c9c57702b0a12c0fac22711ca36bdbfe97.zones.catalog1.example.org. 3600 IN PTR example.net.
-	5c3bba9143435640a26479e86136490a5024452e.zones.catalog1.example.org. 3600 IN PTR example.org.
+	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
+	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
+	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
 	  </artwork>
 	</figure>
       </section>
