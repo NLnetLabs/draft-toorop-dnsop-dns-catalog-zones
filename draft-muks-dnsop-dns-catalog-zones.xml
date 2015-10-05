@@ -174,27 +174,28 @@ please see http://xml.resource.org/authoring/README.html. -->
 	RR. As with all DNS zones, the owner name must be a child of the
 	catalog zone name.</t>
 
-	<t>The TYPE field depends on the type of catalog zone data being
-	represented. <xref target="sec-catzones" /> describes the
-	various types that can be used.</t>
+	<t>The TYPE field depends on the type of catalog zone property
+	value being represented. <xref target="sec-types" /> describes
+	how various zone property value types are represented.</t>
 
 	<t>The CLASS field of the RR MUST be set to the value 1 (IN) as
 	defined in <xref target="RFC1035" />.</t>
 
-	<t>The TTL field, though it must be present, is not used as
-	these RRs are never served via DNS QUERY. It SHOULD be set to
-	1.</t>
+	<t>The TTL field is not used as these RRs are not meant to be
+	served via DNS QUERY. It SHOULD be set to 1.</t>
 
 	<t>The RDLENGTH field contains the length of the RDATA field.</t>
 
-	<t>The RDATA field depends on the catalog zone data being
-	represented in this RR.</t>
+	<t>The content of the RDATA field depends on the type of catalog
+	zone property value being represented. <xref target="sec-types"
+	/> describes how various zone property value types are
+	represented.</t>
       </section>
 
       <section title="SOA and NS records at apex">
-	<t>As for any other DNS zone, a catalog zone would be expected
-	to have a syntactically correct SOA record and one or more NS
-	records at its apex.</t>
+	<t>Similar to any other DNS zone, a catalog zone would be
+	expected to have a syntactically correct SOA record and one or
+	more NS records at its apex.</t>
 
 	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields (as
 	defined in <xref target="RFC1035" />) are used during zone
@@ -206,21 +207,22 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<t>The SOA record's MINIMUM field (as defined in <xref
 	target="RFC1035" />) is supposed to contain a minimum TTL value
 	which is not applicable to catalog zones. It MUST be set to 1 in
-	all catalog zones. Master and slave nameservers SHOULD NOT use
-	catalog zones with an unexpected value in the SOA MINIMUM
-	field.</t>
+	all catalog zones. Master and slave nameservers MUST NOT use
+	catalog zones with an unexpected value in the SOA MINIMUM field
+	as catalog zones. However, they may be transferred.</t>
 
-	<t>As catalog zones are not part of the DNS, NS records at the
-	apex are not used but they are still required so that catalog
-	zones are valid DNS zones. No parent delegation for the catalog
-	zone is required. Any valid DNS name can be used in the NSDNAME
-	field of such NS records (as defined in <xref target="RFC1035"
-	/>) and they will be ignored. A single NS RR with an NSDNAME
-	field containing the absolute name "invalid." is recommended
-	(see <xref target="RFC2606" />).</t>
+	<t>As catalog zones are not meant to be part of the DNS, NS
+	records at the apex are not used but they are still required so
+	that catalog zones are syntactically correct DNS zones. No
+	parent delegation for the catalog zone is required. Any valid
+	DNS name can be used in the NSDNAME field of such NS records (as
+	defined in <xref target="RFC1035" />) and they will be
+	ignored. A single NS RR with an NSDNAME field containing the
+	absolute name "invalid." is recommended (see <xref
+	target="RFC2606" />).</t>
       </section>
 
-      <section title="Data types" anchor="sec-types">
+      <section title="Zone property value data types" anchor="sec-types">
 	<section title="Single name" anchor="sec-sname">
 	  <t>A property containing a single name as value is specified
 	  using a CNAME RR (as defined in <xref target="RFC1035" />)
