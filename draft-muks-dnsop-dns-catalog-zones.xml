@@ -160,9 +160,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	names and their data types is given in <xref
 	target="sec-properties" />.</t>
 
-	<t>***FIXME*** Direct zone properties (viz. Stephen's review)</t>
+	<t>TBD: Direct zone properties (viz. Stephen's review)</t>
 	
-	<t>***FIXME*** Transitive catalogs</t>
+	<t>TBD: Transitive catalogs</t>
       </section>
 
       <section title="Resource record fields">
@@ -344,6 +344,7 @@ please see http://xml.resource.org/authoring/README.html. -->
       </section>
 
       <section title="Examples of catalog zones">
+	<t>TBD.</t>
       </section>
     </section>
 
@@ -391,7 +392,7 @@ please see http://xml.resource.org/authoring/README.html. -->
       catalog zone without TSIG and a slave MUST abandon an update to
       a catalog zone that was received without TSIG.</t>
       
-      <t>***FIXME*** Transitive master-slave relationships</t>
+      <t>TBD: Transitive master-slave relationships</t>
       
     </section>
     
@@ -440,11 +441,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 	configured outside catalog zones, it may be better to leave
 	this to implementations.
 	</t>
+	<t>Choice of hash function
+	<vspace blankLines="1"/>
+	Should a different faster hash function be chosen to replace
+	SHA-1 when computing catalog member zone name hashes?
+	</t>
       </list></t>
     </section>
 
     <section title="Security considerations">
-      <t>FIXME.</t>
+      <t>TBD.</t>
     </section>
 
     <section title="IANA considerations">
@@ -457,9 +463,11 @@ please see http://xml.resource.org/authoring/README.html. -->
       chosen method of storing the catalog as a regular DNS zone was
       proposed by Stephen Morris.</t>
       
-      <t>Catalog zones borrows some syntax ideas from Paul Vixie's <xref
-      target="Metazones" /> proposal, as both share this scheme of
-      representing the catalog as a regular DNS zone.</t>
+      <t>We later discovered that Paul Vixie's <xref target="Metazones"
+      /> proposal implemented a similar approach and reviewed
+      it. Catalog zones borrows some syntax ideas from Metazones, as
+      both share this scheme of representing the catalog as a regular
+      DNS zone.</t>
       
       <t>Thanks to Victoria Risk, Ray Bellis, Witold Krecicki for
       reviewing previous draft proposals and providing support, comments
@@ -534,7 +542,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <t>
 	    draft-muks-dnsop-dns-catalog-zones-01
             <vspace/>
-            FIXME.
+            TBD.
           </t>
 
         </list>
