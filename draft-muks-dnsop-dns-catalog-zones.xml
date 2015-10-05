@@ -424,59 +424,6 @@ please see http://xml.resource.org/authoring/README.html. -->
       
     </section>
     
-    <section title="Open issues and discussion">
-      <t><list style="numbers">
-	<t>Config options
-	<vspace blankLines="1"/>
-	We want catalog zones to be adopted by multiple DNS
-	implementations. Towards this, we have to generalize zone
-	config options and adopt a minimal set that we can expect
-	most implementations to support.
-	</t>
-	<t>Catalog zone and member zones on different masters
-	<vspace blankLines="1"/>
-	Will it be possible to setup a catalog zone on one
-	nameserver as master, and allow its member zones to be
-	served by different master namesservers?
-	</t>
-	<t>Transitive relationships
-	<vspace blankLines="1"/>
-	For a catalog zone, a slave may be a master to a different
-	nameservers in a nameserver farm. In these transitive
-	relationships, zone configuration options (such as
-	also-notify and allow-transfer) may differ based on the
-	location of the master in the hierarchy. It may not be
-	possible to specify this within a catalog zone.
-	</t>
-	<t>Templates
-	<vspace blankLines="1"/>
-	Are support for config and zone data templates useful at
-	this level? They would add complexity across
-	implementations. If added, it would be better to restrict
-	templates at the master and let the slave receive regular
-	expanded zones.
-	</t>
-	<t>Overriding controls
-	<vspace blankLines="1"/>
-	A way to override zone config options (as prescribed by the
-	catalog zones) on slaves was requested. As this would be
-	configured outside catalog zones, it may be better to leave
-	this to implementations.
-	</t>
-	<t>Choice of hash function
-	<vspace blankLines="1"/>
-	Should a different faster hash function be chosen to replace
-	SHA-1 when computing catalog member zone name hashes?
-	</t>
-	<t>Allocation of custom RR types
-	<vspace blankLines="1"/>
-	It may be worth having broader discussion on whether we should
-	get custom RR types for representing various zone property value
-	data types.
-	</t>
-      </list></t>
-    </section>
-
     <section title="Security considerations">
       <t>As catalog zones are transmitted using DNS zone transfers, it
       is absolutely essential for these transfers to be protected from
@@ -577,6 +524,59 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	</list>
       </t>
+    </section>
+
+    <section title="Open issues and discussion">
+      <t><list style="numbers">
+	<t>Config options
+	<vspace blankLines="1"/>
+	We want catalog zones to be adopted by multiple DNS
+	implementations. Towards this, we have to generalize zone
+	config options and adopt a minimal set that we can expect
+	most implementations to support.
+	</t>
+	<t>Catalog zone and member zones on different masters
+	<vspace blankLines="1"/>
+	Will it be possible to setup a catalog zone on one
+	nameserver as master, and allow its member zones to be
+	served by different master namesservers?
+	</t>
+	<t>Transitive relationships
+	<vspace blankLines="1"/>
+	For a catalog zone, a slave may be a master to a different
+	nameservers in a nameserver farm. In these transitive
+	relationships, zone configuration options (such as
+	also-notify and allow-transfer) may differ based on the
+	location of the master in the hierarchy. It may not be
+	possible to specify this within a catalog zone.
+	</t>
+	<t>Templates
+	<vspace blankLines="1"/>
+	Are support for config and zone data templates useful at
+	this level? They would add complexity across
+	implementations. If added, it would be better to restrict
+	templates at the master and let the slave receive regular
+	expanded zones.
+	</t>
+	<t>Overriding controls
+	<vspace blankLines="1"/>
+	A way to override zone config options (as prescribed by the
+	catalog zones) on slaves was requested. As this would be
+	configured outside catalog zones, it may be better to leave
+	this to implementations.
+	</t>
+	<t>Choice of hash function
+	<vspace blankLines="1"/>
+	Should a different faster hash function be chosen to replace
+	SHA-1 when computing catalog member zone name hashes?
+	</t>
+	<t>Allocation of custom RR types
+	<vspace blankLines="1"/>
+	It may be worth having broader discussion on whether we should
+	get custom RR types for representing various zone property value
+	data types.
+	</t>
+      </list></t>
     </section>
 
     <section title="Change History">
