@@ -420,11 +420,6 @@ please see http://xml.resource.org/authoring/README.html. -->
       updated catalog zone available for transfer, or sending NOTIFY
       for the catalog zone to slaves.</t>
       
-      <t>Transfers of the catalog zone MUST be protected via TSIG (as
-      defined in <xref target="RFC2845" />). A master MUST NOT serve a
-      catalog zone without TSIG and a slave MUST abandon an update to
-      a catalog zone that was received without TSIG.</t>
-      
       <t>TBD: Transitive master-slave relationships</t>
       
     </section>
@@ -493,7 +488,12 @@ please see http://xml.resource.org/authoring/README.html. -->
       is absolutely essential for these transfers to be protected from
       unexpected modifications on the route. So, it is a requirement
       that catalog zone transfers MUST be authenticated using TSIG (see
-      <xref target="RFC2845" />).</t>
+      <xref target="RFC2845" />). A master MUST NOT serve a catalog zone
+      for transfer without using TSIG and a slave MUST abandon an update
+      to a catalog zone that was received without using TSIG.</t>
+
+      <t>DNS UPDATEs (see <xref target="RFC2136" />) to catalog zones
+      similarly MUST be authenticated using TSIG.</t>
 
       <t>Zone transfers of member zones MUST similarly be authenticated
       using TSIG (see <xref target="RFC2845" />). The TSIG shared
@@ -533,6 +533,7 @@ please see http://xml.resource.org/authoring/README.html. -->
     <references title="Normative references">
       <?rfc include="reference.RFC.1035.xml"?>
       <?rfc include="reference.RFC.2119.xml"?>
+      <?rfc include="reference.RFC.2136.xml"?>
       <?rfc include="reference.RFC.2606.xml"?>
       <?rfc include="reference.RFC.2782.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
