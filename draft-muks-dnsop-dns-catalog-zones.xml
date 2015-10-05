@@ -415,10 +415,17 @@ please see http://xml.resource.org/authoring/README.html. -->
       instance of the zone MUST be ignored and an error SHOULD be
       logged.</t>
       
-      <t>When zones are introduced into a catalog, a master MUST first
-      make the new zones available for transfers before making the
-      updated catalog zone available for transfer, or sending NOTIFY
-      for the catalog zone to slaves.</t>
+      <t>When zones are introduced into a catalog zone, a master MUST
+      first make the new zones available for transfers before making the
+      updated catalog zone available for transfer, or sending NOTIFY for
+      the catalog zone to slaves. Note that slaves may attempt to
+      transfer the catalog zone upon refresh timeout, so care must be
+      taken to make the member zones available before any update is
+      visible in the catalog zone.</t>
+
+      <t>When zones are deleted from a catalog zone, a master MAY delete
+      the member zone immediately after notifying slaves. It is up to
+      the slave nameserver to handle this scenario correctly.</t>
       
       <t>TBD: Transitive master-slave relationships</t>
       
