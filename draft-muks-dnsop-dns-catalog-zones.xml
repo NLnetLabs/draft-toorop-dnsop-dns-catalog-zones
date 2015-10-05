@@ -256,11 +256,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</section>
 
 	<section title="Unordered list of names" anchor="sec-unolist">
-	  <t>Let N be an absolute name formed by concatenating the
-	  member zone name hash (see <xref target="sec-glossary" />),
-	  the name of the property, and the catalog zone name in that
-	  order, such that N is a unique owner name in the catalog
-	  zone.</t>
+	  <t>Let N be an absolute name formed by concatenating the RDATA
+	  hash (see <xref target="sec-glossary" />), the name of the
+	  property, and the catalog zone name in that order, such that N
+	  is a unique owner name in the catalog zone.</t>
 	  
 	  <t>Then, a property containing an unordered list of names as
 	  value is specified using multiple PTR RRs (see <xref
@@ -286,11 +285,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</section>
 
 	<section title="Ordered list of names" anchor="sec-olist">
-	  <t>Let N be an absolute name formed by concatenating the
-	  member zone name hash (see <xref target="sec-glossary" />),
-	  the name of the property, and the catalog zone name in that
-	  order, such that N is a unique owner name in the catalog
-	  zone.</t>
+	  <t>Let N be an absolute name formed by concatenating the RDATA
+	  hash (see <xref target="sec-glossary" />), the name of the
+	  property, and the catalog zone name in that order, such that N
+	  is a unique owner name in the catalog zone.</t>
 	  
 	  <t>Then, a property containing an ordered list of names as
 	  value is specified using multiple SRV RRs (see <xref
@@ -324,15 +322,47 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  its value and they are ordered.</t>
 	</section>
 
-	<section title="Network of addresses" anchor="sec-network">
-	  <t>TBD.</t>
+	<section title="Unordered list of networks of addresses" anchor="sec-network">
+	  <t>Let N be an absolute name formed by concatenating the RDATA
+	  hash (see <xref target="sec-glossary" />), the name of the
+	  property, and the catalog zone name in that order, such that N
+	  is a unique owner name in the catalog zone.</t>
+
+	  <t>Then, a property containing an unordered list of networks
+	  of addresses as value is specified using multiple MX RRs (see
+	  <xref target="RFC1035" />) with owner name set to N, and each
+	  RR's RDATA set to a representation for each address in the
+	  list of the property's value respectively, as given below.</t>
+
+	  <t>The RDATA of an MX RR contains the PREFERENCE and EXCHANGE
+	  fields. The PREFERENCE field should be set to the prefix
+	  length (left-most significant bits) of the network address and
+	  the EXCHANGE field should be set to a DNS name in either
+	  IN-ADDR.ARPA (see <xref target="RFC0883" /> and <xref
+	  target="RFC0973" />) or IP6.ARPA (see <xref target="RFC3596"
+	  />) representation.</t>
+
+	  <t>For example, if a catalog zone is named "c1.example.org."
+	  and contains a property "prop" with value as network addresses
+	  [10.98.192.0/255.255.255.0] and [10.98.193.40/32], the
+	  corresponding RRs may look as follows:</t>
+
+	  <figure>
+	    <artwork>
+	&lt;hash&gt;.prop.c1.example.org. 3600 IN MX 24 0.192.98.10.in-addr.arpa.
+	&lt;hash&gt;.prop.c1.example.org. 3600 IN MX 32 40.193.98.10.in-addr.arpa.
+	    </artwork>
+	  </figure>
+
+	  <t>Here, the property "prop" can contain one or more networks
+	  of addresses as its value but they are not ordered.</t>
 	</section>
 
 	<section title="Single host address">
-	  <t>A single host address is represented using the network of
-	  addresses data type (see <xref target="sec-network" />) with a
-	  suitable network mask to result in a single network
-	  address.</t>
+	  <t>A single host address is represented using the unordered
+	  list of networks of addresses data type (see <xref
+	  target="sec-network" />) with a suitable network mask to
+	  result in a single network address.</t>
 	</section>
 
 	<section title="Comments">
@@ -388,11 +418,12 @@ please see http://xml.resource.org/authoring/README.html. -->
       <t>As it is a regular DNS zone, a catalog zone can be transferred
       using DNS zone transfers among nameservers. Catalog zones are not
       part of the DNS, so they are not meant to be served via DNS
-      QUERY. It may be inconvenient to serve some contents of catalog
-      zones via DNS queries anyway due to the nature of their
-      representation. A separate method of querying entries inside the
-      catalog zone may be made available by nameserver
-      implementations.</t>
+      QUERY. Nameserver software may start additional section processing
+      for various RR types if they are queried. It may also be
+      inconvenient to serve some contents of catalog zones via DNS
+      queries anyway due to the nature of their representation. A
+      separate method of querying entries inside the catalog zone may be
+      made available by nameserver implementations.</t>
       
       <t>Catalog updates should be automatic, i.e., when a nameserver
       that supports catalog zones completes a zone transfer for a
@@ -487,12 +518,15 @@ please see http://xml.resource.org/authoring/README.html. -->
   <back>
 
     <references title="Normative references">
+      <?rfc include="reference.RFC.0883.xml"?>
+      <?rfc include="reference.RFC.0973.xml"?>
       <?rfc include="reference.RFC.1035.xml"?>
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.2136.xml"?>
       <?rfc include="reference.RFC.2606.xml"?>
       <?rfc include="reference.RFC.2782.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
+      <?rfc include="reference.RFC.3596.xml"?>
       <?rfc include="reference.I-D.lewis-dns-undocumented-types.xml"?>
     </references>
 
@@ -525,9 +559,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t hangText="Member zone:">A DNS zone whose configuration is
 	  published inside a catalog zone.</t>
 
-	  <t hangText="Member zone name hash:">The hexadecimal format
-	  40-digit SHA-1 digest, of a zone name in uncompressed wire
-	  format.</t>
+	  <t hangText="RDATA hash:">The hexadecimal format 40-digit
+	  SHA-1 digest, of the RDATA of the corresponding RR. For RDATA
+	  containing DNS names, no name compression must be in use,
+	  i.e., the name must be in its full expanded wire data format
+	  when it is hashed.</t>
 
 	  <t hangText="Zone property:">A configuration parameter of a
 	  zone, sometimes also called a zone option.</t>
