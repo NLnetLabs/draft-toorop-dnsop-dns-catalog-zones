@@ -225,10 +225,9 @@ please see http://xml.resource.org/authoring/README.html. -->
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="Single name" anchor="sec-sname">
 	  <t>A property containing a single name as value is specified
-	  using a CNAME RR (as defined in <xref target="RFC1035" />)
-	  with owner name set to the name of the propery as a sub-domain
-	  of the catalog zone name, and RDATA set to the property
-	  value.</t>
+	  using a CNAME RR (see <xref target="RFC1035" />) with owner
+	  name set to the name of the property as a sub-domain of the
+	  catalog zone name, and RDATA set to the property value.</t>
 	  
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop1" with
@@ -249,14 +248,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<section title="Unordered list of names" anchor="sec-unolist">
 	  <t>Let N be an absolute name formed by concatenating the
 	  member zone name hash (see <xref target="sec-glossary" />),
-	  the name of the property and the catalog zone name in that
+	  the name of the property, and the catalog zone name in that
 	  order, such that N is a unique owner name in the catalog
 	  zone.</t>
 	  
 	  <t>Then, a property containing an unordered list of names as
-	  value is specified using multiple PTR RRs (as defined in <xref
-	  target="RFC1035" />) with owner name set to N, and RDATA set
-	  to each name in the list of the property's value
+	  value is specified using multiple PTR RRs (see <xref
+	  target="RFC1035" />) with owner name set to N, and each RR's
+	  RDATA set to each name in the list of the property's value
 	  respectively.</t>
 	  
 	  <t>For example, if a catalog zone is named
@@ -272,29 +271,30 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    </artwork>
 	  </figure>
 
-	  <t>The property can contain one or more names as its
-	  value.</t>
+	  <t>Here, the property "prop2" can contain one or more names as
+	  its value but they are not ordered.</t>
 	</section>
 
 	<section title="Ordered list of names" anchor="sec-olist">
 	  <t>Let N be an absolute name formed by concatenating the
 	  member zone name hash (see <xref target="sec-glossary" />),
-	  the name of the property and the catalog zone name in that
+	  the name of the property, and the catalog zone name in that
 	  order, such that N is a unique owner name in the catalog
 	  zone.</t>
 	  
 	  <t>Then, a property containing an ordered list of names as
-	  value is specified using multiple SRV RRs (as defined in <xref
+	  value is specified using multiple SRV RRs (see <xref
 	  target="RFC2782" />) with owner name set to N. The RDATA of
-	  SRV RRs contains the Priority, Weight, Port and Target
-	  fields. Over multiple RRs, the Target field should be set to
-	  each name in the list of the property's value
+	  each SRV RR contains the Priority, Weight, Port and Target
+	  fields. Over multiple SRV RRs, the Target field should be set
+	  to each name in the list of the property's value
 	  respectively. The &lt;Priority, Weight, Port&gt; fields in
-	  that sequence form a sort ordering, and their values should be
-	  set to numbers that represents this name's relative order (in
-	  ascending order) in the ordered list of names. As Priority,
-	  Weight and Port are 16-bit fields, it's possible to order
-	  1&lt;&lt;48 different names within a single property.</t>
+	  that sequence form a sort ordering tuple, and their values
+	  should be set to numbers that represents this name's relative
+	  order (in ascending order) in the ordered list of names. As
+	  Priority, Weight and Port are 16-bit fields, it's possible to
+	  order 1&lt;&lt;48 different names within a single
+	  zone property value.</t>
 	  
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop3" with
@@ -310,8 +310,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    </artwork>
 	  </figure>
 
-	  <t>The property can contain one or more names as its
-	  value.</t>
+	  <t>Here, the property "prop3" can contain one or more names as
+	  its value and they are ordered.</t>
 	</section>
 	
 	<section title="Hosts" />
