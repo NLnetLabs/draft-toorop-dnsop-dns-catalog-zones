@@ -151,16 +151,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 	zones are not directly visible in the DNS and are not meant to
 	be served via DNS QUERY (<xref target="RFC1035" />).</t>
 
-	<t>Member zone configuration is specified as a set of zone
-	properties. Each zone property has a name, a data type and an
-	associated value. Zone property data types are described in
-	<xref target="sec-types" />. Each property is of one data type
-	only. A list of allowed property names and their data types is
-	given in <xref target="sec-properties" />.</t>
+	<t>Member zones' configuration is specified as a list of zone
+	properties. Each zone property has a name and an associated
+	value of a specific data type. Zone property value data types
+	are described in <xref target="sec-types" />. Zone property
+	names are case-insensitive. Each zone property uses one data
+	type only for its values. A list of permitted zone property
+	names and their data types is given in <xref
+	target="sec-properties" />.</t>
 	
 	<t>***FIXME*** Transitive catalogs</t>
-
-	<t>***FIXME*** Case-sensitivity of property keys</t>
       </section>
 
       <section title="Resource record fields">
