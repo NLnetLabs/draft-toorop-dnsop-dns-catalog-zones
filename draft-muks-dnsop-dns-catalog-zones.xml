@@ -448,12 +448,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 	location of the master in the hierarchy. It may not be
 	possible to specify this within a catalog zone.
 	</t>
-	<t>DNSSEC and catalog zones
-	<vspace blankLines="1"/>
-	Catalog zones do not need to be signed. Their zone transfers
-	are authenticated by TSIG. Are there any reasons why signing
-	catalog zones would be useful?
-	</t>
 	<t>Templates
 	<vspace blankLines="1"/>
 	Are support for config and zone data templates useful at
@@ -500,6 +494,11 @@ please see http://xml.resource.org/authoring/README.html. -->
       secrets used for member zones are identical to those used for the
       catalog zones. Details of the shared secrets MUST NOT be mentioned
       anywhere in the catalog zone data.</t>
+
+      <t>Catalog zones do not need to be signed using DNSSEC. Their zone
+      transfers are authenticated by TSIG. Signed zones MUST be handled
+      normally by nameservers, and their contents MUST NOT be
+      validated.</t>
     </section>
 
     <section title="IANA considerations">
