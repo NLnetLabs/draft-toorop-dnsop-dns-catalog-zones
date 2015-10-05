@@ -219,7 +219,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
-	  value "Example", the corresponding RR may look as
+	  string value "Example", the corresponding RR may look as
 	  follows:</t>
 
 	  <figure>
@@ -373,7 +373,45 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</section>
 
 	<section title="Zone properties specific to a member zone">
-	  <t>TBD: Direct zone properties (viz. Stephen's review)</t>
+	  <t>Member zones in a catalog zone share template zone
+	  configuration that is common to all member zones in that
+	  catalog. This section describes the syntax that can be used to
+	  specify zone properties specific to single member zones.</t>
+
+	  <t>Let N be an absolute name formed by concatenating the
+	  member zone name hash (see <xref target="sec-glossary" />) and
+	  the catalog zone name in that order, such that N is a unique
+	  owner name in the catalog zone.</t>
+
+	  <t>Zone properties specific to a particular member zone are
+	  specified under the respective sub-domain N.</t>
+
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and a member zone "example.com."
+	  contains a property "prop0" with string (see <xref
+	  target="sec-string" />) value "Example", the corresponding RR
+	  may look as follows:</t>
+
+	  <figure>
+	    <artwork>
+	prop0.&lt;m-hash&gt;.catalog1.example.org. 3600 IN NINFO "Example"
+	    </artwork>
+	  </figure>
+
+	  <t>As another example, if a catalog zone is named
+	  "cat1.example.org." and a member zone "example.com."  contains
+	  a property "prop2" with its value being an unordered list (see
+	  <xref target="sec-unolist" />) of two names "a.example.com."
+	  and "b.example.com.", the corresponding RRs may look as
+	  follows:</t>
+
+	  <figure>
+	    <artwork>
+	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR a.example.com.
+	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR b.example.com.
+	    </artwork>
+	  </figure>
+
 	</section>
 
       </section>
@@ -564,6 +602,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  containing DNS names, no name compression must be in use,
 	  i.e., the name must be in its full expanded wire data format
 	  when it is hashed.</t>
+
+	  <t hangText="Member zone name hash:">The hexadecimal format
+	  40-digit SHA-1 digest, of a zone name in uncompressed wire
+	  format.</t>
 
 	  <t hangText="Zone property:">A configuration parameter of a
 	  zone, sometimes also called a zone option.</t>
