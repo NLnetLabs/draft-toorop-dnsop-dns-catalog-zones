@@ -243,10 +243,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<section title="Unordered list of names" anchor="sec-unolist">
 	  <t>Let N be an absolute name formed by concatenating the
-	  40-digit hexadecimal format SHA-1 digest of the uncompressed
-	  catalog zone name in wire format, the name of the property and
-	  the catalog zone name in that order, such that N is a unique
-	  owner name in the catalog zone.</t>
+	  member zone name hash (see <xref target="sec-glossary" />),
+	  the name of the property and the catalog zone name in that
+	  order, such that N is a unique owner name in the catalog
+	  zone.</t>
 	  
 	  <t>Then, a property containing an unordered list of names as
 	  value is specified using multiple PTR RRs (as defined in <xref
@@ -273,10 +273,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<section title="Ordered list of names" anchor="sec-olist">
 	  <t>Let N be an absolute name formed by concatenating the
-	  40-digit hexadecimal format SHA-1 digest of the uncompressed
-	  catalog zone name in wire format, the name of the property and
-	  the catalog zone name in that order, such that N is a unique
-	  owner name in the catalog zone.</t>
+	  member zone name hash (see <xref target="sec-glossary" />),
+	  the name of the property and the catalog zone name in that
+	  order, such that N is a unique owner name in the catalog
+	  zone.</t>
 	  
 	  <t>Then, a property containing an ordered list of names as
 	  value is specified using multiple SRV RRs (as defined in <xref
@@ -504,6 +504,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t hangText="Member zone:">A DNS zone whose configuration is
 	  published inside a catalog zone.</t>
+
+	  <t hangText="Member zone name hash:">The hexadecimal format
+	  40-digit SHA-1 digest, of a zone name in uncompressed wire
+	  format.</t>
 
 	  <t hangText="Zone property:">A configuration parameter of a
 	  zone, sometimes also called a zone option.</t>
