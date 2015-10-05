@@ -313,11 +313,20 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>Here, the property "prop3" can contain one or more names as
 	  its value and they are ordered.</t>
 	</section>
-	
-	<section title="Hosts" />
-	<section title="Networks" />
-	<section title="Comments" />
+
+	<section title="Hosts">
+	<t>TBD.</t>
+	</section>
+
+	<section title="Networks">
+	<t>TBD.</t>
+	</section>
+
+	<section title="Comments">
+	<t>TBD.</t>
+	</section>
       </section>
+
       <section title="Zone configuration properties" anchor="sec-properties">
 	<section title="zone-soa-default-serial" />
 	<section title="zone-soa-default-refresh" />
