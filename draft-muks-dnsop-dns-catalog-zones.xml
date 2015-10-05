@@ -211,10 +211,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="Single name" anchor="sec-sname">
-	  <t>A property containing a single name as value is specified
-	  using a CNAME RR (see <xref target="RFC1035" />) with owner
-	  name set to the name of the property as a sub-domain of the
-	  catalog zone name, and RDATA set to the property value.</t>
+	  <t>A property with a single name as value is specified using a
+	  CNAME RR (see <xref target="RFC1035" />) with owner name set
+	  to the name of the property as a sub-domain of the catalog
+	  zone name, and RDATA set to the property value.</t>
 	  
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop1" with
