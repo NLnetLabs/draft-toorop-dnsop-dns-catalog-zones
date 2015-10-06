@@ -547,8 +547,8 @@ please see http://xml.resource.org/authoring/README.html. -->
       Metazones, as both share this scheme of representing the catalog
       as a regular DNS zone.</t>
       
-      <t>Thanks to Victoria Risk, Ray Bellis, Witold Krecicki for
-      reviewing previous draft proposals and providing support, comments
+      <t>Thanks to Ray Bellis, Brian Conry, Witold Krecicki, Victoria
+      Risk for reviewing draft proposals and providing support, comments
       and suggestions.</t>
 
       <t>Thanks to BIND users who reviewed draft proposals and offered
