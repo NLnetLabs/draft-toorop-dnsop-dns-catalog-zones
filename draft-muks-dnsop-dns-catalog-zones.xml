@@ -371,11 +371,8 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="Comment">
           <t>Comments may be added anywhere in a catalog zone using a
           scheme such as NOTE RRs (see <xref target="I-D.hunt-note-rr"
-          />). All NOTE RRs MUST be ignored when generating a catalog
-          from the catalog zone. However they MUST be preserved and
-          transferred as part of the zone. This memo does not depend on
-          NOTE RRs and it is only suggested here as an informative
-          reference.</t>
+          />). This memo does not depend on NOTE RRs and it is only
+          suggested here as an informative reference.</t>
         </section>
 
 	<section title="Zone properties specific to a member zone">
