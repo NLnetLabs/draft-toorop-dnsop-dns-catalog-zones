@@ -212,11 +212,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="String" anchor="sec-string">
-	  <t>A property with a string as value is specified using a
-	  NINFO RR (see <xref target="I-D.lewis-dns-undocumented-types"
-	  />) with owner name set to the name of the property as a
-	  sub-domain of the catalog zone name, and RDATA set to the
-	  property value.</t>
+	  <t>A property with a string as value is specified using a TXT
+	  RR (see <xref target="RFC1035" />) with owner name set to the
+	  name of the property as a sub-domain of the catalog zone name,
+	  and RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
@@ -369,12 +368,15 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  result in a single network address.</t>
 	</section>
 
-	<section title="Comments">
-	  <t>Comments may be added anywhere in a catalog zone using TXT
-	  RRs (see <xref target="RFC1035" />). All TXT RRs are ignored
-	  when generating a catalog from the catalog zone. However they
-	  MUST be preserved and transferred as part of the zone.</t>
-	</section>
+        <section title="Comments">
+          <t>Comments may be added anywhere in a catalog zone using a
+          scheme such as NOTE RRs (see <xref target="I-D.hunt-note-rr"
+          />). All NOTE RRs MUST be ignored when generating a catalog
+          from the catalog zone. However they MUST be preserved and
+          transferred as part of the zone. This memo does not depend on
+          NOTE RRs and it is only suggested here as an informative
+          reference.</t>
+        </section>
 
 	<section title="Zone properties specific to a member zone">
 	  <t>Member zones in a catalog zone share template zone
@@ -571,10 +573,10 @@ please see http://xml.resource.org/authoring/README.html. -->
       <?rfc include="reference.RFC.2782.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
       <?rfc include="reference.RFC.3596.xml"?>
-      <?rfc include="reference.I-D.lewis-dns-undocumented-types.xml"?>
     </references>
 
     <references title="Informative references">
+      <?rfc include="reference.I-D.hunt-note-rr.xml"?>
       <reference anchor="RPZ" target="http://ftp.isc.org/isc/dnsrpz/isc-tn-2010-1.txt">
 	<front>
 	  <title>DNS Response Policy Zones (DNS RPZ)</title>
