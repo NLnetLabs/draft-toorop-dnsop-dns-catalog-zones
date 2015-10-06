@@ -165,7 +165,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	how various zone property value types are represented.</t>
 
 	<t>The CLASS field of the RR MUST be set to the value 1 (IN) as
-	defined in <xref target="RFC1035" />.</t>
+	defined in <xref target="RFC1035" />. This is because RR types
+	such as SRV and APL (which catalog zones overloads the meaning
+	of) are defined only for the IN class. </t>
 
 	<t>The TTL field is not used as these RRs are not meant to be
 	served via DNS QUERY. It SHOULD be set to 1.</t>
