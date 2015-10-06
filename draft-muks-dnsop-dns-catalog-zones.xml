@@ -301,20 +301,23 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  should be set to numbers that represents this name's relative
 	  order (in ascending order) in the ordered list of names. As
 	  Priority, Weight and Port are 16-bit fields, it's possible to
-	  order 1&lt;&lt;48 different names within a single
-	  zone property value.</t>
+	  order 1&lt;&lt;48 different names within a single zone
+	  property value. It is advised to separate the sort ordering
+	  tuple values sufficiently with gaps so that list items can be
+	  introduced in-between without significant change to the
+	  existing records' sort ordering tuple values.</t>
 	  
-	  <t>For example, if a catalog zone is named
-	  "catalog1.example.org." and contains a property "prop3" with
-	  its value being an ordered list of three names
-	  "n1.example.com.", "n2.example.com." and "n3.example.com." in
-	  that order, the corresponding RRs may look as follows:</t>
+	  <t>For example, if a catalog zone is named "cat1.example.org."
+	  and contains a property "prop3" with its value being an
+	  ordered list of three names "n1.example.com.",
+	  "n2.example.com." and "n3.example.com." in that order, the
+	  corresponding RRs may look as follows:</t>
 	  
 	  <figure>
 	    <artwork>
-	&lt;hash&gt;.prop3.catalog1.example.org. 3600 IN SRV 0 0 1 n1.example.com.
-	&lt;hash&gt;.prop3.catalog1.example.org. 3600 IN SRV 0 0 2 n2.example.com.
-	&lt;hash&gt;.prop3.catalog1.example.org. 3600 IN SRV 0 0 3 n3.example.com.
+	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 100 n1.example.com.
+	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 200 n2.example.com.
+	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 300 n3.example.com.
 	    </artwork>
 	  </figure>
 
