@@ -138,8 +138,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	zone-based representations such as response-policy zones <xref
 	target="RPZ" />. Other than being transmitted via zone
 	transfers, catalog zones are not directly visible in the DNS and
-	are not intended to be served via DNS QUERY (<xref
-	target="RFC1035" />).</t>
+	are not intended to be served via DNS QUERY <xref
+	target="RFC1035" />.</t>
 
 	<t>Member zones' configuration is specified as a list of zone
 	properties. Each zone property has a name and an associated
@@ -155,8 +155,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <section title="Resource record fields">
 	<t>A catalog zone contains various resource records (RRs). They
-	have NAME, TYPE, CLASS, TTL, RDLENGTH and RDATA as fields (as
-	defined in <xref target="RFC1035" />).</t>
+	have NAME, TYPE, CLASS, TTL, RDLENGTH and RDATA as fields <xref
+	target="RFC1035" />.</t>
 
 	<t>The NAME field contains the owner name of the respective
 	RR. As with all DNS zones, the owner name must be a child of the
@@ -167,10 +167,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	how various zone property value types are represented.</t>
 
 	<t>[TBD/FIXME] The CLASS field of the RR MUST be set to the
-	value 1 (IN) as defined in <xref target="RFC1035" />. This is
-	because RR types such as SRV and APL (which catalog zones
-	overloads the meaning of) are defined only for the IN
-	class. </t>
+	value 1 (IN) <xref target="RFC1035" />. This is because RR types
+	such as SRV and APL (which catalog zones overloads the meaning
+	of) are defined only for the IN class. </t>
 
 	<t>The TTL field is not used as these RRs are not intended to be
 	served via DNS QUERY. It SHOULD be set to 1.</t>
@@ -188,37 +187,36 @@ please see http://xml.resource.org/authoring/README.html. -->
 	expected to have a syntactically correct SOA record and one or
 	more NS records at its apex.</t>
 
-	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields (as
-	defined in <xref target="RFC1035" />) are used during zone
-	transfer. A catalog zone's SOA SERIAL field MUST increase when
-	an update is made to the catalog zone's contents. Otherwise,
-	slave nameservers may not notice updates to the catalog zone's
+	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields
+	<xref target="RFC1035" /> are used during zone transfer. A
+	catalog zone's SOA SERIAL field MUST increase when an update is
+	made to the catalog zone's contents. Otherwise, slave
+	nameservers may not notice updates to the catalog zone's
 	contents.</t>
 	
-	<t>The SOA record's MINIMUM field (as defined in <xref
-	target="RFC1035" />) is not applicable to catalog zones, as they
-	are not intended to be served via DNS QUERY. It SHOULD be set to
-	1 in all catalog zones. [TBD/FIXME] Master and slave nameservers
-	MUST NOT use catalog zones with an unexpected value in the SOA
-	MINIMUM field as catalog zones, but they may be transferred.</t>
+	<t>The SOA record's MINIMUM field <xref target="RFC1035" /> is
+	not applicable to catalog zones, as they are not intended to be
+	served via DNS QUERY. It SHOULD be set to 1 in all catalog
+	zones. [TBD/FIXME] Master and slave nameservers MUST NOT use
+	catalog zones with an unexpected value in the SOA MINIMUM field
+	as catalog zones, but they may be transferred.</t>
 
 	<t>As catalog zones are not intended to be part of the DNS, NS
 	records at the apex are not used but they are still required so
 	that catalog zones are syntactically correct DNS zones. No
 	parent delegation for the catalog zone is required. Any valid
-	DNS name can be used in the NSDNAME field of such NS records (as
-	defined in <xref target="RFC1035" />) and they will be
-	ignored. A single NS RR with an NSDNAME field containing the
-	absolute name "invalid." is recommended (see <xref
-	target="RFC2606" />).</t>
+	DNS name can be used in the NSDNAME field of such NS records
+	<xref target="RFC1035" /> and they will be ignored. A single NS
+	RR with an NSDNAME field containing the absolute name "invalid."
+	is recommended <xref target="RFC2606" />.</t>
       </section>
 
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="String" anchor="sec-string">
 	  <t>A property with a string as value is specified using a TXT
-	  RR (see <xref target="RFC1035" />) with owner name set to the
-	  name of the property as a sub-domain of the catalog zone name,
-	  and RDATA set to the property value.</t>
+	  RR <xref target="RFC1035" /> with owner name set to the name
+	  of the property as a sub-domain of the catalog zone name, and
+	  RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
@@ -232,15 +230,15 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  </figure>
 
 	  <t>Here, "prop0" can only contain one string, though it may
-	  consist of multiple &lt;character-string&gt;s (see <xref
-	  target="RFC1035" />).</t>
+	  consist of multiple &lt;character-string&gt;s <xref
+	  target="RFC1035" />.</t>
 	</section>
 
 	<section title="Single name" anchor="sec-sname">
 	  <t>A property with a single name as value is specified using a
-	  CNAME RR (see <xref target="RFC1035" />) with owner name set
-	  to the name of the property as a sub-domain of the catalog
-	  zone name, and RDATA set to the property value.</t>
+	  CNAME RR <xref target="RFC1035" /> with owner name set to the
+	  name of the property as a sub-domain of the catalog zone name,
+	  and RDATA set to the property value.</t>
 	  
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop1" with
@@ -265,8 +263,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  is a unique owner name in the catalog zone.</t>
 	  
 	  <t>Then, a property containing an unordered list of names as
-	  value is specified using multiple PTR RRs (see <xref
-	  target="RFC1035" />) with owner name set to N, and each RR's
+	  value is specified using multiple PTR RRs <xref
+	  target="RFC1035" /> with owner name set to N, and each RR's
 	  RDATA set to each name in the list of the property's value
 	  respectively.</t>
 	  
@@ -294,8 +292,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  is a unique owner name in the catalog zone.</t>
 	  
 	  <t>Then, a property containing an ordered list of names as
-	  value is specified using multiple SRV RRs (see <xref
-	  target="RFC2782" />) with owner name set to N. The RDATA of
+	  value is specified using multiple SRV RRs <xref
+	  target="RFC2782" /> with owner name set to N. The RDATA of
 	  each SRV RR contains the Priority, Weight, Port and Target
 	  fields. Over multiple SRV RRs, the Target field should be set
 	  to each name in the list of the property's value
@@ -335,18 +333,18 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  is a unique owner name in the catalog zone.</t>
 
 	  <t>Then, a property containing an unordered list of networks
-	  of addresses as value is specified using multiple MX RRs (see
-	  <xref target="RFC1035" />) with owner name set to N, and each
-	  RR's RDATA set to a representation for each address in the
-	  list of the property's value respectively, as given below.</t>
+	  of addresses as value is specified using multiple MX RRs <xref
+	  target="RFC1035" /> with owner name set to N, and each RR's
+	  RDATA set to a representation for each address in the list of
+	  the property's value respectively, as given below.</t>
 
 	  <t>The RDATA of an MX RR contains the PREFERENCE and EXCHANGE
 	  fields. The PREFERENCE field should be set to the prefix
 	  length (left-most significant bits) of the network address and
 	  the EXCHANGE field should be set to a DNS name in either
-	  IN-ADDR.ARPA (see <xref target="RFC0883" /> and <xref
-	  target="RFC0973" />) or IP6.ARPA (see <xref target="RFC3596"
-	  />) representation.</t>
+	  IN-ADDR.ARPA (<xref target="RFC0883" /> and <xref
+	  target="RFC0973" />) or IP6.ARPA (<xref target="RFC3596" />)
+	  representation.</t>
 
 	  <t>For example, if a catalog zone is named "c1.example.org."
 	  and contains a property "prop" with value as network addresses
@@ -373,8 +371,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
         <section title="Comment">
           <t>Comments may be added anywhere in a catalog zone using a
-          scheme such as NOTE RRs (see <xref target="I-D.hunt-note-rr"
-          />). This memo does not depend on NOTE RRs and it is only
+          scheme such as NOTE RRs <xref target="I-D.hunt-note-rr"
+          />. This memo does not depend on NOTE RRs and it is only
           suggested here as an informative reference.</t>
         </section>
 
@@ -516,18 +514,18 @@ please see http://xml.resource.org/authoring/README.html. -->
       <t>As catalog zones are transmitted using DNS zone transfers, it
       is absolutely essential for these transfers to be protected from
       unexpected modifications on the route. So, it is a requirement
-      that catalog zone transfers MUST be authenticated using TSIG (see
-      <xref target="RFC2845" />). A master MUST NOT serve a catalog zone
-      for transfer without using TSIG and a slave MUST abandon an update
-      to a catalog zone that was received without using TSIG.</t>
+      that catalog zone transfers MUST be authenticated using TSIG <xref
+      target="RFC2845" />. A master MUST NOT serve a catalog zone for
+      transfer without using TSIG and a slave MUST abandon an update to
+      a catalog zone that was received without using TSIG.</t>
 
-      <t>DNS UPDATEs (see <xref target="RFC2136" />) to catalog zones
-      similarly MUST be authenticated using TSIG.</t>
+      <t>DNS UPDATE <xref target="RFC2136" /> to catalog zones similarly
+      MUST be authenticated using TSIG.</t>
 
       <t>Zone transfers of member zones MUST similarly be authenticated
-      using TSIG (see <xref target="RFC2845" />). The TSIG shared
-      secrets used for member zones are identical to those used for the
-      catalog zones. Details of the shared secrets MUST NOT be mentioned
+      using TSIG <xref target="RFC2845" />. The TSIG shared secrets used
+      for member zones are identical to those used for the catalog
+      zones. Details of the shared secrets MUST NOT be mentioned
       anywhere in the catalog zone data.</t>
 
       <t>Catalog zones do not need to be signed using DNSSEC. Their zone
