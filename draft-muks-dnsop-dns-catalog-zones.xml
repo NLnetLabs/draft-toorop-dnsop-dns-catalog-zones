@@ -124,20 +124,22 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<t>A catalog zone is a specially crafted DNS zone that contains,
 	as DNS zone data, a list of DNS zones called member zones and
 	associated template zone configuration common to all its member
-	zones. A catalog zone can also include other catalog zones, but
-	template zone configuration present in a catalog zone only
-	applies to its immediate member zones. A catalog zone is meant
-	to be used to provision DNS catalogs to nameservers via zone
-	transfers, for the purpose of setting up member zones to be
-	served from these nameservers.</t>
+	zones. An implementation of catalog zones MAY allow catalog
+	zones to include other catalog zones, but template zone
+	configuration present in a catalog zone only applies to its
+	immediate member zones. A catalog zone is meant to be used to
+	provision DNS catalogs to nameservers via zone transfers, for
+	the purpose of setting up member zones to be served from these
+	nameservers.</t>
 
-	<t>A catalog zone overrides the meanings of various RR types to
-	achieve its purpose. Though this may be controversial, the
-	situation is not different from other similar zone-based
-	representations such as response-policy zones <xref target="RPZ"
-	/>. Other than being transmitted via zone transfers, catalog
-	zones are not directly visible in the DNS and are not meant to
-	be served via DNS QUERY (<xref target="RFC1035" />).</t>
+	<t>[TBD/FIXME] A catalog zone overrides the meanings of various
+	RR types to achieve its purpose. Though this may be
+	controversial, the situation is not different from other similar
+	zone-based representations such as response-policy zones <xref
+	target="RPZ" />. Other than being transmitted via zone
+	transfers, catalog zones are not directly visible in the DNS and
+	are not intended to be served via DNS QUERY (<xref
+	target="RFC1035" />).</t>
 
 	<t>Member zones' configuration is specified as a list of zone
 	properties. Each zone property has a name and an associated
@@ -164,12 +166,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	value being represented. <xref target="sec-types" /> describes
 	how various zone property value types are represented.</t>
 
-	<t>The CLASS field of the RR MUST be set to the value 1 (IN) as
-	defined in <xref target="RFC1035" />. This is because RR types
-	such as SRV and APL (which catalog zones overloads the meaning
-	of) are defined only for the IN class. </t>
+	<t>[TBD/FIXME] The CLASS field of the RR MUST be set to the
+	value 1 (IN) as defined in <xref target="RFC1035" />. This is
+	because RR types such as SRV and APL (which catalog zones
+	overloads the meaning of) are defined only for the IN
+	class. </t>
 
-	<t>The TTL field is not used as these RRs are not meant to be
+	<t>The TTL field is not used as these RRs are not intended to be
 	served via DNS QUERY. It SHOULD be set to 1.</t>
 
 	<t>The RDLENGTH field contains the length of the RDATA field.</t>
@@ -193,13 +196,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	contents.</t>
 	
 	<t>The SOA record's MINIMUM field (as defined in <xref
-	target="RFC1035" />) is supposed to contain a minimum TTL value
-	which is not applicable to catalog zones. It MUST be set to 1 in
-	all catalog zones. Master and slave nameservers MUST NOT use
-	catalog zones with an unexpected value in the SOA MINIMUM field
-	as catalog zones. However, they may be transferred.</t>
+	target="RFC1035" />) is not applicable to catalog zones, as they
+	are not intended to be served via DNS QUERY. It SHOULD be set to
+	1 in all catalog zones. [TBD/FIXME] Master and slave nameservers
+	MUST NOT use catalog zones with an unexpected value in the SOA
+	MINIMUM field as catalog zones, but they may be transferred.</t>
 
-	<t>As catalog zones are not meant to be part of the DNS, NS
+	<t>As catalog zones are not intended to be part of the DNS, NS
 	records at the apex are not used but they are still required so
 	that catalog zones are syntactically correct DNS zones. No
 	parent delegation for the catalog zone is required. Any valid
@@ -460,13 +463,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <t>As it is a regular DNS zone, a catalog zone can be transferred
       using DNS zone transfers among nameservers. Catalog zones are not
-      part of the DNS, so they are not meant to be served via DNS
-      QUERY. Nameserver software may start additional section processing
-      for various RR types if they are queried. It may also be
-      inconvenient to serve some contents of catalog zones via DNS
-      queries anyway due to the nature of their representation. A
-      separate method of querying entries inside the catalog zone may be
-      made available by nameserver implementations.</t>
+      part of the DNS, so they are not intended to be served via DNS
+      QUERY. [TBD/FIXME] Nameserver software may start additional
+      section processing for various RR types if they are queried. It
+      may also be inconvenient to serve some contents of catalog zones
+      via DNS queries anyway due to the nature of their
+      representation. A separate method of querying entries inside the
+      catalog zone may be made available by nameserver
+      implementations.</t>
       
       <t>Catalog updates should be automatic, i.e., when a nameserver
       that supports catalog zones completes a zone transfer for a
