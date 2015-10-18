@@ -195,13 +195,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 	nameservers may not notice updates to the catalog zone's
 	contents.</t>
 
-	<t>The SOA record's MINIMUM field <xref target="RFC1035" /> is
-	not applicable to catalog zones, as they are not intended to be
-	served via DNS QUERY. It SHOULD be set to 1 in all catalog
-	zones. [TBD/FIXME] Primary and secondary nameservers MUST NOT
-	use catalog zones with an unexpected value in the SOA MINIMUM
-	field as catalog zones, but they may be transferred.</t>
-
 	<t>As catalog zones are not intended to be part of the DNS, NS
 	records at the apex are not used but they are still required so
 	that catalog zones are syntactically correct DNS zones. No
