@@ -290,15 +290,52 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    <t>The INT RDATA's presentation uses the representation of
 	    an unsuffixed "integer constant" as defined in the C
 	    programming language standard <xref target="ISO.9899.1990"
-	    /> of the type matching a 64-bit signed integer on that
-	    platform.</t>
+	    /> (of the type matching a 64-bit signed integer on that
+	    platform), with an optional minus prefix.</t>
+
+	    <t>Scanners must read any of the various formats
+	    possible. Drivers must output the RDATA in base-10 decimal
+	    format.</t>
 	  </section>
 
 	  <section title="INT RR example">
 	    <t>The following example shows a INT RR:
 	  <figure>
 	    <artwork>
-	counter-increment.example.org. 3600 IN INT -1
+	counter-increment.example.org. 3600 IN INT -0x1
+	    </artwork>
+	  </figure>
+	    </t>
+	  </section>
+	</section>
+
+	<section title="UINT RR TYPE (64-bit unsigned integer value)" anchor="sec-uint">
+	  <t>The UINT RR TYPE represents a 64-bit unsigned integer in
+	  its RDATA.</t>
+
+	  <section title="UINT RDATA wire format">
+	    <t>The UINT RDATA consists of a 64-bit usigned integer, in
+	    network byte order, which occupies 8 octets (RDLENGTH is
+	    8).</t>
+	  </section>
+
+	  <section title="UINT RDATA presentation format">
+	    <t>The UINT RDATA's presentation uses the representation of
+	    an unsuffixed "integer constant" as defined in the C
+	    programming language standard <xref target="ISO.9899.1990"
+	    /> (of the type matching a 64-bit signed integer on that
+	    platform).</t>
+
+	    <t>Scanners must read any of the various formats
+	    possible. Drivers must output the RDATA in base-10 decimal
+	    format.</t>
+	  </section>
+
+	  <section title="UINT RR example">
+	    <t>The following example shows a UINT RR:
+	  <figure>
+	    <artwork>
+	min-ttl.example.org. 3600 IN UINT 3600
 	    </artwork>
 	  </figure>
 	    </t>
@@ -672,9 +709,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <section title="IANA considerations">
       <t>This document defines new resource record types, titled BOOL,
-      FLOAT, INT, NAME, and UINT (see <xref target="sec-rrtypes" />),
-      assigned values as follows from the Resource Record (RR) TYPEs
-      space [to be removed upon publication:
+      FLOAT, INT, and UINT (see <xref target="sec-rrtypes" />), assigned
+      values as follows from the Resource Record (RR) TYPEs space [to be
+      removed upon publication:
       https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-11].</t>
 
       <texttable>
@@ -694,10 +731,6 @@ please see http://xml.resource.org/authoring/README.html. -->
         <c>INT</c>
         <c>TBD</c>
         <c>64-bit signed integer</c>
-
-        <c>NAME</c>
-        <c>TBD</c>
-        <c>DNS name</c>
 
         <c>UINT</c>
         <c>TBD</c>
