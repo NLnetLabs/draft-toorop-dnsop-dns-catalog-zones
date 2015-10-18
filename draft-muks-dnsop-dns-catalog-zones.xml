@@ -348,7 +348,7 @@ please see http://xml.resource.org/authoring/README.html. -->
       </section>
 
       <section title="Zone property value data types" anchor="sec-types">
-	<section title="String" anchor="sec-string">
+	<section title="Strings" anchor="sec-string">
 	  <t>A property with a string as value is specified using a TXT
 	  RR <xref target="RFC1035" /> with owner name set to the name
 	  of the property as a sub-domain of the catalog zone name, and
@@ -370,9 +370,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  target="RFC1035" />.</t>
 	</section>
 
-	<section title="Single name" anchor="sec-sname">
+	<section title="Single names" anchor="sec-sname">
 	  <t>A property with a single name as value is specified using a
-	  CNAME RR <xref target="RFC1035" /> with owner name set to the
+	  PTR RR <xref target="RFC1035" /> with owner name set to the
 	  name of the property as a sub-domain of the catalog zone name,
 	  and RDATA set to the property value.</t>
 
@@ -383,13 +383,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	prop1.catalog1.example.org. 3600 IN CNAME val1.example.com.
+	prop1.catalog1.example.org. 3600 IN PTR val1.example.com.
 	    </artwork>
 	  </figure>
 
-	  <t>Here, "prop1" can only contain one name. It cannot be a
-	  list of names. It is restricted by the use of the CNAME RR
-	  type.</t>
+	  <t>Here, "prop1" can contain multiple PTR RRs at that node of
+	  the domain name space <xref target="RFC1034" />. The single
+	  name property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Unordered list of names" anchor="sec-unolist">
@@ -412,13 +412,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	&lt;hash&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
-	&lt;hash&gt;.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
+	&lt;hash1&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
+	&lt;hash2&gt;.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
 	    </artwork>
 	  </figure>
 
-	  <t>Here, the property "prop2" can contain one or more names as
-	  its value but they are not ordered.</t>
+	  <t>Here, "prop2"'s child nodes (in the domain name space <xref
+	  target="RFC1034" />) can contain multiple PTR RRs at each
+	  child node. For example, &lt;hash1&gt;.prop2 may contain
+	  multiple PTR RRs at that node. The single name property SHOULD
+	  be checked by the implementation.</t>
 	</section>
 
 	<section title="Ordered list of names" anchor="sec-olist">
@@ -766,6 +769,7 @@ please see http://xml.resource.org/authoring/README.html. -->
     <references title="Normative references">
       <?rfc include="reference.RFC.0883.xml"?>
       <?rfc include="reference.RFC.0973.xml"?>
+      <?rfc include="reference.RFC.1034.xml"?>
       <?rfc include="reference.RFC.1035.xml"?>
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.2136.xml"?>
