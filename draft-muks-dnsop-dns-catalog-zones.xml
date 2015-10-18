@@ -422,7 +422,13 @@ please see http://xml.resource.org/authoring/README.html. -->
       </section>
 
       <section title="Zone configuration properties" anchor="sec-properties">
-	<t>TBD: Prepare a list of zone configuration properties.</t>
+	<t>TBD: Prepare a list of zone configuration properties that are
+	common to DNS implementations. This is so that a company may
+	manage a catalog zone using a Windows DNS server as the primary,
+	and a secondary nameserver hosting service may pick up the
+	common properties and may use a different nameserver
+	implementation such as BIND or NSD on a POSIX operating system
+	to serve it.</t>
 
 	<section title="zone-soa-default-serial">
 	  <t>TBD.</t>
