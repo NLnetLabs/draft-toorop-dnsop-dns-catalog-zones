@@ -14,7 +14,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <?rfc toc="yes"?>
 <?rfc tocappendix="yes"?>
 <!-- generate a ToC -->
-<?rfc tocdepth="3"?>
+<?rfc tocdepth="4"?>
 <!-- the number of levels of subsections in ToC. default: 3 -->
 <!-- control references -->
 <?rfc symrefs="yes"?>
@@ -210,6 +210,100 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<xref target="RFC1035" /> and they will be ignored. A single NS
 	RR with an NSDNAME field containing the absolute name "invalid."
 	is recommended <xref target="RFC2606" />.</t>
+      </section>
+
+      <section title="New RR TYPEs to represent data" anchor="sec-rrtypes">
+	<t>This section introduces new RR TYPEs to represent some types
+	of data for which no uncontroversial representation is currently
+	available. These are used in <xref target="sec-types" />.</t>
+
+	<section title="BOOL RR TYPE (boolean condition)" anchor="sec-bool">
+	  <t>The BOOL RR TYPE represents a single boolean valued datum
+	  in its RDATA.</t>
+
+	  <section title="BOOL RDATA wire format">
+	    <t>The BOOL RDATA consists of a single octet (RDLENGTH is
+	    1). A zero valued octet represents the false condition and a
+	    non-zero valued octet represents the true
+	    condition. Implementations SHOULD use an octet value of 1 to
+	    represent true conditions.</t>
+	  </section>
+
+	  <section title="BOOL RDATA presentation format">
+	    <t>The BOOL RDATA's presentation is represented with the
+	    mnemonic "FALSE" for the false condition, and "TRUE" for the
+	    true condition. The presentation is case-insensitive.</t>
+	  </section>
+
+	  <section title="BOOL RR example">
+	    <t>The following example shows a BOOL RR:
+	    <figure>
+	      <artwork>
+		is.ready.example.org. 3600 IN BOOL TRUE
+	      </artwork>
+	    </figure>
+	    </t>
+	  </section>
+	</section>
+
+	<section title="FLOAT RR TYPE (floating-point value)" anchor="sec-float">
+	  <t>The FLOAT RR TYPE represents a number in IEEE 754
+	  double-precision floating point representation in its
+	  RDATA.</t>
+
+	  <section title="FLOAT RDATA wire format">
+	    <t>The FLOAT RDATA consists of a number in IEEE 754
+	    double-precision floating point representation <xref
+	    target="IEEE.754.1985" /> in network byte order, which
+	    occupies 8 octets (RDLENGTH is 8).</t>
+	  </section>
+
+	  <section title="FLOAT RDATA presentation format">
+	    <t>The FLOAT RDATA's presentation uses the representation of
+	    an unsuffixed "floating constant" as defined in the C
+	    programming language standard <xref target="ISO.9899.1990"
+	    />.</t>
+	  </section>
+
+	  <section title="FLOAT RR example">
+	    <t>The following example shows a FLOAT RR:
+	  <figure>
+	    <artwork>
+	decay-rate.example.org. 3600 IN FLOAT 0.33333333
+	    </artwork>
+	  </figure>
+	    </t>
+	  </section>
+	</section>
+
+	<section title="INT RR TYPE (64-bit signed integer value)" anchor="sec-int">
+	  <t>The INT RR TYPE represents a 64-bit signed integer in its
+	  RDATA.</t>
+
+	  <section title="INT RDATA wire format">
+	    <t>The INT RDATA consists of a 64-bit signed integer in
+	    two's complement representation, in network byte order,
+	    which occupies 8 octets (RDLENGTH is 8).</t>
+	  </section>
+
+	  <section title="INT RDATA presentation format">
+	    <t>The INT RDATA's presentation uses the representation of
+	    an unsuffixed "integer constant" as defined in the C
+	    programming language standard <xref target="ISO.9899.1990"
+	    /> of the type matching a 64-bit signed integer on that
+	    platform.</t>
+	  </section>
+
+	  <section title="INT RR example">
+	    <t>The following example shows a INT RR:
+	  <figure>
+	    <artwork>
+	counter-increment.example.org. 3600 IN INT -1
+	    </artwork>
+	  </figure>
+	    </t>
+	  </section>
+	</section>
       </section>
 
       <section title="Zone property owner names">
@@ -577,7 +671,39 @@ please see http://xml.resource.org/authoring/README.html. -->
     </section>
 
     <section title="IANA considerations">
-      <t>This document has no actions for IANA.</t>
+      <t>This document defines new resource record types, titled BOOL,
+      FLOAT, INT, NAME, and UINT (see <xref target="sec-rrtypes" />),
+      assigned values as follows from the Resource Record (RR) TYPEs
+      space [to be removed upon publication:
+      https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-11].</t>
+
+      <texttable>
+
+        <ttcol>TYPE</ttcol>
+        <ttcol>Value</ttcol>
+        <ttcol>Meaning</ttcol>
+
+        <c>BOOL</c>
+        <c>TBD</c>
+        <c>Boolean value</c>
+
+        <c>FLOAT</c>
+        <c>TBD</c>
+        <c>IEEE 754 double-precision number</c>
+
+        <c>INT</c>
+        <c>TBD</c>
+        <c>64-bit signed integer</c>
+
+        <c>NAME</c>
+        <c>TBD</c>
+        <c>DNS name</c>
+
+        <c>UINT</c>
+        <c>TBD</c>
+        <c>64-bit unsigned integer</c>
+
+      </texttable>
     </section>
 
     <section title="Acknowledgements">
@@ -614,6 +740,9 @@ please see http://xml.resource.org/authoring/README.html. -->
       <?rfc include="reference.RFC.2782.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
       <?rfc include="reference.RFC.3596.xml"?>
+      <?rfc include="reference.IEEE.754.1985.xml"?>
+      <?rfc include="reference.FIPS.180-1.1995.xml"?>
+      <?rfc include="reference.ISO.9899.1990.xml"?>
     </references>
 
     <references title="Informative references">
@@ -653,14 +782,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  target="I-D.ietf-dnsop-dns-terminology" />.</t>
 
 	  <t hangText="RDATA hash:">The hexadecimal format 40-digit
-	  SHA-1 digest, of the RDATA of the corresponding RR. For RDATA
-	  containing DNS names, no name compression must be in use,
-	  i.e., the name must be in its full expanded wire data format
-	  when it is hashed.</t>
+	  SHA-1 <xref target="FIPS.180-1.1995" /> digest, of the RDATA
+	  of the corresponding RR. For RDATA containing DNS names, no
+	  name compression must be in use, i.e., the name must be in its
+	  full expanded wire data format when it is hashed.</t>
 
 	  <t hangText="Member zone name hash:">The hexadecimal format
-	  40-digit SHA-1 digest, of a zone name in uncompressed wire
-	  format.</t>
+	  40-digit SHA-1 <xref target="FIPS.180-1.1995" /> digest, of a
+	  zone name in uncompressed wire format.</t>
 
 	  <t hangText="Secondary nameserver:">An authoritative server
 	  which uses zone transfer to retrieve the zone. Also see <xref
