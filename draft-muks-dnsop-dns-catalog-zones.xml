@@ -424,47 +424,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  be checked by the implementation.</t>
 	</section>
 
-	<section title="Ordered list of names" anchor="sec-olist">
-	  <t>Let N be an absolute name formed by concatenating the RDATA
-	  hash (see <xref target="sec-glossary" />), the name of the
-	  property, and the catalog zone name in that order, such that N
-	  is a unique owner name in the catalog zone.</t>
-
-	  <t>Then, a property containing an ordered list of names as
-	  value is specified using multiple SRV RRs <xref
-	  target="RFC2782" /> with owner name set to N. The RDATA of
-	  each SRV RR contains the Priority, Weight, Port and Target
-	  fields. Over multiple SRV RRs, the Target field should be set
-	  to each name in the list of the property's value
-	  respectively. The &lt;Priority, Weight, Port&gt; fields in
-	  that sequence form a sort ordering tuple, and their values
-	  should be set to numbers that represents this name's relative
-	  order (in ascending order) in the ordered list of names. As
-	  Priority, Weight and Port are 16-bit fields, it's possible to
-	  order 1&lt;&lt;48 different names within a single zone
-	  property value. It is advised to separate the sort ordering
-	  tuple values sufficiently with gaps so that list items can be
-	  introduced in-between without significant change to the
-	  existing records' sort ordering tuple values.</t>
-
-	  <t>For example, if a catalog zone is named "cat1.example.org."
-	  and contains a property "prop3" with its value being an
-	  ordered list of three names "n1.example.com.",
-	  "n2.example.com." and "n3.example.com." in that order, the
-	  corresponding RRs may look as follows:</t>
-
-	  <figure>
-	    <artwork>
-	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 100 n1.example.com.
-	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 200 n2.example.com.
-	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 300 n3.example.com.
-	    </artwork>
-	  </figure>
-
-	  <t>Here, the property "prop3" can contain one or more names as
-	  its value and they are ordered.</t>
-	</section>
-
 	<section title="Unordered list of networks of addresses" anchor="sec-network">
 	  <t>Let N be an absolute name formed by concatenating the RDATA
 	  hash (see <xref target="sec-glossary" />), the name of the
