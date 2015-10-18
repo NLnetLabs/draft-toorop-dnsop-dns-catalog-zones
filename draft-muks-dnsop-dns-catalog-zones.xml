@@ -349,10 +349,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="Strings" anchor="sec-string">
-	  <t>A property with a string as value is specified using a TXT
-	  RR <xref target="RFC1035" /> with owner name set to the name
-	  of the property as a sub-domain of the catalog zone name, and
-	  RDATA set to the property value.</t>
+	  <t>A property with a single string as value is specified using
+	  a single TXT RR <xref target="RFC1035" /> with owner name set
+	  to the name of the property as a sub-domain of the catalog
+	  zone name, and RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
@@ -365,9 +365,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    </artwork>
 	  </figure>
 
-	  <t>Here, "prop0" can only contain one string, though it may
-	  consist of multiple &lt;character-string&gt;s <xref
-	  target="RFC1035" />.</t>
+	  <t>Here, "prop0" can contain multiple TXT RRs at that node of
+	  the domain name space <xref target="RFC1034" />. The single
+	  string property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Single names" anchor="sec-sname">
@@ -424,47 +424,39 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  be checked by the implementation.</t>
 	</section>
 
-	<section title="Unordered list of networks of addresses" anchor="sec-network">
-	  <t>Let N be an absolute name formed by concatenating the RDATA
-	  hash (see <xref target="sec-glossary" />), the name of the
-	  property, and the catalog zone name in that order, such that N
-	  is a unique owner name in the catalog zone.</t>
+	<section title="List of network addresses" anchor="sec-network">
+	  <t>A property with a list of network addresses as value is
+	  specified using a single APL RR <xref target="RFC3123" /> with
+	  owner name set to the name of the property as a sub-domain of
+	  the catalog zone name, and RDATA set to the property value. In
+	  its presentation format, the "!" character (corresponding to
+	  the negation flag) is used to negate a network element. The
+	  exact meaning of a negated network element is left to be
+	  described by the property APL is used for. Note that the AFL
+	  RR TYPE is defined only for the IN(1) RR CLASS.</t>
 
-	  <t>Then, a property containing an unordered list of networks
-	  of addresses as value is specified using multiple MX RRs <xref
-	  target="RFC1035" /> with owner name set to N, and each RR's
-	  RDATA set to a representation for each address in the list of
-	  the property's value respectively, as given below.</t>
-
-	  <t>The RDATA of an MX RR contains the PREFERENCE and EXCHANGE
-	  fields. The PREFERENCE field should be set to the prefix
-	  length (left-most significant bits) of the network address and
-	  the EXCHANGE field should be set to a DNS name in either
-	  IN-ADDR.ARPA (<xref target="RFC0883" /> and <xref
-	  target="RFC0973" />) or IP6.ARPA (<xref target="RFC3596" />)
-	  representation.</t>
-
-	  <t>For example, if a catalog zone is named "c1.example.org."
-	  and contains a property "prop" with value as network addresses
-	  [10.98.192.0/255.255.255.0] and [10.98.193.40/32], the
-	  corresponding RRs may look as follows:</t>
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "allow" with
+	  value [10.98.192.0/24, 192.168.0.0/24] as the list of
+	  networks, the corresponding RR may look as follows:</t>
 
 	  <figure>
 	    <artwork>
-	&lt;hash&gt;.prop.c1.example.org. 3600 IN MX 24 0.192.98.10.in-addr.arpa.
-	&lt;hash&gt;.prop.c1.example.org. 3600 IN MX 32 40.193.98.10.in-addr.arpa.
+	allow.catalog1.example.org. 3600 IN APL (1:10.98.192.0/24
+	                                         1:192.168.0.0/24)
 	    </artwork>
 	  </figure>
 
-	  <t>Here, the property "prop" can contain one or more networks
-	  of addresses as its value but they are not ordered.</t>
+	  <t>Here, "allow" can contain multiple APL RRs at that node of
+	  the domain name space <xref target="RFC1034" />. The single
+	  APL RR property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Single host address">
-	  <t>A single host address is represented using the unordered
-	  list of networks of addresses data type (see <xref
-	  target="sec-network" />) with a suitable network mask to
-	  result in a single network address.</t>
+	  <t>A single host address is represented using the list of
+	  network addresses data type (see <xref target="sec-network"
+	  />) with a suitable network and prefix to result in a single
+	  network address.</t>
 	</section>
 
         <section title="Comment">
@@ -726,15 +718,13 @@ please see http://xml.resource.org/authoring/README.html. -->
   <back>
 
     <references title="Normative references">
-      <?rfc include="reference.RFC.0883.xml"?>
-      <?rfc include="reference.RFC.0973.xml"?>
       <?rfc include="reference.RFC.1034.xml"?>
       <?rfc include="reference.RFC.1035.xml"?>
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.2136.xml"?>
       <?rfc include="reference.RFC.2606.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
-      <?rfc include="reference.RFC.3596.xml"?>
+      <?rfc include="reference.RFC.3123.xml"?>
       <?rfc include="reference.IEEE.754.1985.xml"?>
       <?rfc include="reference.FIPS.180-1.1995.xml"?>
       <?rfc include="reference.ISO.9899.1990.xml"?>
