@@ -77,7 +77,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <abstract>
       <t>This document describes a method for automatic zone catalog
-      provisioning and synchronization among DNS master and slave
+      provisioning and synchronization among DNS primary and secondary
       nameservers by storing and transferring the catalogs as regular
       DNS zones.</t>
     </abstract>
@@ -88,18 +88,19 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <section title="Introduction">
       <t>DNS nameservers implement AXFR and IXFR for zone data
-      synchronization among a master and its slaves, but the list of
-      zones served (called a catalog in <xref target="RFC1035" />) is
-      not automatically synchronized. The administrator of a DNS
-      nameserver farm has to manually, or via an external application
-      layer, synchronize such zone catalogs among masters and their
-      slaves. This can be inconvenient, error-prone and dependent on the
-      nameserver implementation.</t>
+      synchronization among a primary and its secondary nameservers, but
+      the list of zones served (called a catalog in <xref
+      target="RFC1035" />) is not automatically synchronized. The
+      administrator of a DNS nameserver farm has to manually, or via an
+      external application layer, synchronize such zone catalogs among
+      primaries and their secondary nameservers. This can be
+      inconvenient, error-prone and dependent on the nameserver
+      implementation.</t>
 
       <t>A method for automatic zone catalog provisioning and
       synchronization is useful, so that the zone catalog can be
-      maintained in one master location by an administrator, similar to
-      zone data.</t>
+      maintained in one reference location by an administrator, similar
+      to zone data.</t>
 
       <t>This document describes one such method, in which the catalog
       is represented as a regular DNS zone called a "catalog zone", and
@@ -190,16 +191,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields
 	<xref target="RFC1035" /> are used during zone transfer. A
 	catalog zone's SOA SERIAL field MUST increase when an update is
-	made to the catalog zone's contents. Otherwise, slave
+	made to the catalog zone's contents. Otherwise, secondary
 	nameservers may not notice updates to the catalog zone's
 	contents.</t>
 	
 	<t>The SOA record's MINIMUM field <xref target="RFC1035" /> is
 	not applicable to catalog zones, as they are not intended to be
 	served via DNS QUERY. It SHOULD be set to 1 in all catalog
-	zones. [TBD/FIXME] Master and slave nameservers MUST NOT use
-	catalog zones with an unexpected value in the SOA MINIMUM field
-	as catalog zones, but they may be transferred.</t>
+	zones. [TBD/FIXME] Primary and secondary nameservers MUST NOT
+	use catalog zones with an unexpected value in the SOA MINIMUM
+	field as catalog zones, but they may be transferred.</t>
 
 	<t>As catalog zones are not intended to be part of the DNS, NS
 	records at the apex are not used but they are still required so
@@ -454,9 +455,9 @@ please see http://xml.resource.org/authoring/README.html. -->
       <section title="Catalog zone version">
 	<t>[TBD/FIXME] The catalog zone version is specified by an INT
 	resource record. All catalog zones MUST have this record
-	present. Master and slave nameservers MUST NOT use catalog zones
-	with an unexpected RDATA value in the INT RR, but they may be
-	transferred as ordinary zones.</t>
+	present. Primary and secondary nameservers MUST NOT use catalog
+	zones with an unexpected RDATA value in the INT RR, but they may
+	be transferred as ordinary zones.</t>
       </section>
 
       <section title="Examples of catalog zones">
@@ -484,37 +485,38 @@ please see http://xml.resource.org/authoring/README.html. -->
       running nameserver automatically without any manual
       intervention.</t>
       
-      <t>As with regular zones, master and slave nameservers for a
+      <t>As with regular zones, primary and secondary nameservers for a
       catalog zone may be operated by different administrators. The
-      slave nameservers may be configured to synchronize catalog zones
-      from the master, but the master's administrators may not have
-      any administrative access to the slaves.</t>
+      secondary nameservers may be configured to synchronize catalog
+      zones from the primary, but the primary's administrators may not
+      have any administrative access to the secondaries.</t>
       
-      <t>A catalog zone can be updated via DNS UPDATE on a master, or
-      via zone transfers. Nameservers MAY allow broken zones with
-      incorrect catalog zone syntax (as they are treated as regular
-      zones), but nameservers MUST NOT process such broken zones as
-      catalog zones. For the purpose of catalog processing, the broken
-      catalogs MUST be ignored.</t>
+      <t>A catalog zone can be updated via DNS UPDATE on a reference
+      primary nameserver, or via zone transfers. Nameservers MAY allow
+      broken zones with incorrect catalog zone syntax (as they are
+      treated as regular zones), but nameservers MUST NOT process such
+      broken zones as catalog zones. For the purpose of catalog
+      processing, the broken catalogs MUST be ignored.</t>
 
       <t>If there is a clash between an existing member zone's name and
       an incoming member zone's name (via transfer or update), the new
       instance of the zone MUST be ignored and an error SHOULD be
       logged.</t>
       
-      <t>When zones are introduced into a catalog zone, a master MUST
+      <t>When zones are introduced into a catalog zone, a primary MUST
       first make the new zones available for transfers before making the
       updated catalog zone available for transfer, or sending NOTIFY for
-      the catalog zone to slaves. Note that slaves may attempt to
-      transfer the catalog zone upon refresh timeout, so care must be
-      taken to make the member zones available before any update is
-      visible in the catalog zone.</t>
+      the catalog zone to secondaries. Note that secondary nameservers
+      may attempt to transfer the catalog zone upon refresh timeout, so
+      care must be taken to make the member zones available before any
+      update is visible in the catalog zone.</t>
 
-      <t>When zones are deleted from a catalog zone, a master MAY delete
-      the member zone immediately after notifying slaves. It is up to
-      the slave nameserver to handle this scenario correctly.</t>
+      <t>When zones are deleted from a catalog zone, a primary MAY
+      delete the member zone immediately after notifying secondaries. It
+      is up to the secondary nameserver to handle this scenario
+      correctly.</t>
       
-      <t>TBD: Transitive master-slave relationships</t>
+      <t>TBD: Transitive primary-secondary relationships</t>
       
     </section>
     
@@ -523,9 +525,10 @@ please see http://xml.resource.org/authoring/README.html. -->
       is absolutely essential for these transfers to be protected from
       unexpected modifications on the route. So, it is a requirement
       that catalog zone transfers MUST be authenticated using TSIG <xref
-      target="RFC2845" />. A master MUST NOT serve a catalog zone for
-      transfer without using TSIG and a slave MUST abandon an update to
-      a catalog zone that was received without using TSIG.</t>
+      target="RFC2845" />. A primary nameserver MUST NOT serve a catalog
+      zone for transfer without using TSIG and a secondary nameserver
+      MUST abandon an update to a catalog zone that was received without
+      using TSIG.</t>
 
       <t>DNS UPDATE <xref target="RFC2136" /> to catalog zones similarly
       MUST be authenticated using TSIG.</t>
@@ -584,6 +587,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <references title="Informative references">
       <?rfc include="reference.I-D.hunt-note-rr.xml"?>
+      <?rfc include="reference.I-D.ietf-dnsop-dns-terminology.xml"?>
       <reference anchor="RPZ" target="http://ftp.isc.org/isc/dnsrpz/isc-tn-2010-1.txt">
 	<front>
 	  <title>DNS Response Policy Zones (DNS RPZ)</title>
@@ -612,6 +616,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t hangText="Member zone:">A DNS zone whose configuration is
 	  published inside a catalog zone.</t>
 
+	  <t hangText="Primary nameserver:">An authoritative server
+	  configured to be the source of zone transfer to one or more
+	  [secondary] nameservers. Also see <xref
+	  target="I-D.ietf-dnsop-dns-terminology" />.</t>
+
 	  <t hangText="RDATA hash:">The hexadecimal format 40-digit
 	  SHA-1 digest, of the RDATA of the corresponding RR. For RDATA
 	  containing DNS names, no name compression must be in use,
@@ -621,6 +630,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t hangText="Member zone name hash:">The hexadecimal format
 	  40-digit SHA-1 digest, of a zone name in uncompressed wire
 	  format.</t>
+
+	  <t hangText="Secondary nameserver:">An authoritative server
+	  which uses zone transfer to retrieve the zone. Also see <xref
+	  target="I-D.ietf-dnsop-dns-terminology" />.</t>
 
 	  <t hangText="Zone property:">A configuration parameter of a
 	  zone, sometimes also called a zone option.</t>
@@ -638,35 +651,35 @@ please see http://xml.resource.org/authoring/README.html. -->
 	config options and adopt a minimal set that we can expect
 	most implementations to support.
 	</t>
-	<t>Catalog zone and member zones on different masters
+	<t>Catalog zone and member zones on different primary
+	nameservers
 	<vspace blankLines="1"/>
-	Will it be possible to setup a catalog zone on one
-	nameserver as master, and allow its member zones to be
-	served by different master namesservers?
+	Will it be possible to setup a catalog zone on one nameserver as
+	primary, and allow its member zones to be served by different
+	primary namesservers?
 	</t>
 	<t>Transitive relationships
 	<vspace blankLines="1"/>
-	For a catalog zone, a slave may be a master to a different
-	nameservers in a nameserver farm. In these transitive
-	relationships, zone configuration options (such as
-	also-notify and allow-transfer) may differ based on the
-	location of the master in the hierarchy. It may not be
-	possible to specify this within a catalog zone.
+	For a catalog zone, a secondary nameserver may be a primary
+	nameserver to a different set of nameservers in a nameserver
+	farm. In these transitive relationships, zone configuration
+	options (such as also-notify and allow-transfer) may differ
+	based on the location of the primary in the hierarchy. It may
+	not be possible to specify this within a catalog zone.
 	</t>
 	<t>Templates
 	<vspace blankLines="1"/>
-	Are support for config and zone data templates useful at
-	this level? They would add complexity across
-	implementations. If added, it would be better to restrict
-	templates at the master and let the slave receive regular
-	expanded zones.
+	Are support for config and zone data templates useful at this
+	level? They would add complexity across implementations. If
+	added, it would be better to restrict templates at the primary
+	nameserver and let the secondary receive regular expanded zones.
 	</t>
 	<t>Overriding controls
 	<vspace blankLines="1"/>
 	A way to override zone config options (as prescribed by the
-	catalog zones) on slaves was requested. As this would be
-	configured outside catalog zones, it may be better to leave
-	this to implementations.
+	catalog zones) on secondary nameservers was requested. As this
+	would be configured outside catalog zones, it may be better to
+	leave this to implementations.
 	</t>
 	<t>Choice of hash function
 	<vspace blankLines="1"/>
@@ -695,7 +708,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <t>
 	    draft-muks-dnsop-dns-catalog-zones-01
             <vspace/>
-            TBD.
+            TBD. Use politically correct language.
           </t>
 
         </list>
