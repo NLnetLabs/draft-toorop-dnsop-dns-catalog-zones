@@ -213,7 +213,7 @@ please see http://xml.resource.org/authoring/README.html. -->
       </section>
 
       <section title="Zone property owner names">
-	<t>TBD.</t>
+	<t>TBD: Explain naming of owner names and hashing.</t>
       </section>
 
       <section title="Zone property value data types" anchor="sec-types">
@@ -433,6 +433,26 @@ please see http://xml.resource.org/authoring/README.html. -->
 	be transferred as ordinary zones.</t>
       </section>
 
+      <section title="List of member zones">
+	<t>The list of member zones are specified as an unordered list
+	(see <xref target="sec-unolist" />) of names under the owner
+	name "zones" where "zones" is a sub-domain of the catalog
+	zone.</t>
+
+	<t>For example, if a catalog zone is named
+	"catalog1.example.org." and lists 3 zones "example.com.",
+	"example.net." and "example.org.", the RRs may look as
+	follows:</t>
+
+	<figure>
+	  <artwork>
+	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
+	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
+	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
+	  </artwork>
+	</figure>
+      </section>
+
       <section title="Zone configuration properties" anchor="sec-properties">
 	<t>TBD: Prepare a list of zone configuration properties that are
 	common to DNS implementations. This is so that a company may
@@ -452,26 +472,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<section title="zone-soa-default-refresh">
 	  <t>TBD.</t>
 	</section>
-      </section>
-
-      <section title="List of member zones">
-	<t>The list of member zones are specified as an unordered list
-	(see <xref target="sec-unolist" />) of names under the owner
-	name "zones" where "zones" is a sub-domain of the catalog
-	zone.</t>
-
-	<t>For example, if a catalog zone is named
-	"catalog1.example.org." and lists 3 zones "example.com.",
-	"example.net." and "example.org.", the RRs may look as
-	follows:</t>
-
-	<figure>
-	  <artwork>
-	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
-	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
-	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
-	  </artwork>
-	</figure>
       </section>
 
       <section title="Examples of catalog zones">
