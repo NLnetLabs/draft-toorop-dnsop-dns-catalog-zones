@@ -194,7 +194,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	made to the catalog zone's contents. Otherwise, secondary
 	nameservers may not notice updates to the catalog zone's
 	contents.</t>
-	
+
 	<t>The SOA record's MINIMUM field <xref target="RFC1035" /> is
 	not applicable to catalog zones, as they are not intended to be
 	served via DNS QUERY. It SHOULD be set to 1 in all catalog
@@ -210,6 +210,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<xref target="RFC1035" /> and they will be ignored. A single NS
 	RR with an NSDNAME field containing the absolute name "invalid."
 	is recommended <xref target="RFC2606" />.</t>
+      </section>
+
+      <section title="Zone property owner names">
+	<t>TBD.</t>
       </section>
 
       <section title="Zone property value data types" anchor="sec-types">
@@ -240,12 +244,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  CNAME RR <xref target="RFC1035" /> with owner name set to the
 	  name of the property as a sub-domain of the catalog zone name,
 	  and RDATA set to the property value.</t>
-	  
+
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop1" with
 	  value "val1.example.com.", the corresponding RR may look as
 	  follows:</t>
-	  
+
 	  <figure>
 	    <artwork>
 	prop1.catalog1.example.org. 3600 IN CNAME val1.example.com.
@@ -262,19 +266,19 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  hash (see <xref target="sec-glossary" />), the name of the
 	  property, and the catalog zone name in that order, such that N
 	  is a unique owner name in the catalog zone.</t>
-	  
+
 	  <t>Then, a property containing an unordered list of names as
 	  value is specified using multiple PTR RRs <xref
 	  target="RFC1035" /> with owner name set to N, and each RR's
 	  RDATA set to each name in the list of the property's value
 	  respectively.</t>
-	  
+
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop2" with
 	  its value being an unordered list of two names
 	  "a.example.com." and "b.example.com.", the corresponding RRs
 	  may look as follows:</t>
-	  
+
 	  <figure>
 	    <artwork>
 	&lt;hash&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
@@ -291,7 +295,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  hash (see <xref target="sec-glossary" />), the name of the
 	  property, and the catalog zone name in that order, such that N
 	  is a unique owner name in the catalog zone.</t>
-	  
+
 	  <t>Then, a property containing an ordered list of names as
 	  value is specified using multiple SRV RRs <xref
 	  target="RFC2782" /> with owner name set to N. The RDATA of
@@ -308,13 +312,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  tuple values sufficiently with gaps so that list items can be
 	  introduced in-between without significant change to the
 	  existing records' sort ordering tuple values.</t>
-	  
+
 	  <t>For example, if a catalog zone is named "cat1.example.org."
 	  and contains a property "prop3" with its value being an
 	  ordered list of three names "n1.example.com.",
 	  "n2.example.com." and "n3.example.com." in that order, the
 	  corresponding RRs may look as follows:</t>
-	  
+
 	  <figure>
 	    <artwork>
 	&lt;hash&gt;.prop3.cat1.example.org. 3600 IN SRV 0 0 100 n1.example.com.
@@ -421,6 +425,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       </section>
 
+      <section title="Catalog zone version">
+	<t>[TBD/FIXME] The catalog zone version is specified by an INT
+	resource record. All catalog zones MUST have this record
+	present. Primary and secondary nameservers MUST NOT use catalog
+	zones with an unexpected RDATA value in the INT RR, but they may
+	be transferred as ordinary zones.</t>
+      </section>
+
       <section title="Zone configuration properties" anchor="sec-properties">
 	<t>TBD: Prepare a list of zone configuration properties that are
 	common to DNS implementations. This is so that a company may
@@ -452,7 +464,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	"catalog1.example.org." and lists 3 zones "example.com.",
 	"example.net." and "example.org.", the RRs may look as
 	follows:</t>
-	
+
 	<figure>
 	  <artwork>
 	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
@@ -462,74 +474,83 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</figure>
       </section>
 
-      <section title="Catalog zone version">
-	<t>[TBD/FIXME] The catalog zone version is specified by an INT
-	resource record. All catalog zones MUST have this record
-	present. Primary and secondary nameservers MUST NOT use catalog
-	zones with an unexpected RDATA value in the INT RR, but they may
-	be transferred as ordinary zones.</t>
-      </section>
-
       <section title="Examples of catalog zones">
 	<t>TBD.</t>
       </section>
     </section>
 
     <section title="Nameserver behavior and requirements" anchor="sec-impl">
-      <t>TBD: Explain nameserver behavior briefly here.</t>
+      <section title="General requirements">
+	<t>TBD: Explain nameserver behavior in a more detailed way
+	here. It is under-specified.</t>
 
-      <t>As it is a regular DNS zone, a catalog zone can be transferred
-      using DNS zone transfers among nameservers. Catalog zones are not
-      part of the DNS, so they are not intended to be served via DNS
-      QUERY. [TBD/FIXME] Nameserver software may start additional
-      section processing for various RR types if they are queried. It
-      may also be inconvenient to serve some contents of catalog zones
-      via DNS queries anyway due to the nature of their
-      representation. A separate method of querying entries inside the
-      catalog zone may be made available by nameserver
-      implementations.</t>
-      
-      <t>Catalog updates should be automatic, i.e., when a nameserver
-      that supports catalog zones completes a zone transfer for a
-      catalog zone, it SHOULD apply changes to the catalog within the
-      running nameserver automatically without any manual
-      intervention.</t>
-      
-      <t>As with regular zones, primary and secondary nameservers for a
-      catalog zone may be operated by different administrators. The
-      secondary nameservers may be configured to synchronize catalog
-      zones from the primary, but the primary's administrators may not
-      have any administrative access to the secondaries.</t>
-      
-      <t>A catalog zone can be updated via DNS UPDATE on a reference
-      primary nameserver, or via zone transfers. Nameservers MAY allow
-      broken zones with incorrect catalog zone syntax (as they are
-      treated as regular zones), but nameservers MUST NOT process such
-      broken zones as catalog zones. For the purpose of catalog
-      processing, the broken catalogs MUST be ignored.</t>
+	<t>As it is a regular DNS zone, a catalog zone can be
+	transferred using DNS zone transfers among nameservers. Catalog
+	zones are not part of the DNS, so they are not intended to be
+	served via DNS QUERY. [TBD/FIXME] Nameserver software may start
+	additional section processing for various RR types if they are
+	queried. It may also be inconvenient to serve some contents of
+	catalog zones via DNS queries anyway due to the nature of their
+	representation. A separate method of querying entries inside the
+	catalog zone may be made available by nameserver
+	implementations.</t>
 
-      <t>If there is a clash between an existing member zone's name and
-      an incoming member zone's name (via transfer or update), the new
-      instance of the zone MUST be ignored and an error SHOULD be
-      logged.</t>
-      
-      <t>When zones are introduced into a catalog zone, a primary MUST
-      first make the new zones available for transfers before making the
-      updated catalog zone available for transfer, or sending NOTIFY for
-      the catalog zone to secondaries. Note that secondary nameservers
-      may attempt to transfer the catalog zone upon refresh timeout, so
-      care must be taken to make the member zones available before any
-      update is visible in the catalog zone.</t>
+	<t>Catalog updates should be automatic, i.e., when a nameserver
+	that supports catalog zones completes a zone transfer for a
+	catalog zone, it SHOULD apply changes to the catalog within the
+	running nameserver automatically without any manual
+	intervention.</t>
 
-      <t>When zones are deleted from a catalog zone, a primary MAY
-      delete the member zone immediately after notifying secondaries. It
-      is up to the secondary nameserver to handle this scenario
-      correctly.</t>
-      
-      <t>TBD: Transitive primary-secondary relationships</t>
-      
+	<t>As with regular zones, primary and secondary nameservers for
+	a catalog zone may be operated by different administrators. The
+	secondary nameservers may be configured to synchronize catalog
+	zones from the primary, but the primary's administrators may not
+	have any administrative access to the secondaries.</t>
+
+	<t>A catalog zone can be updated via DNS UPDATE on a reference
+	primary nameserver, or via zone transfers. Nameservers MAY allow
+	broken zones with incorrect catalog zone syntax (as they are
+	treated as regular zones), but nameservers MUST NOT process such
+	broken zones as catalog zones. For the purpose of catalog
+	processing, the broken catalogs MUST be ignored.</t>
+
+	<t>If there is a clash between an existing member zone's name
+	and an incoming member zone's name (via transfer or update), the
+	new instance of the zone MUST be ignored and an error SHOULD be
+	logged.</t>
+
+	<t>When zones are introduced into a catalog zone, a primary MUST
+	first make the new zones available for transfers before making
+	the updated catalog zone available for transfer, or sending
+	NOTIFY for the catalog zone to secondaries. Note that secondary
+	nameservers may attempt to transfer the catalog zone upon
+	refresh timeout, so care must be taken to make the member zones
+	available before any update is visible in the catalog zone.</t>
+
+	<t>When zones are deleted from a catalog zone, a primary MAY
+	delete the member zone immediately after notifying
+	secondaries. It is up to the secondary nameserver to handle this
+	scenario correctly.</t>
+
+	<t>TBD: Transitive primary-secondary relationships</t>
+      </section>
+
+      <section title="Updating catalog zones">
+	<t>TBD: Explain updation of catalog zones using DNS UPDATE.</t>
+      </section>
+
+      <section title="Implementation notes">
+	<t>Catalog zones on secondary nameservers would have to be setup
+	manually, perhaps as static configuration, similar to how
+	ordinary DNS zones are configured. Members of such catalog zones
+	will be automatically synchronized by the secondary after the
+	catalog zone is configured.</t>
+
+	<t>TBD: Describe queries to catalog zones and why an AXFR or
+	out-of-band method is necessary.</t>
+      </section>
     </section>
-    
+
     <section title="Security considerations">
       <t>As catalog zones are transmitted using DNS zone transfers, it
       is absolutely essential for these transfers to be protected from
@@ -564,13 +585,13 @@ please see http://xml.resource.org/authoring/README.html. -->
       proposals that were evaluated at ISC for easy zone management. The
       chosen method of storing the catalog as a regular DNS zone was
       proposed by Stephen Morris.</t>
-      
+
       <t>We later discovered that Paul Vixie's earlier <xref
       target="Metazones" /> proposal implemented a similar approach and
       reviewed it. Catalog zones borrows some syntax ideas from
       Metazones, as both share this scheme of representing the catalog
       as a regular DNS zone.</t>
-      
+
       <t>Thanks to Ray Bellis, Brian Conry, Evan Hunt, Witold Krecicki,
       Victoria Risk for reviewing draft proposals and providing support,
       comments and suggestions.</t>
