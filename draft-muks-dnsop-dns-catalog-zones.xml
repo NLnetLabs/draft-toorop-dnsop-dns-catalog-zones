@@ -503,11 +503,27 @@ please see http://xml.resource.org/authoring/README.html. -->
       </section>
 
       <section title="Catalog zone version">
-	<t>[TBD/FIXME] The catalog zone version is specified by an INT
-	resource record. All catalog zones MUST have this record
-	present. Primary and secondary nameservers MUST NOT use catalog
-	zones with an unexpected RDATA value in the INT RR, but they may
-	be transferred as ordinary zones.</t>
+	<t>The catalog zone version is specified by an unsigned integer
+	property with the property name "version". All catalog zones
+	MUST have this property present. Primary and secondary
+	nameservers MUST NOT use catalog zones with an unexpected value
+	value in this property, but they may be transferred as ordinary
+	zones. For this memo, the "version" property MUST be set to
+	0.</t>
+
+	<t>For example, if a catalog zone is named
+	"catalog1.example.org.", the corresponding RR MUST look as
+	follows:</t>
+
+	<figure>
+	  <artwork>
+	version.catalog1.example.org. 3600 IN UINT 0
+	  </artwork>
+	</figure>
+
+	<t>Here, "version" can contain multiple UINT RRs at that node of
+	the domain name space <xref target="RFC1034" />. The single
+	string property SHOULD be checked by the implementation.</t>
       </section>
 
       <section title="List of member zones">
