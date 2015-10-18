@@ -167,10 +167,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	value being represented. <xref target="sec-types" /> describes
 	how various zone property value types are represented.</t>
 
-	<t>[TBD/FIXME] The CLASS field of the RR MUST be set to the
-	value 1 (IN) <xref target="RFC1035" />. This is because RR types
-	such as SRV and APL (which catalog zones overloads the meaning
-	of) are defined only for the IN class. </t>
+	<t>The CLASS field of the RR MUST be set to the value 1 (IN)
+	<xref target="RFC1035" />. This is because some RR TYPEs such as
+	APL used by catalog zones are defined only for the IN
+	class.</t>
 
 	<t>The TTL field is not used as these RRs are not intended to be
 	served via DNS QUERY. It SHOULD be set to 1.</t>
@@ -733,7 +733,6 @@ please see http://xml.resource.org/authoring/README.html. -->
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.2136.xml"?>
       <?rfc include="reference.RFC.2606.xml"?>
-      <?rfc include="reference.RFC.2782.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
       <?rfc include="reference.RFC.3596.xml"?>
       <?rfc include="reference.IEEE.754.1985.xml"?>
