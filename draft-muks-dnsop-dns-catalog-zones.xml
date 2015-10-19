@@ -88,28 +88,29 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <section title="Introduction">
       <t>DNS nameservers implement AXFR and IXFR for zone data
-      synchronization among a primary and its secondary nameservers, but
-      the list of zones served (called a catalog in <xref
-      target="RFC1035" />) is not automatically synchronized. The
-      administrator of a DNS nameserver farm has to manually, or via an
-      external application layer, synchronize such zone catalogs among
-      primaries and their secondary nameservers. This can be
-      inconvenient, error-prone and dependent on the nameserver
-      implementation.</t>
+      synchronization among a zone's primary its and secondary
+      nameservers, but the list of zones served by the primary (called a
+      catalog in <xref target="RFC1035" />) is not automatically
+      synchronized. The administrator of a DNS nameserver farm has to
+      manually, or via an external application layer, synchronize such
+      zone catalogs among primaries and their secondary
+      nameservers. This can be inconvenient, error-prone and dependent
+      on the nameserver implementation.</t>
 
       <t>A method for automatic zone catalog provisioning and
       synchronization is useful, so that the zone catalog can be
-      maintained in one reference location by an administrator, similar
-      to zone data.</t>
+      maintained in a reference location by an administrator, similar to
+      zone data.</t>
 
       <t>This document describes one such method, in which the catalog
       is represented as a regular DNS zone called a "catalog zone", and
-      transferred using zone transfers. The representation of catalogs
-      within DNS zones is specified and nameserver requirements are
-      listed so that DNS implementations can support catalog zones.</t>
+      transferred using DNS zone transfers. The representation of
+      catalogs within DNS zones is specified and nameserver requirements
+      are listed so that DNS implementations can support catalog
+      zones.</t>
 
       <t>The contents and representation of catalog zones are described
-      under <xref target="sec-catzones" />. Nameserver behavior is
+      in <xref target="sec-catzones" />. Nameserver behavior is
       described in <xref target="sec-impl" />. A glossary of some terms
       used in this memo is provided in <xref target="sec-glossary"
       />.</t>
@@ -129,26 +130,29 @@ please see http://xml.resource.org/authoring/README.html. -->
 	zones to include other catalog zones, but template zone
 	configuration present in a catalog zone only applies to its
 	immediate member zones. A catalog zone is meant to be used to
-	provision DNS catalogs to nameservers via zone transfers, for
-	the purpose of setting up member zones to be served from these
-	nameservers.</t>
+	provision DNS catalogs to secondary nameservers via zone
+	transfers, for the purpose of setting up member zones to be
+	served from these secondary nameservers.</t>
 
-	<t>A catalog zone overrides the meanings of some RR types to
+	<t>A catalog zone uses some RR TYPEs such as PTR differently to
 	achieve its purpose. Though this may be controversial, the
 	situation is not different from other similar zone-based
 	representations such as response-policy zones <xref target="RPZ"
-	/>. Other than being transmitted via zone transfers, catalog
-	zones do not participate in the DNS and are not intended to be
-	served via DNS QUERY <xref target="RFC1035" />.</t>
+	/>. However, none of the RR TYPEs used by catalog zones can
+	incur any additional section processing during DNS QUERY. Other
+	than being transmitted via zone transfers, catalog zones do not
+	participate in the DNS and are not intended to be served via DNS
+	QUERY <xref target="RFC1035" />.</t>
 
-	<t>Member zones' configuration is specified as a list of zone
-	properties. Each zone property has a name and an associated
-	value of a specific data type. Zone property value data types
-	are described in <xref target="sec-types" />. Zone property
-	names are case-insensitive. Each zone property uses one data
-	type only for its values. A list of permitted zone property
-	names and their data types is given in <xref
-	target="sec-properties" />.</t>
+	<t>Member zones' configuration is specified as a map of zone
+	properties, represented as a subtree of a node <xref
+	target="RFC1034" /> in the domain name space inside a catalog
+	zone. This is described in <xref target="sec-map" />. Each zone
+	property has a name and an associated value of a specific data
+	type. Zone property value data types are described in <xref
+	target="sec-types" />. A list of permitted zone property names
+	and their data types is given in <xref target="sec-properties"
+	/>.</t>
 
 	<t>TBD: Transitive catalogs</t>
       </section>
@@ -168,13 +172,15 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<t>The CLASS field of the RR MUST be set to the value 1 (IN)
 	<xref target="RFC1035" />. This is because some RR TYPEs such as
-	APL used by catalog zones are defined only for the IN
-	class.</t>
+	APL used by catalog zones are defined only for the IN CLASS.</t>
 
-	<t>The TTL field is not used as these RRs are not intended to be
-	served via DNS QUERY. It SHOULD be set to 1.</t>
+	<t>The TTL field's value is not specially defined by this memo.
+	Catalog zones do not participate in the DNS and are not intended
+	to be served via DNS QUERY <xref target="RFC1035" />, but this
+	memo does not restrict their use.</t>
 
-	<t>The RDLENGTH field contains the length of the RDATA field.</t>
+	<t>The RDLENGTH field contains the length of the RDATA
+	field.</t>
 
 	<t>The content of the RDATA field depends on the type of catalog
 	zone property value being represented. <xref target="sec-types"
@@ -194,31 +200,39 @@ please see http://xml.resource.org/authoring/README.html. -->
 	nameservers may not notice updates to the catalog zone's
 	contents.</t>
 
+	<t>The SOA record's MINIMUM field's value is not specially
+	defined by this memo.  Catalog zones do not participate in the
+	DNS and are not intended to be served via DNS QUERY <xref
+	target="RFC1035" />, but this memo does not restrict their
+	use.</t>
+
 	<t>As catalog zones do not participate in the DNS, NS records at
 	the apex are not used but they are still required so that
 	catalog zones are syntactically correct DNS zones. No parent
 	delegation for the catalog zone is required. Any valid DNS name
 	can be used in the NSDNAME field of such NS records <xref
-	target="RFC1035" /> and they will be ignored. A single NS RR
+	target="RFC1035" /> and they MUST be ignored. A single NS RR
 	with an NSDNAME field containing the absolute name "invalid."
 	is recommended <xref target="RFC2606" />.</t>
       </section>
 
       <section title="New RR TYPEs to represent data" anchor="sec-rrtypes">
 	<t>This section introduces new RR TYPEs to represent some types
-	of data for which no uncontroversial representation is currently
-	available. These are used in <xref target="sec-types" />.</t>
+	of data for which no convenient representation is currently
+	available. These are used in <xref target="sec-types" />. These
+	are general-purpose RR TYPEs and their use is not restricted to
+	catalog zones.</t>
 
 	<section title="BOOL RR TYPE (boolean condition)" anchor="sec-bool">
-	  <t>The BOOL RR TYPE represents a single boolean valued datum
-	  in its RDATA.</t>
+	  <t>The BOOL RR TYPE represents a single boolean condition in
+	  its RDATA.</t>
 
 	  <section title="BOOL RDATA wire format">
 	    <t>The BOOL RDATA consists of a single octet (RDLENGTH is
 	    1). A zero valued octet represents the false condition and a
 	    non-zero valued octet represents the true
-	    condition. Implementations SHOULD use an octet value of 1 to
-	    represent true conditions.</t>
+	    condition. Implementations SHOULD generate an octet value of
+	    1 to represent true conditions.</t>
 	  </section>
 
 	  <section title="BOOL RDATA presentation format">
@@ -228,10 +242,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  </section>
 
 	  <section title="BOOL RR example">
-	    <t>The following example shows a BOOL RR:
+	    <t>The following example shows BOOL RRs:
 	    <figure>
 	      <artwork>
-		is.ready.example.org. 3600 IN BOOL TRUE
+		is-ready.example.org. 3600 IN BOOL TRUE
+		allow-query.example.org. 3600 IN BOOL False
 	      </artwork>
 	    </figure>
 	    </t>
@@ -239,12 +254,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</section>
 
 	<section title="FLOAT RR TYPE (floating-point value)" anchor="sec-float">
-	  <t>The FLOAT RR TYPE represents a number in IEEE 754
+	  <t>The FLOAT RR TYPE represents a value in IEEE 754
 	  double-precision floating point representation in its
 	  RDATA.</t>
 
 	  <section title="FLOAT RDATA wire format">
-	    <t>The FLOAT RDATA consists of a number in IEEE 754
+	    <t>The FLOAT RDATA consists of a value in IEEE 754
 	    double-precision floating point representation <xref
 	    target="IEEE.754.1985" /> in network byte order, which
 	    occupies 8 octets (RDLENGTH is 8).</t>
@@ -306,7 +321,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  its RDATA.</t>
 
 	  <section title="UINT RDATA wire format">
-	    <t>The UINT RDATA consists of a 64-bit usigned integer, in
+	    <t>The UINT RDATA consists of a 64-bit unsigned integer, in
 	    network byte order, which occupies 8 octets (RDLENGTH is
 	    8).</t>
 	  </section>
@@ -335,16 +350,64 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</section>
       </section>
 
-      <section title="Zone property owner names">
+      <section title="Zone properties map and owner names" anchor="sec-map">
 	<t>TBD: Explain naming of owner names and hashing.</t>
+
+	<t>Zone property names are case-insensitive. Each zone property
+	may use only one data type for its values. A list of permitted
+	zone property names and their data types is given in <xref
+	target="sec-properties" />.</t>
+
+	<section title="Zone properties specific to a member zone">
+	  <t>Member zones in a catalog zone share template zone
+	  configuration that is common to all member zones in that
+	  catalog. This section describes the syntax that can be used to
+	  specify zone properties specific to single member zones.</t>
+
+	  <t>Let N be an absolute name formed by concatenating the
+	  member zone name hash (see <xref target="sec-glossary" />) and
+	  the catalog zone name in that order, such that N is a unique
+	  owner name in the catalog zone.</t>
+
+	  <t>Zone properties specific to a particular member zone are
+	  specified under the respective sub-domain N.</t>
+
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and a member zone "example.com."
+	  contains a property "prop0" with string (see <xref
+	  target="sec-string" />) value "Example", the corresponding RR
+	  may look as follows:</t>
+
+	  <figure>
+	    <artwork>
+	prop0.&lt;m-hash&gt;.catalog1.example.org. 3600 IN TXT "Example"
+	    </artwork>
+	  </figure>
+
+	  <t>As another example, if a catalog zone is named
+	  "cat1.example.org." and a member zone "example.com."  contains
+	  a property "prop2" with its value being an unordered list (see
+	  <xref target="sec-unolist" />) of two names "a.example.com."
+	  and "b.example.com.", the corresponding RRs may look as
+	  follows:</t>
+
+	  <figure>
+	    <artwork>
+	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR a.example.com.
+	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR b.example.com.
+	    </artwork>
+	  </figure>
+
+	</section>
+
       </section>
 
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="Strings" anchor="sec-string">
-	  <t>A property with a single string as value is specified using
-	  a single TXT RR <xref target="RFC1035" /> with owner name set
-	  to the name of the property as a sub-domain of the catalog
-	  zone name, and RDATA set to the property value.</t>
+	  <t>A property with a string as value is specified using a
+	  single TXT RR <xref target="RFC1035" /> with owner name set to
+	  the name of the property as a sub-domain of the catalog zone
+	  name, and RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
@@ -424,8 +487,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  its presentation format, the "!" character (corresponding to
 	  the negation flag) is used to negate a network element. The
 	  exact meaning of a negated network element is left to be
-	  described by the property APL is used for. Note that the AFL
-	  RR TYPE is defined only for the IN(1) RR CLASS.</t>
+	  described by the property that APL is used for. Note that the
+	  AFL RR TYPE is defined only for the IN(1) RR CLASS.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "allow" with
@@ -458,48 +521,6 @@ please see http://xml.resource.org/authoring/README.html. -->
           suggested here as an informative reference.</t>
         </section>
 
-	<section title="Zone properties specific to a member zone">
-	  <t>Member zones in a catalog zone share template zone
-	  configuration that is common to all member zones in that
-	  catalog. This section describes the syntax that can be used to
-	  specify zone properties specific to single member zones.</t>
-
-	  <t>Let N be an absolute name formed by concatenating the
-	  member zone name hash (see <xref target="sec-glossary" />) and
-	  the catalog zone name in that order, such that N is a unique
-	  owner name in the catalog zone.</t>
-
-	  <t>Zone properties specific to a particular member zone are
-	  specified under the respective sub-domain N.</t>
-
-	  <t>For example, if a catalog zone is named
-	  "catalog1.example.org." and a member zone "example.com."
-	  contains a property "prop0" with string (see <xref
-	  target="sec-string" />) value "Example", the corresponding RR
-	  may look as follows:</t>
-
-	  <figure>
-	    <artwork>
-	prop0.&lt;m-hash&gt;.catalog1.example.org. 3600 IN TXT "Example"
-	    </artwork>
-	  </figure>
-
-	  <t>As another example, if a catalog zone is named
-	  "cat1.example.org." and a member zone "example.com."  contains
-	  a property "prop2" with its value being an unordered list (see
-	  <xref target="sec-unolist" />) of two names "a.example.com."
-	  and "b.example.com.", the corresponding RRs may look as
-	  follows:</t>
-
-	  <figure>
-	    <artwork>
-	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR a.example.com.
-	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR b.example.com.
-	    </artwork>
-	  </figure>
-
-	</section>
-
       </section>
 
       <section title="Catalog zone version">
@@ -508,8 +529,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	MUST have this property present. Primary and secondary
 	nameservers MUST NOT use catalog zones with an unexpected value
 	value in this property, but they may be transferred as ordinary
-	zones. For this memo, the "version" property MUST be set to
-	0.</t>
+	zones. For this memo, the "version" property value MUST be set
+	to 0.</t>
 
 	<t>For example, if a catalog zone is named
 	"catalog1.example.org.", the corresponding RR MUST look as
@@ -522,8 +543,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</figure>
 
 	<t>Here, "version" can contain multiple UINT RRs at that node of
-	the domain name space <xref target="RFC1034" />. The single
-	string property SHOULD be checked by the implementation.</t>
+	the domain name space <xref target="RFC1034" />. The single UINT
+	RR property SHOULD be checked by the implementation.</t>
       </section>
 
       <section title="List of member zones">
@@ -601,10 +622,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<t>A catalog zone can be updated via DNS UPDATE on a reference
 	primary nameserver, or via zone transfers. Nameservers MAY allow
-	broken zones with incorrect catalog zone syntax (as they are
-	treated as regular zones), but nameservers MUST NOT process such
-	broken zones as catalog zones. For the purpose of catalog
-	processing, the broken catalogs MUST be ignored.</t>
+	loading and transfer of broken zones with incorrect catalog zone
+	syntax (as they are treated as regular zones), but nameservers
+	MUST NOT process such broken zones as catalog zones. For the
+	purpose of catalog processing, the broken catalogs MUST be
+	ignored.</t>
 
 	<t>If there is a clash between an existing member zone's name
 	and an incoming member zone's name (via transfer or update), the
@@ -617,18 +639,19 @@ please see http://xml.resource.org/authoring/README.html. -->
 	NOTIFY for the catalog zone to secondaries. Note that secondary
 	nameservers may attempt to transfer the catalog zone upon
 	refresh timeout, so care must be taken to make the member zones
-	available before any update is visible in the catalog zone.</t>
+	available before any update to the list of member zones is
+	visible in the catalog zone.</t>
 
 	<t>When zones are deleted from a catalog zone, a primary MAY
 	delete the member zone immediately after notifying
 	secondaries. It is up to the secondary nameserver to handle this
-	scenario correctly.</t>
+	condition correctly.</t>
 
 	<t>TBD: Transitive primary-secondary relationships</t>
       </section>
 
       <section title="Updating catalog zones">
-	<t>TBD: Explain updation of catalog zones using DNS UPDATE.</t>
+	<t>TBD: Explain updating catalog zones using DNS UPDATE.</t>
       </section>
 
       <section title="Implementation notes" anchor="sec-notes">
@@ -838,11 +861,19 @@ please see http://xml.resource.org/authoring/README.html. -->
 	Should a different faster hash function be chosen to replace
 	SHA-1 when computing catalog member zone name hashes?
 	</t>
-	<t>Allocation of custom RR types
+	<t>Overriding existing RR types
 	<vspace blankLines="1"/>
-	It may be worth having broader discussion on whether we should
-	get custom RR types for representing various zone property value
-	data types.
+	This memo currently overrides only the PTR RR TYPE's meaning as
+	PTR is currently used for reverse lookups. But such overridden
+	use seems like a non-issue as PTR is defined to be a pointer to
+	any name in <xref target="RFC1035" />.
+	</t>
+	<t>APL limits
+	<vspace blankLines="1"/>
+	APL can only support as many networks as can fit in its
+	RDATA. Though a very large number of networks can be listed in a
+	single RDATA field, it is still limited in size. Will this
+	limitation become a problem for any users?
 	</t>
       </list></t>
     </section>
