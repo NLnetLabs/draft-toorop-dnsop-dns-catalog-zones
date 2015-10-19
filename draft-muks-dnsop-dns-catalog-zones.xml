@@ -353,55 +353,35 @@ please see http://xml.resource.org/authoring/README.html. -->
       </section>
 
       <section title="Zone properties map and owner names" anchor="sec-map">
-	<t>TBD: Explain naming of owner names and hashing.</t>
+	<t>Member zones' configuration is specified as a map of zone
+	properties, represented as a subtree of a node <xref
+	target="RFC1034" /> in the domain name space inside a catalog
+	zone. A subtree of child nodes is used for a nested map,
+	occuping another label level. A map element's key (property
+	name) is represented in the label at that level. For example, if
+	a catalog zone is named "catalog1.example.org." and contains a
+	property with name "prop0", the corresponding owner name of the
+	node representing that property is
+	"prop0.catalog1.example.org."</t>
 
 	<t>Zone property names are case-insensitive. Each zone property
 	may use only one data type for its values. A list of permitted
 	zone property names and their data types is given in <xref
 	target="sec-properties" />.</t>
 
-	<section title="Zone properties specific to a member zone">
-	  <t>Member zones in a catalog zone share template zone
-	  configuration that is common to all member zones in that
-	  catalog. This section describes the syntax that can be used to
-	  specify zone properties specific to single member zones.</t>
+	<t>Many properties are single-valued, but some properties can be
+	collections with thousands of values. An example is the list of
+	member zones within a catalog zone, which can be larger than any
+	single RDATA instance can allow. Multiple RRs are used to
+	represent such properties.</t>
 
-	  <t>Let N be an absolute name formed by concatenating the
-	  member zone name hash (see <xref target="sec-glossary" />) and
-	  the catalog zone name in that order, such that N is a unique
-	  owner name in the catalog zone.</t>
-
-	  <t>Zone properties specific to a particular member zone are
-	  specified under the respective sub-domain N.</t>
-
-	  <t>For example, if a catalog zone is named
-	  "catalog1.example.org." and a member zone "example.com."
-	  contains a property "prop0" with string (see <xref
-	  target="sec-string" />) value "Example", the corresponding RR
-	  may look as follows:</t>
-
-	  <figure>
-	    <artwork>
-	prop0.&lt;m-hash&gt;.catalog1.example.org. 3600 IN TXT "Example"
-	    </artwork>
-	  </figure>
-
-	  <t>As another example, if a catalog zone is named
-	  "cat1.example.org." and a member zone "example.com."  contains
-	  a property "prop2" with its value being an unordered list (see
-	  <xref target="sec-unolist" />) of two names "a.example.com."
-	  and "b.example.com.", the corresponding RRs may look as
-	  follows:</t>
-
-	  <figure>
-	    <artwork>
-	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR a.example.com.
-	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR b.example.com.
-	    </artwork>
-	  </figure>
-
-	</section>
-
+	<t>TBD: Currently a hashing method in owner names is used to
+	split the elements of such properties with multiple RRs into
+	individual RRsets, one per RR. This needs to be revisited as
+	IXFR and DNS UPDATE both allow individual RRs within an RRset to
+	be modified. The hashing method used is described in the
+	appropriate property value data types in <xref
+	target="sec-types" />.</t>
       </section>
 
       <section title="Zone property value data types" anchor="sec-types">
@@ -544,9 +524,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    </artwork>
 	  </figure>
 
-	  <t>Here, "prop2"'s child nodes (in the domain name space <xref
-	  target="RFC1034" />) can contain multiple PTR RRs at each
-	  child node. For example, &lt;hash1&gt;.prop2 may contain
+	  <t>Here, "prop2"'s subtree child nodes (in the domain name
+	  space <xref target="RFC1034" />) can contain multiple PTR RRs
+	  at each child. For example, &lt;hash1&gt;.prop2 may contain
 	  multiple PTR RRs at that node. The single name property SHOULD
 	  be checked by the implementation.</t>
 	</section>
@@ -625,6 +605,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 	name "zones" where "zones" is a sub-domain of the catalog
 	zone.</t>
 
+	<t>The names of member zones are represented on the RDATA side
+	instead of as part of owner names so that the entire name of a
+	zone (that is technically possible <xref target="RFC1035" />)
+	can be represented correctly.</t>
+
 	<t>For example, if a catalog zone is named
 	"catalog1.example.org." and lists 3 zones "example.com.",
 	"example.net." and "example.org.", the RRs may look as
@@ -658,6 +643,48 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<section title="zone-soa-default-refresh">
 	  <t>TBD.</t>
 	</section>
+      </section>
+
+      <section title="Zone properties specific to a member zone">
+	<t>Member zones in a catalog zone share template zone
+	configuration that is common to all member zones in that
+	catalog. This section describes the syntax that can be used to
+	specify zone properties specific to single member zones.</t>
+
+	<t>Let N be an absolute name formed by concatenating the member
+	zone name hash (see <xref target="sec-glossary" />) and the
+	catalog zone name in that order, such that N is a unique owner
+	name in the catalog zone.</t>
+
+	<t>Zone properties specific to a particular member zone are
+	specified under the respective sub-domain N.</t>
+
+	<t>For example, if a catalog zone is named
+	"catalog1.example.org." and a member zone "example.com."
+	contains a property "prop0" with string (see <xref
+	target="sec-string" />) value "Example", the corresponding RR
+	may look as follows:</t>
+
+	<figure>
+	  <artwork>
+	prop0.&lt;m-hash&gt;.catalog1.example.org. 3600 IN TXT "Example"
+	  </artwork>
+	</figure>
+
+	<t>As another example, if a catalog zone is named
+	"cat1.example.org." and a member zone "example.com."  contains a
+	property "prop2" with its value being an unordered list (see
+	<xref target="sec-unolist" />) of two names "a.example.com."
+	and "b.example.com.", the corresponding RRs may look as
+	follows:</t>
+
+	<figure>
+	  <artwork>
+	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR a.example.com.
+	&lt;hash&gt;.prop2.&lt;m-hash&gt;.cat1.example.org. 3600 IN PTR b.example.com.
+	  </artwork>
+	</figure>
+
       </section>
 
       <section title="Examples of catalog zones">
@@ -938,6 +965,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	catalog zones) on secondary nameservers was requested. As this
 	would be configured outside catalog zones, it may be better to
 	leave this to implementations.
+	</t>
+	<t>Use of hashing
+	<vspace blankLines="1"/>
+	Should use of hashing be completely removed, and replaced with
+	the same common owner name for all property RRs in a collection?
+	Both IXFR and DNS UPDATE allow changing individual RRs in a
+	RRset.
 	</t>
 	<t>Choice of hash function
 	<vspace blankLines="1"/>
