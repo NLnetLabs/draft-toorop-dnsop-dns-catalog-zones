@@ -220,7 +220,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<t>This section introduces new RR TYPEs to represent some types
 	of data for which no convenient representation is currently
 	available. These are used in <xref target="sec-types" />. These
-	are general-purpose RR TYPEs and their use is not restricted to
+	are general-purpose RR TYPEs and their use is not limited to
 	catalog zones.</t>
 
 	<section title="BOOL RR TYPE (boolean condition)" anchor="sec-rr-bool">
