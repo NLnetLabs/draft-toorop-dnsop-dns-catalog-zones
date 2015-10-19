@@ -216,14 +216,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 	is recommended <xref target="RFC2606" />.</t>
       </section>
 
-      <section title="New RR TYPEs to represent data" anchor="sec-rrtypes">
+      <section title="RR TYPEs to represent data" anchor="sec-rrtypes">
 	<t>This section introduces new RR TYPEs to represent some types
 	of data for which no convenient representation is currently
 	available. These are used in <xref target="sec-types" />. These
 	are general-purpose RR TYPEs and their use is not restricted to
 	catalog zones.</t>
 
-	<section title="BOOL RR TYPE (boolean condition)" anchor="sec-bool">
+	<section title="BOOL RR TYPE (boolean condition)" anchor="sec-rr-bool">
 	  <t>The BOOL RR TYPE represents a single boolean condition in
 	  its RDATA.</t>
 
@@ -253,7 +253,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  </section>
 	</section>
 
-	<section title="FLOAT RR TYPE (floating-point value)" anchor="sec-float">
+	<section title="FLOAT RR TYPE (floating-point value)" anchor="sec-rr-float">
 	  <t>The FLOAT RR TYPE represents a value in IEEE 754
 	  double-precision floating point representation in its
 	  RDATA.</t>
@@ -283,7 +283,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  </section>
 	</section>
 
-	<section title="INT RR TYPE (64-bit signed integer value)" anchor="sec-int">
+	<section title="INT RR TYPE (64-bit signed integer value)" anchor="sec-rr-int">
 	  <t>The INT RR TYPE represents a 64-bit signed integer in its
 	  RDATA.</t>
 
@@ -316,7 +316,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  </section>
 	</section>
 
-	<section title="UINT RR TYPE (64-bit unsigned integer value)" anchor="sec-uint">
+	<section title="UINT RR TYPE (64-bit unsigned integer value)" anchor="sec-rr-uint">
 	  <t>The UINT RR TYPE represents a 64-bit unsigned integer in
 	  its RDATA.</t>
 
@@ -423,6 +423,28 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>Here, "prop0" can contain multiple TXT RRs at that node of
 	  the domain name space <xref target="RFC1034" />. The single
 	  string property SHOULD be checked by the implementation.</t>
+	</section>
+
+	<section title="Booleans" anchor="sec-bool">
+	  <t>A property with a boolean as value is specified using a
+	  single BOOL RR (see <xref target="sec-rr-bool" />) with owner
+	  name set to the name of the property as a sub-domain of the
+	  catalog zone name, and RDATA set to the property value.</t>
+
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "active" with
+	  boolean value false, the corresponding RR may look as
+	  follows:</t>
+
+	  <figure>
+	    <artwork>
+	active.catalog1.example.org. 3600 IN BOOL false
+	    </artwork>
+	  </figure>
+
+	  <t>Here, "active" can contain multiple BOOL RRs at that node
+	  of the domain name space <xref target="RFC1034" />. The single
+	  boolean property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Single names" anchor="sec-sname">
