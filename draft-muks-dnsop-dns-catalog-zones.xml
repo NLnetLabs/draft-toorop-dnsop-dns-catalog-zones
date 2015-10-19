@@ -255,12 +255,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<section title="FLOAT RR TYPE (floating-point value)" anchor="sec-rr-float">
 	  <t>The FLOAT RR TYPE represents a value in IEEE 754
-	  double-precision floating point representation in its
+	  double-precision floating-point representation in its
 	  RDATA.</t>
 
 	  <section title="FLOAT RDATA wire format">
 	    <t>The FLOAT RDATA consists of a value in IEEE 754
-	    double-precision floating point representation <xref
+	    double-precision floating-point representation <xref
 	    target="IEEE.754.1985" /> in network byte order, which
 	    occupies 8 octets (RDLENGTH is 8).</t>
 	  </section>
@@ -273,10 +273,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  </section>
 
 	  <section title="FLOAT RR example">
-	    <t>The following example shows a FLOAT RR:
+	    <t>The following example shows FLOAT RRs:
 	  <figure>
 	    <artwork>
-	decay-rate.example.org. 3600 IN FLOAT 0.33333333
+	x.sample-color.example.org. 3600 IN FLOAT 0.8
+	y.sample-color.example.org. 3600 IN FLOAT 0.2
+	z.sample-color.example.org. 3600 IN FLOAT 0.5
 	    </artwork>
 	  </figure>
 	    </t>
@@ -404,10 +406,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <section title="Zone property value data types" anchor="sec-types">
 	<section title="Strings" anchor="sec-string">
-	  <t>A property with a string as value is specified using a
-	  single TXT RR <xref target="RFC1035" /> with owner name set to
-	  the name of the property as a sub-domain of the catalog zone
-	  name, and RDATA set to the property value.</t>
+	  <t>A property with a string value is specified using a single
+	  TXT RR <xref target="RFC1035" /> with owner name set to the
+	  name of the property as a sub-domain of the catalog zone name,
+	  and RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
@@ -426,10 +428,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	</section>
 
 	<section title="Booleans" anchor="sec-bool">
-	  <t>A property with a boolean as value is specified using a
-	  single BOOL RR (see <xref target="sec-rr-bool" />) with owner
-	  name set to the name of the property as a sub-domain of the
-	  catalog zone name, and RDATA set to the property value.</t>
+	  <t>A property with a boolean value is specified using a single
+	  BOOL RR (see <xref target="sec-rr-bool" />) with owner name
+	  set to the name of the property as a sub-domain of the catalog
+	  zone name, and RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "active" with
@@ -445,6 +447,30 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>Here, "active" can contain multiple BOOL RRs at that node
 	  of the domain name space <xref target="RFC1034" />. The single
 	  boolean property SHOULD be checked by the implementation.</t>
+	</section>
+
+	<section title="Floating-point values" anchor="sec-float">
+	  <t>A property with a floating-point value is specified using a
+	  single FLOAT RR (see <xref target="sec-rr-float" />) with
+	  owner name set to the name of the property as a sub-domain of
+	  the catalog zone name, and RDATA set to the property
+	  value.</t>
+
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "decay-rate"
+	  with value 0.33333333, the corresponding RR may look as
+	  follows:</t>
+
+	  <figure>
+	    <artwork>
+	decay-rate.catalog1.example.org. 3600 IN FLOAT 0.33333333
+	    </artwork>
+	  </figure>
+
+	  <t>Here, "decay-rate" can contain multiple FLOAT RRs at that
+	  node of the domain name space <xref target="RFC1034" />. The
+	  single floating-point property SHOULD be checked by the
+	  implementation.</t>
 	</section>
 
 	<section title="Single names" anchor="sec-sname">
