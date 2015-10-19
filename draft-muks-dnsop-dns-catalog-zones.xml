@@ -344,7 +344,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    <t>The following example shows a UINT RR:
 	  <figure>
 	    <artwork>
-	min-ttl.example.org. 3600 IN UINT 3600
+	max-query-rate.example.org. 3600 IN UINT 3600
 	    </artwork>
 	  </figure>
 	    </t>
@@ -447,6 +447,30 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>Here, "active" can contain multiple BOOL RRs at that node
 	  of the domain name space <xref target="RFC1034" />. The single
 	  boolean property SHOULD be checked by the implementation.</t>
+	</section>
+
+	<section title="Integers" anchor="sec-int">
+	  <t>A property with an integer value is specified using a
+	  single INT RR (see <xref target="sec-rr-int" />) for signed
+	  integers, or UINT RR (see <xref target="sec-rr-uint" />) for
+	  unsigned integers, with owner name set to the name of the
+	  property as a sub-domain of the catalog zone name, and RDATA
+	  set to the property value.</t>
+
+	  <t>For example, if a catalog zone is named
+	  "catalog1.example.org." and contains a property "min-ttl" with
+	  unsigned integer value 300, the corresponding RR may look as
+	  follows:</t>
+
+	  <figure>
+	    <artwork>
+	min-ttl.catalog1.example.org. 3600 IN UINT 300
+	    </artwork>
+	  </figure>
+
+	  <t>Here, "min-ttl" can contain multiple UINT RRs at that node
+	  of the domain name space <xref target="RFC1034" />. The single
+	  integer property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Floating-point values" anchor="sec-float">
