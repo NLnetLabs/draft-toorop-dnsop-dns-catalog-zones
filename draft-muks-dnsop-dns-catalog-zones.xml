@@ -661,8 +661,19 @@ please see http://xml.resource.org/authoring/README.html. -->
 	will be automatically synchronized by the secondary after the
 	catalog zone is configured.</t>
 
-	<t>TBD: Describe queries to catalog zones and why an AXFR or
-	out-of-band method is necessary.</t>
+	<t>An administrator would want to query data from a catalog
+	zone. Typical queries may include dumping the list of member
+	zones, dumping a member zone's effective configuration, querying
+	a specific property value of a member zone, etc.  Because of the
+	syntax of catalog zones, it may not be possible to perform these
+	queries efficiently (or in some cases, at all) using DNS
+	QUERY. The list of member zones may not fit in a single DNS
+	message. The set of present properties for a zone cannot be
+	queried using a single DNS QUERY.</t>
+
+	<t>Implementations are advised to provide a tool that uses
+	either the output of AXFR or an out-of-band method to perform
+	queries on catalog zones.</t>
       </section>
     </section>
 
