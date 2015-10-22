@@ -332,7 +332,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    <t>The UINT RDATA's presentation uses the representation of
 	    an unsuffixed "integer constant" as defined in the C
 	    programming language standard <xref target="ISO.9899.1990"
-	    /> (of the type matching a 64-bit signed integer on that
+	    /> (of the type matching a 64-bit unsigned integer on that
 	    platform).</t>
 
 	    <t>Scanners must read any of the various formats
