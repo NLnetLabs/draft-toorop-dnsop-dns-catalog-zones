@@ -866,8 +866,19 @@ please see http://xml.resource.org/authoring/README.html. -->
       <?rfc include="reference.RFC.2845.xml"?>
       <?rfc include="reference.RFC.3123.xml"?>
       <?rfc include="reference.IEEE.754.1985.xml"?>
-      <?rfc include="reference.FIPS.180-1.1995.xml"?>
       <?rfc include="reference.ISO.9899.1990.xml"?>
+
+      <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
+        <front>
+          <title>Secure Hash Standard</title>
+          <author>
+            <organization>National Institute of Standards and Technology</organization>
+          </author>
+          <date month="August" year="2015" />
+        </front>
+        <seriesInfo name="FIPS" value="PUB 180-4" />
+      </reference>
+
     </references>
 
     <references title="Informative references">
@@ -907,13 +918,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  target="I-D.ietf-dnsop-dns-terminology" />.</t>
 
 	  <t hangText="RDATA hash:">The hexadecimal format 40-digit
-	  SHA-1 <xref target="FIPS.180-1.1995" /> digest, of the RDATA
+	  SHA-1 <xref target="FIPS.180-4.2015" /> digest, of the RDATA
 	  of the corresponding RR. For RDATA containing DNS names, no
 	  name compression must be in use, i.e., the name must be in its
 	  full expanded wire data format when it is hashed.</t>
 
 	  <t hangText="Member zone name hash:">The hexadecimal format
-	  40-digit SHA-1 <xref target="FIPS.180-1.1995" /> digest, of a
+	  40-digit SHA-1 <xref target="FIPS.180-4.2015" /> digest, of a
 	  zone name in uncompressed wire format.</t>
 
 	  <t hangText="Secondary nameserver:">An authoritative server
