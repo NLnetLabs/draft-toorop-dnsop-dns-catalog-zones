@@ -865,6 +865,7 @@ please see http://xml.resource.org/authoring/README.html. -->
       <?rfc include="reference.RFC.2606.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
       <?rfc include="reference.RFC.3123.xml"?>
+      <?rfc include="reference.RFC.7719.xml"?>
       <?rfc include="reference.IEEE.754.1985.xml"?>
       <?rfc include="reference.ISO.9899.1990.xml"?>
 
@@ -883,7 +884,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <references title="Informative references">
       <?rfc include="reference.I-D.hunt-note-rr.xml"?>
-      <?rfc include="reference.I-D.ietf-dnsop-dns-terminology.xml"?>
       <reference anchor="RPZ" target="http://ftp.isc.org/isc/dnsrpz/isc-tn-2010-1.txt">
 	<front>
 	  <title>DNS Response Policy Zones (DNS RPZ)</title>
@@ -914,8 +914,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t hangText="Primary nameserver:">An authoritative server
 	  configured to be the source of zone transfer to one or more
-	  [secondary] nameservers. Also see <xref
-	  target="I-D.ietf-dnsop-dns-terminology" />.</t>
+	  [secondary] nameservers. Also see <xref target="RFC7719"
+	  />.</t>
 
 	  <t hangText="RDATA hash:">The hexadecimal format 40-digit
 	  SHA-1 <xref target="FIPS.180-4.2015" /> digest, of the RDATA
@@ -929,7 +929,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t hangText="Secondary nameserver:">An authoritative server
 	  which uses zone transfer to retrieve the zone. Also see <xref
-	  target="I-D.ietf-dnsop-dns-terminology" />.</t>
+	  target="RFC7719" />.</t>
 
 	  <t hangText="Zone property:">A configuration parameter of a
 	  zone, sometimes also called a zone option.</t>
