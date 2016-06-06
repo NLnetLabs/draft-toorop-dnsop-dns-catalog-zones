@@ -30,7 +30,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 <!-- end of list of popular I-D processing instructions -->
 <?rfc comments="no" ?>
 <?rfc inline="yes" ?>
-<rfc category="exp" docName="draft-muks-dnsop-dns-catalog-zones-00" ipr="trust200902">
+<rfc category="exp" docName="draft-muks-dnsop-dns-catalog-zones-01" ipr="trust200902">
 
   <front>
 
@@ -62,6 +62,36 @@ please see http://xml.resource.org/authoring/README.html. -->
           <country>US</country>
         </postal>
         <email>muks@mukund.org</email>
+        <uri>http://www.isc.org/</uri>
+      </address>
+    </author>
+
+    <author fullname="Ray Bellis" initials="R." surname="Bellis">
+      <organization>Internet Systems Consortium</organization>
+      <address>
+        <postal>
+          <street>950 Charter Street</street>
+          <city>Redwood City</city>
+          <code>94063</code>
+          <region>CA</region>
+          <country>US</country>
+        </postal>
+        <email>ray@isc.org</email>
+        <uri>http://www.isc.org/</uri>
+      </address>
+    </author>
+
+    <author fullname="Witold Krecicki" initials="W." surname="Krecicki">
+      <organization>Internet Systems Consortium</organization>
+      <address>
+        <postal>
+          <street>950 Charter Street</street>
+          <city>Redwood City</city>
+          <code>94063</code>
+          <region>CA</region>
+          <country>US</country>
+        </postal>
+        <email>wpk@isc.org</email>
         <uri>http://www.isc.org/</uri>
       </address>
     </author>
@@ -1014,6 +1044,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    draft-muks-dnsop-dns-catalog-zones-00
             <vspace/>
             Initial public draft.
+          </t>
+
+          <t>
+	    draft-muks-dnsop-dns-catalog-zones-01
+            <vspace/>
+	    Added Witold, Ray as authors.
           </t>
 
         </list>
