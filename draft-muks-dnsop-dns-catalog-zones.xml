@@ -1049,7 +1049,8 @@ please see http://xml.resource.org/authoring/README.html. -->
           <t>
 	    draft-muks-dnsop-dns-catalog-zones-01
             <vspace/>
-	    Added Witold, Ray as authors.
+	    Added Witold, Ray as authors. Fixed typos, consistency
+	    issues. Fixed references. Updated Area.
           </t>
 
         </list>
