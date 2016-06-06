@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- This template is for creating an Internet Draft using xml2rfc,
 which is available here: http://xml.resource.org. -->
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd">
@@ -246,142 +246,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 	is recommended <xref target="RFC2606" />.</t>
       </section>
 
-      <section title="RR TYPEs to represent data" anchor="sec-rrtypes">
-	<t>This section introduces new RR TYPEs to represent some types
-	of data for which no convenient representation is currently
-	available. These are used in <xref target="sec-types" />. These
-	are general-purpose RR TYPEs and their use is not limited to
-	catalog zones.</t>
-
-	<section title="BOOL RR TYPE (boolean condition)" anchor="sec-rr-bool">
-	  <t>The BOOL RR TYPE represents a single boolean condition in
-	  its RDATA.</t>
-
-	  <section title="BOOL RDATA wire format">
-	    <t>The BOOL RDATA consists of a single octet (RDLENGTH is
-	    1). A zero valued octet represents the false condition and a
-	    non-zero valued octet represents the true
-	    condition. Implementations SHOULD generate an octet value of
-	    1 to represent true conditions.</t>
-	  </section>
-
-	  <section title="BOOL RDATA presentation format">
-	    <t>The BOOL RDATA's presentation is represented with the
-	    mnemonic "FALSE" for the false condition, and "TRUE" for the
-	    true condition. The presentation is case-insensitive.</t>
-	  </section>
-
-	  <section title="BOOL RR example">
-	    <t>The following example shows BOOL RRs:
-	    <figure>
-	      <artwork>
-		is-ready.example.org. 3600 IN BOOL TRUE
-		allow-query.example.org. 3600 IN BOOL False
-	      </artwork>
-	    </figure>
-	    </t>
-	  </section>
-	</section>
-
-	<section title="FLOAT RR TYPE (floating-point value)" anchor="sec-rr-float">
-	  <t>The FLOAT RR TYPE represents a value in IEEE 754
-	  double-precision floating-point representation in its
-	  RDATA.</t>
-
-	  <section title="FLOAT RDATA wire format">
-	    <t>The FLOAT RDATA consists of a value in IEEE 754
-	    double-precision floating-point representation <xref
-	    target="IEEE.754.1985" /> in network byte order, which
-	    occupies 8 octets (RDLENGTH is 8).</t>
-	  </section>
-
-	  <section title="FLOAT RDATA presentation format">
-	    <t>The FLOAT RDATA's presentation uses the representation of
-	    an unsuffixed "floating constant" as defined in the C
-	    programming language standard <xref target="ISO.9899.1990"
-	    />.</t>
-	  </section>
-
-	  <section title="FLOAT RR example">
-	    <t>The following example shows FLOAT RRs:
-	  <figure>
-	    <artwork>
-	x.sample-color.example.org. 3600 IN FLOAT 0.8
-	y.sample-color.example.org. 3600 IN FLOAT 0.2
-	z.sample-color.example.org. 3600 IN FLOAT 0.5
-	    </artwork>
-	  </figure>
-	    </t>
-	  </section>
-	</section>
-
-	<section title="INT RR TYPE (64-bit signed integer value)" anchor="sec-rr-int">
-	  <t>The INT RR TYPE represents a 64-bit signed integer in its
-	  RDATA.</t>
-
-	  <section title="INT RDATA wire format">
-	    <t>The INT RDATA consists of a 64-bit signed integer in
-	    two's complement representation, in network byte order,
-	    which occupies 8 octets (RDLENGTH is 8).</t>
-	  </section>
-
-	  <section title="INT RDATA presentation format">
-	    <t>The INT RDATA's presentation uses the representation of
-	    an unsuffixed "integer constant" as defined in the C
-	    programming language standard <xref target="ISO.9899.1990"
-	    /> (of the type matching a 64-bit signed integer on that
-	    platform), with an optional minus prefix.</t>
-
-	    <t>Scanners must read any of the various formats
-	    possible. Printers must output the RDATA in base-10 decimal
-	    format.</t>
-	  </section>
-
-	  <section title="INT RR example">
-	    <t>The following example shows a INT RR:
-	  <figure>
-	    <artwork>
-	counter-increment.example.org. 3600 IN INT -0x1
-	    </artwork>
-	  </figure>
-	    </t>
-	  </section>
-	</section>
-
-	<section title="UINT RR TYPE (64-bit unsigned integer value)" anchor="sec-rr-uint">
-	  <t>The UINT RR TYPE represents a 64-bit unsigned integer in
-	  its RDATA.</t>
-
-	  <section title="UINT RDATA wire format">
-	    <t>The UINT RDATA consists of a 64-bit unsigned integer, in
-	    network byte order, which occupies 8 octets (RDLENGTH is
-	    8).</t>
-	  </section>
-
-	  <section title="UINT RDATA presentation format">
-	    <t>The UINT RDATA's presentation uses the representation of
-	    an unsuffixed "integer constant" as defined in the C
-	    programming language standard <xref target="ISO.9899.1990"
-	    /> (of the type matching a 64-bit unsigned integer on that
-	    platform).</t>
-
-	    <t>Scanners must read any of the various formats
-	    possible. Printers must output the RDATA in base-10 decimal
-	    format.</t>
-	  </section>
-
-	  <section title="UINT RR example">
-	    <t>The following example shows a UINT RR:
-	  <figure>
-	    <artwork>
-	max-query-rate.example.org. 3600 IN UINT 3600
-	    </artwork>
-	  </figure>
-	    </t>
-	  </section>
-	</section>
-      </section>
-
       <section title="Zone properties map and owner names" anchor="sec-map">
 	<t>Member zones' configuration is specified as a map of zone
 	properties, represented as a subtree of a node <xref
@@ -439,9 +303,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<section title="Booleans" anchor="sec-bool">
 	  <t>A property with a boolean value is specified using a single
-	  BOOL RR (see <xref target="sec-rr-bool" />) with owner name
-	  set to the name of the property as a sub-domain of the catalog
-	  zone name, and RDATA set to the property value.</t>
+	  TXT RR with owner name set to the name of the property as a
+	  sub-domain of the catalog zone name, and RDATA set to "true"
+	  for true condition and "false" for false condition. The RDATA
+	  is case-insensitive.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "active" with
@@ -450,22 +315,36 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	active.catalog1.example.org. 3600 IN BOOL false
+	active.catalog1.example.org. 3600 IN TXT "false"
 	    </artwork>
 	  </figure>
 
-	  <t>Here, "active" can contain multiple BOOL RRs at that node
-	  of the domain name space <xref target="RFC1034" />. The single
+	  <t>Here, "active" can contain multiple TXT RRs at that node of
+	  the domain name space <xref target="RFC1034" />. The single
 	  boolean property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Integers" anchor="sec-int">
 	  <t>A property with an integer value is specified using a
-	  single INT RR (see <xref target="sec-rr-int" />) for signed
-	  integers, or UINT RR (see <xref target="sec-rr-uint" />) for
-	  unsigned integers, with owner name set to the name of the
-	  property as a sub-domain of the catalog zone name, and RDATA
-	  set to the property value.</t>
+	  single TXT RR for signed integers or unsigned integers, with
+	  owner name set to the name of the property as a sub-domain of
+	  the catalog zone name, and RDATA set to the property
+	  value.</t>
+
+	  <t>A signed integer's TXT RDATA uses the representation of an
+	  unsuffixed "integer constant" as defined in the C programming
+	  language standard <xref target="ISO.9899.1990" /> (of the type
+	  matching a 64-bit signed integer on that platform), with an
+	  optional minus prefix. The representation MUST be specified
+	  using a single &lt;character-string&gt; <xref target="RFC1034"
+	  />.</t>
+
+	  <t>An unsigned integer's TXT RDATA uses the representation of
+	  an unsuffixed "integer constant" as defined in the C
+	  programming language standard <xref target="ISO.9899.1990" />
+	  (of the type matching a 64-bit signed integer on that
+	  platform). The representation MUST be specified using a single
+	  &lt;character-string&gt; <xref target="RFC1034" />.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "min-ttl" with
@@ -474,21 +353,26 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	min-ttl.catalog1.example.org. 3600 IN UINT 300
+	min-ttl.catalog1.example.org. 3600 IN TXT "300"
 	    </artwork>
 	  </figure>
 
-	  <t>Here, "min-ttl" can contain multiple UINT RRs at that node
+	  <t>Here, "min-ttl" can contain multiple TXT RRs at that node
 	  of the domain name space <xref target="RFC1034" />. The single
 	  integer property SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="Floating-point values" anchor="sec-float">
 	  <t>A property with a floating-point value is specified using a
-	  single FLOAT RR (see <xref target="sec-rr-float" />) with
-	  owner name set to the name of the property as a sub-domain of
-	  the catalog zone name, and RDATA set to the property
-	  value.</t>
+	  single TXT RR with owner name set to the name of the property
+	  as a sub-domain of the catalog zone name, and RDATA set to the
+	  property value.</t>
+
+	  <t>A floating-point value's TXT RDATA uses the representation
+	  of an unsuffixed "floating constant" as defined in the C
+	  programming language standard <xref target="ISO.9899.1990"
+	  />. The representation MUST be specified using a single
+	  &lt;character-string&gt; <xref target="RFC1034" />.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "decay-rate"
@@ -497,7 +381,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	decay-rate.catalog1.example.org. 3600 IN FLOAT 0.33333333
+	decay-rate.catalog1.example.org. 3600 IN TXT "0.33333333"
 	    </artwork>
 	  </figure>
 
@@ -620,12 +504,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<figure>
 	  <artwork>
-	version.catalog1.example.org. 3600 IN UINT 0
+	version.catalog1.example.org. 3600 IN TXT "0"
 	  </artwork>
 	</figure>
 
-	<t>Here, "version" can contain multiple UINT RRs at that node of
-	the domain name space <xref target="RFC1034" />. The single UINT
+	<t>Here, "version" can contain multiple TXT RRs at that node of
+	the domain name space <xref target="RFC1034" />. The single TXT
 	RR property SHOULD be checked by the implementation.</t>
       </section>
 
@@ -832,35 +716,7 @@ please see http://xml.resource.org/authoring/README.html. -->
     </section>
 
     <section title="IANA considerations">
-      <t>This document defines new resource record types, titled BOOL,
-      FLOAT, INT, and UINT (see <xref target="sec-rrtypes" />), assigned
-      values as follows from the Resource Record (RR) TYPEs space [to be
-      removed upon publication:
-      https://www.iana.org/assignments/dns-parameters/dns-parameters.xhtml#dns-parameters-11].</t>
-
-      <texttable>
-
-        <ttcol>TYPE</ttcol>
-        <ttcol>Value</ttcol>
-        <ttcol>Meaning</ttcol>
-
-        <c>BOOL</c>
-        <c>TBD</c>
-        <c>Boolean value</c>
-
-        <c>FLOAT</c>
-        <c>TBD</c>
-        <c>IEEE 754 double-precision number</c>
-
-        <c>INT</c>
-        <c>TBD</c>
-        <c>64-bit signed integer (two's complement)</c>
-
-        <c>UINT</c>
-        <c>TBD</c>
-        <c>64-bit unsigned integer</c>
-
-      </texttable>
+      <t>This document has no IANA actions.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -1050,7 +906,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    draft-muks-dnsop-dns-catalog-zones-01
             <vspace/>
 	    Added Witold, Ray as authors. Fixed typos, consistency
-	    issues. Fixed references. Updated Area.
+	    issues. Fixed references. Updated Area. Removed newly
+	    introduced custom RR TYPEs.
           </t>
 
         </list>
