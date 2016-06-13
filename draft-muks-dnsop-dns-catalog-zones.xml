@@ -169,10 +169,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	situation is not different from other similar zone-based
 	representations such as response-policy zones <xref target="RPZ"
 	/>. However, none of the RR TYPEs used by catalog zones can
-	incur any additional section processing during DNS QUERY. Other
-	than being transmitted via zone transfers, catalog zones do not
-	participate in the DNS and are not intended to be served via DNS
-	QUERY <xref target="RFC1035" />.</t>
+	incur any additional section processing during DNS QUERY.</t>
 
 	<t>Member zones' configuration is specified as a map of zone
 	properties, represented as a subtree of a node <xref
@@ -204,13 +201,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 	target="RFC1035" />. This is because some RR TYPEs such as APL
 	used by catalog zones are defined only for the IN CLASS.</t>
 
-	<t>The TTL field's value is not specially defined by this memo.
-	Catalog zones do not participate in the DNS and are not intended
-	to be served via DNS QUERY <xref target="RFC1035" />, but this
-	memo does not restrict their use.</t>
+	<t>The TTL field's value is not specially defined by this
+	memo.</t>
 
-	<t>The RDLENGTH field contains the length of the RDATA
-	field.</t>
+	<t>The RDLENGTH field contains the length of the RDATA field. It
+	is not specially defined by this memo.</t>
 
 	<t>The content of the RDATA field depends on the type of catalog
 	zone property value being represented. <xref target="sec-types"
@@ -231,10 +226,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	contents.</t>
 
 	<t>The SOA record's MINIMUM field's value is not specially
-	defined by this memo.  Catalog zones do not participate in the
-	DNS and are not intended to be served via DNS QUERY <xref
-	target="RFC1035" />, but this memo does not restrict their
-	use.</t>
+	defined by this memo. Although they are regular DNS zones,
+	catalog zones contain only information for the management of a
+	set of nameservers.  For this reason, operators may want to
+	limit the systems able to query these zones.</t>
 
 	<t>As catalog zones do not participate in the DNS, NS records at
 	the apex are not used but they are still required so that
@@ -612,14 +607,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 	here. It is under-specified.</t>
 
 	<t>As it is a regular DNS zone, a catalog zone can be
-	transferred using DNS zone transfers among nameservers. Catalog
-	zones do not participate in the DNS and are not intended to be
-	served via DNS QUERY. It may be inconvenient to serve some
-	contents of catalog zones via DNS queries anyway due to the
-	nature of their representation. A separate method of querying
-	entries inside the catalog zone may be made available by
-	nameserver implementations (see <xref target="sec-notes"
-	/>).</t>
+	transferred using DNS zone transfers among nameservers.</t>
+
+	<t>Although they are regular DNS zones, catalog zones contain
+	only information for the management of a set of nameservers.
+	For this reason, operators may want to limit the systems able to
+	query these zones. It may be inconvenient to serve some contents
+	of catalog zones via DNS queries anyway due to the nature of
+	their representation. A separate method of querying entries
+	inside the catalog zone may be made available by nameserver
+	implementations (see <xref target="sec-notes" />).</t>
 
 	<t>Catalog updates should be automatic, i.e., when a nameserver
 	that supports catalog zones completes a zone transfer for a
@@ -674,12 +671,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	will be automatically synchronized by the secondary after the
 	catalog zone is configured.</t>
 
-	<t>An administrator would want to query data from a catalog
+	<t>An administrator would want to look at data inside a catalog
 	zone. Typical queries may include dumping the list of member
 	zones, dumping a member zone's effective configuration, querying
 	a specific property value of a member zone, etc.  Because of the
 	syntax of catalog zones, it may not be possible to perform these
-	queries efficiently (or in some cases, at all) using DNS
+	queries intuitively, or in some cases, at all, using DNS
 	QUERY. The list of member zones may not fit in a single DNS
 	message. The set of present properties for a zone cannot be
 	queried using a single DNS QUERY.</t>
@@ -907,7 +904,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    Added Witold, Ray as authors. Fixed typos, consistency
 	    issues. Fixed references. Updated Area. Removed newly
 	    introduced custom RR TYPEs. Changed schema version to
-	    1. Changed TSIG requirement from MUST to SHOULD.
+	    1. Changed TSIG requirement from MUST to SHOULD. Removed
+	    restrictive language about use of DNS QUERY.
           </t>
 
         </list>
