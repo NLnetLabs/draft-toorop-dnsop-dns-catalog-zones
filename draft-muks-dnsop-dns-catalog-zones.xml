@@ -468,7 +468,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <figure>
 	    <artwork>
 	allow-query.catalog1.example.org. 3600 IN APL (
-		1:192.0.2.0/24 1:198.51.100.0/24)
+		1:192.0.2.0/24 2:1080::8:800:200c:417a/128)
 	    </artwork>
 	  </figure>
 
