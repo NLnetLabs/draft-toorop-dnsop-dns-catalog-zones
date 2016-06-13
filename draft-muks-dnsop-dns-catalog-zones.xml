@@ -39,60 +39,60 @@ please see http://xml.resource.org/authoring/README.html. -->
     <author fullname="Mukund Sivaraman" initials="M." surname="Sivaraman">
       <organization>Internet Systems Consortium</organization>
       <address>
-        <postal>
-          <street>950 Charter Street</street>
-          <city>Redwood City</city>
-          <code>94063</code>
-          <region>CA</region>
-          <country>US</country>
-        </postal>
-        <email>muks@mukund.org</email>
-        <uri>http://www.isc.org/</uri>
+	<postal>
+	  <street>950 Charter Street</street>
+	  <city>Redwood City</city>
+	  <code>94063</code>
+	  <region>CA</region>
+	  <country>US</country>
+	</postal>
+	<email>muks@mukund.org</email>
+	<uri>http://www.isc.org/</uri>
       </address>
     </author>
 
     <author fullname="Stephen Morris" initials="S." surname="Morris">
       <organization>Internet Systems Consortium</organization>
       <address>
-        <postal>
-          <street>950 Charter Street</street>
-          <city>Redwood City</city>
-          <code>94063</code>
-          <region>CA</region>
-          <country>US</country>
-        </postal>
-        <email>stephen@isc.org</email>
-        <uri>http://www.isc.org/</uri>
+	<postal>
+	  <street>950 Charter Street</street>
+	  <city>Redwood City</city>
+	  <code>94063</code>
+	  <region>CA</region>
+	  <country>US</country>
+	</postal>
+	<email>stephen@isc.org</email>
+	<uri>http://www.isc.org/</uri>
       </address>
     </author>
 
     <author fullname="Ray Bellis" initials="R." surname="Bellis">
       <organization>Internet Systems Consortium</organization>
       <address>
-        <postal>
-          <street>950 Charter Street</street>
-          <city>Redwood City</city>
-          <code>94063</code>
-          <region>CA</region>
-          <country>US</country>
-        </postal>
-        <email>ray@isc.org</email>
-        <uri>http://www.isc.org/</uri>
+	<postal>
+	  <street>950 Charter Street</street>
+	  <city>Redwood City</city>
+	  <code>94063</code>
+	  <region>CA</region>
+	  <country>US</country>
+	</postal>
+	<email>ray@isc.org</email>
+	<uri>http://www.isc.org/</uri>
       </address>
     </author>
 
     <author fullname="Witold Krecicki" initials="W." surname="Krecicki">
       <organization>Internet Systems Consortium</organization>
       <address>
-        <postal>
-          <street>950 Charter Street</street>
-          <city>Redwood City</city>
-          <code>94063</code>
-          <region>CA</region>
-          <country>US</country>
-        </postal>
-        <email>wpk@isc.org</email>
-        <uri>http://www.isc.org/</uri>
+	<postal>
+	  <street>950 Charter Street</street>
+	  <city>Redwood City</city>
+	  <code>94063</code>
+	  <region>CA</region>
+	  <country>US</country>
+	</postal>
+	<email>wpk@isc.org</email>
+	<uri>http://www.isc.org/</uri>
       </address>
     </author>
 
@@ -483,12 +483,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  host address.</t>
 	</section>
 
-        <section title="Comments">
-          <t>Comments may be added anywhere in a catalog zone using a
-          scheme such as NOTE RRs <xref target="I-D.hunt-note-rr"
-          />. This memo does not depend on NOTE RRs and it is only
-          suggested here as an informative reference.</t>
-        </section>
+	<section title="Comments">
+	  <t>Comments may be added anywhere in a catalog zone using a
+	  scheme such as NOTE RRs <xref target="I-D.hunt-note-rr"
+	  />. This memo does not depend on NOTE RRs and it is only
+	  suggested here as an informative reference.</t>
+	</section>
 
       </section>
 
@@ -600,23 +600,26 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<figure>
 	  <artwork>
-	&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org. 3600 IN PTR a.example.com.
-	&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org. 3600 IN PTR b.example.com.
+	(&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
+	 3600 IN PTR a.example.com.)
+	(&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
+	 3600 IN PTR b.example.com.)
 	  </artwork>
 	</figure>
 
       </section>
 
       <section title="Example of a catalog zone">
-        <figure>
-          <artwork>
-            $ORIGIN catalog.example.org.
-            @                                                   IN SOA  . . 1 3600 3600 86400 3600
-                                                                IN NS   invalid.
-            version                                             IN TXT  "1"
-            5960775ba382e7a4e09263fc06e7c00569b6a05c.zones      IN PTR  domain1.example.com.
-          </artwork>
-        </figure>
+	<figure>
+	  <artwork>
+	    $ORIGIN catalog.example.org.
+	    @		IN SOA	. . 1 3600 3600 86400 3600
+			IN NS	invalid.
+	    version	IN TXT	"1"
+	    (5960775ba382e7a4e09263fc06e7c00569b6a05c.zones
+	     IN PTR domain1.example.com.)
+	  </artwork>
+	</figure>
       </section>
     </section>
 
@@ -775,14 +778,14 @@ please see http://xml.resource.org/authoring/README.html. -->
       <?rfc include="reference.ISO.9899.1990.xml"?>
 
       <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
-        <front>
-          <title>Secure Hash Standard</title>
-          <author>
-            <organization>National Institute of Standards and Technology</organization>
-          </author>
-          <date month="August" year="2015" />
-        </front>
-        <seriesInfo name="FIPS" value="PUB 180-4" />
+	<front>
+	  <title>Secure Hash Standard</title>
+	  <author>
+	    <organization>National Institute of Standards and Technology</organization>
+	  </author>
+	  <date month="August" year="2015" />
+	</front>
+	<seriesInfo name="FIPS" value="PUB 180-4" />
       </reference>
 
     </references>
@@ -913,17 +916,17 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <section title="Change History (to be removed before final publication)">
       <t>
-        <list style="symbols">
+	<list style="symbols">
 
-          <t>
+	  <t>
 	    draft-muks-dnsop-dns-catalog-zones-00
-            <vspace/>
-            Initial public draft.
-          </t>
+	    <vspace/>
+	    Initial public draft.
+	  </t>
 
-          <t>
+	  <t>
 	    draft-muks-dnsop-dns-catalog-zones-01
-            <vspace/>
+	    <vspace/>
 	    Added Witold, Ray as authors. Fixed typos, consistency
 	    issues. Fixed references. Updated Area. Removed newly
 	    introduced custom RR TYPEs. Changed schema version to
@@ -933,9 +936,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    the new zones available for transfers first (instead of
 	    MUST). Updated examples, esp. use IPv6 in examples per Fred
 	    Baker. Add catalog zone example.
-          </t>
+	  </t>
 
-        </list>
+	</list>
       </t>
     </section>
 
