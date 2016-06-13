@@ -380,12 +380,12 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "decay-rate"
-	  with value 0.33333333, the corresponding RR would appear as
+	  with value 0.15, the corresponding RR would appear as
 	  follows:</t>
 
 	  <figure>
 	    <artwork>
-	decay-rate.catalog1.example.org. 3600 IN TXT "0.33333333"
+	decay-rate.catalog1.example.org. 3600 IN TXT "15e-2"
 	    </artwork>
 	  </figure>
 
@@ -461,20 +461,21 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  AFL RR TYPE is defined only for the IN(1) RR CLASS.</t>
 
 	  <t>For example, if a catalog zone is named
-	  "catalog1.example.org." and contains a property "allow" with
-	  value [192.0.2.0/24, 198.51.100.0/24] as the list of networks,
-	  the corresponding RR would appear as follows:</t>
+	  "catalog1.example.org." and contains a property "allow-query"
+	  with value [192.0.2.0/24, 198.51.100.0/24] as the list of
+	  networks, the corresponding RR would appear as follows:</t>
 
 	  <figure>
 	    <artwork>
-	allow.catalog1.example.org. 3600 IN APL (1:192.0.2.0/24
-	                                         1:198.51.100.0/24)
+	allow-query.catalog1.example.org. 3600 IN APL (
+		1:192.0.2.0/24 1:198.51.100.0/24)
 	    </artwork>
 	  </figure>
 
-	  <t>Here, "allow" can contain multiple APL RRs at that node of
-	  the domain name space <xref target="RFC1034" />. The single
-	  APL RR property SHOULD be checked by the implementation.</t>
+	  <t>Here, "allow-query" can contain multiple APL RRs at that
+	  node of the domain name space <xref target="RFC1034" />. The
+	  single APL RR property SHOULD be checked by the
+	  implementation.</t>
 	</section>
 
 	<section title="Single host address">
@@ -608,8 +609,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       </section>
 
-      <section title="Examples of catalog zones">
-	<t>TBD.</t>
+      <section title="Example of a catalog zone">
+        <figure>
+          <artwork>
+            $ORIGIN catalog.example.org.
+            @                                                   IN SOA  . . 1 3600 3600 86400 3600
+                                                                IN NS   invalid.
+            version                                             IN TXT  "1"
+            5960775ba382e7a4e09263fc06e7c00569b6a05c.zones      IN PTR  domain1.example.com.
+          </artwork>
+        </figure>
       </section>
     </section>
 
