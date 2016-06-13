@@ -209,11 +209,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	whatever value seems convenient for any management applications
 	that may query the catalog zone.</t>
 
-	<t>The RDLENGTH field's value is not specially defined by this
-	memo. Catalog zones are for nameserver management only and are
-	not intended for general querying.  Operators should use
-	whatever value seems convenient for any management applications
-	that may query the catalog zone.</t>
+	<t>The RDLENGTH field contains the length of the RDATA
+	field.</t>
 
 	<t>The content of the RDATA field depends on the type of catalog
 	zone property value being represented. <xref target="sec-types"
