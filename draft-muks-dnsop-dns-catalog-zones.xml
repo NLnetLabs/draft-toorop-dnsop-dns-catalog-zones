@@ -415,7 +415,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  implementation.</t>
 	</section>
 
-	<section title="Unordered list of names" anchor="sec-unolist">
+	<section title="Unordered list of domain names" anchor="sec-unolist">
 	  <t>Let N be an absolute name formed by concatenating the RDATA
 	  hash (see <xref target="sec-glossary" />), the name of the
 	  property, and the catalog zone name in that order, such that N
@@ -424,8 +424,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>Then, a property containing an unordered list of names as
 	  value is specified using multiple PTR RRs <xref
 	  target="RFC1035" /> with owner name set to N, and each RR's
-	  RDATA set to each name in the list of the property's value
-	  respectively.</t>
+	  RDATA set to each domain name in the list of the property's
+	  value respectively.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop2" with
@@ -443,8 +443,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>Here, "prop2"'s subtree child nodes (in the domain name
 	  space <xref target="RFC1034" />) can contain multiple PTR RRs
 	  at each child. For example, &lt;hash1&gt;.prop2 may contain
-	  multiple PTR RRs at that node. The single name property SHOULD
-	  be checked by the implementation.</t>
+	  multiple PTR RRs at that node. The single domain name property
+	  SHOULD be checked by the implementation.</t>
 	</section>
 
 	<section title="List of network addresses" anchor="sec-network">
