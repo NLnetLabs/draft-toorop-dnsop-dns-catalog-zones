@@ -650,13 +650,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	new instance of the zone MUST be ignored and an error SHOULD be
 	logged.</t>
 
-	<t>When zones are introduced into a catalog zone, a primary MUST
-	first make the new zones available for transfers before making
-	the updated catalog zone available for transfer, or sending
-	NOTIFY for the catalog zone to secondaries. Note that secondary
-	nameservers may attempt to transfer the catalog zone upon
-	refresh timeout, so care must be taken to make the member zones
-	available before any update to the list of member zones is
+	<t>When zones are introduced into a catalog zone, a primary
+	SHOULD first make the new zones available for transfers before
+	making the updated catalog zone available for transfer, or
+	sending NOTIFY for the catalog zone to secondaries. Note that
+	secondary nameservers may attempt to transfer the catalog zone
+	upon refresh timeout, so care must be taken to make the member
+	zones available before any update to the list of member zones is
 	visible in the catalog zone.</t>
 
 	<t>When zones are deleted from a catalog zone, a primary MAY
@@ -912,7 +912,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	    issues. Fixed references. Updated Area. Removed newly
 	    introduced custom RR TYPEs. Changed schema version to
 	    1. Changed TSIG requirement from MUST to SHOULD. Removed
-	    restrictive language about use of DNS QUERY.
+	    restrictive language about use of DNS QUERY. When zones are
+	    introduced into a catalog zone, a primary SHOULD first make
+	    the new zones available for transfers first (instead of
+	    MUST)..
           </t>
 
         </list>
