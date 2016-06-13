@@ -118,14 +118,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 
     <section title="Introduction">
       <t>DNS nameservers implement AXFR and IXFR for zone data
-      synchronization among a zone's primary its and secondary
-      nameservers, but the list of zones served by the primary (called a
-      catalog in <xref target="RFC1035" />) is not automatically
-      synchronized. The administrator of a DNS nameserver farm has to
-      manually, or via an external application layer, synchronize such
-      zone catalogs among primaries and their secondary
-      nameservers. This can be inconvenient, error-prone and dependent
-      on the nameserver implementation.</t>
+      synchronization among a zone's primary and secondary nameservers,
+      but the list of zones served by the primary (called a catalog in
+      <xref target="RFC1035" />) is not automatically synchronized. The
+      administrator of a DNS nameserver farm has to synchronize such
+      zone catalogs among primaries and their secondary nameservers
+      manually or via an external application layer. This can be
+      inconvenient, error-prone and dependent on the nameserver
+      implementation.</t>
 
       <t>A method for automatic zone catalog provisioning and
       synchronization is useful, so that the zone catalog can be
@@ -165,12 +165,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	transfers, for the purpose of setting up member zones to be
 	served from these secondary nameservers.</t>
 
-	<t>A catalog zone uses some RR TYPEs such as PTR differently to
-	achieve its purpose. Though this may be controversial, the
-	situation is not different from other similar zone-based
+	<t>A catalog zone uses some RR TYPEs such as PTR with alternate
+	semantics for its purposes. Although this may be controversial,
+	the situation is similar to other similar zone-based
 	representations such as response-policy zones <xref target="RPZ"
-	/>. However, none of the RR TYPEs used by catalog zones can
-	incur any additional section processing during DNS QUERY.</t>
+	/>. A design criterion of catalog zones is that none of the RR
+	TYPEs used therein may incur any additional section processing
+	during DNS QUERY.</t>
 
 	<t>Member zones' configuration is specified as a map of zone
 	properties, represented as a subtree of a node <xref
@@ -227,10 +228,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields
 	<xref target="RFC1035" /> are used during zone transfer. A
-	catalog zone's SOA SERIAL field MUST increase when an update is
-	made to the catalog zone's contents. Otherwise, secondary
-	nameservers may not notice updates to the catalog zone's
-	contents.</t>
+	catalog zone's SOA SERIAL field SHOULD increase when an update
+	is made to the catalog zone's contents as per serial number
+	arithmetic defined in <xref target="RFC1982" />. Otherwise,
+	secondary nameservers may not notice updates to the catalog
+	zone's contents.</t>
 
 	<t>The SOA record's MINIMUM field's value is not specially
 	defined by this memo. Although they are regular DNS zones,
@@ -289,7 +291,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop0" with
-	  string value "Example", the corresponding RR may look as
+	  string value "Example", the corresponding RR would appear as
 	  follows:</t>
 
 	  <figure>
@@ -312,7 +314,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "active" with
-	  boolean value false, the corresponding RR may look as
+	  boolean value false, the corresponding RR would appear as
 	  follows:</t>
 
 	  <figure>
@@ -344,14 +346,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  <t>An unsigned integer's TXT RDATA uses the representation of
 	  an unsuffixed "integer constant" as defined in the C
 	  programming language standard <xref target="ISO.9899.1990" />
-	  (of the type matching a 64-bit signed integer on that
+	  (of the type matching a 64-bit unsigned integer on that
 	  platform). The representation MUST be specified using a single
 	  &lt;character-string&gt; <xref target="RFC1034" />.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "min-ttl" with
-	  unsigned integer value 300, the corresponding RR may look as
-	  follows:</t>
+	  unsigned integer value 300, the corresponding RR would appear
+	  as follows:</t>
 
 	  <figure>
 	    <artwork>
@@ -378,7 +380,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "decay-rate"
-	  with value 0.33333333, the corresponding RR may look as
+	  with value 0.33333333, the corresponding RR would appear as
 	  follows:</t>
 
 	  <figure>
@@ -401,8 +403,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop1" with
-	  value "val1.example.com.", the corresponding RR may look as
-	  follows:</t>
+	  value "val1.example.com.", the corresponding RR would appear
+	  as follows:</t>
 
 	  <figure>
 	    <artwork>
@@ -431,7 +433,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  "catalog1.example.org." and contains a property "prop2" with
 	  its value being an unordered list of two names
 	  "a.example.com." and "b.example.com.", the corresponding RRs
-	  may look as follows:</t>
+	  would appear as follows:</t>
 
 	  <figure>
 	    <artwork>
@@ -460,8 +462,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "allow" with
-	  value [192.0.2.0/24, 198.51.100.0/24] as the list of
-	  networks, the corresponding RR may look as follows:</t>
+	  value [192.0.2.0/24, 198.51.100.0/24] as the list of networks,
+	  the corresponding RR would appear as follows:</t>
 
 	  <figure>
 	    <artwork>
@@ -522,13 +524,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 	zone.</t>
 
 	<t>The names of member zones are represented on the RDATA side
-	instead of as part of owner names so that the entire name of a
-	zone (that is technically possible <xref target="RFC1035" />)
-	can be represented correctly.</t>
+	instead of as part of owner names so that all valid domain names
+	may be represented regardless of their length. <xref
+	target="RFC1035" /></t>
 
 	<t>For example, if a catalog zone is named
 	"catalog1.example.org." and lists 3 zones "example.com.",
-	"example.net." and "example.org.", the RRs may look as
+	"example.net." and "example.org.", the RRs would appear as
 	follows:</t>
 
 	<figure>
@@ -552,6 +554,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<t>TBD: We may specify that unrecognized zone property names
 	must be ignored, or that nameserver specific properties must be
 	specified using the "x-" prefix similar to MIME type naming.</t>
+
+	<t>TBD: Any list of zone properties is ideally maintained as a
+	registry rather than within this memo.</t>
 
 	<section title="zone-soa-default-serial">
 	  <t>TBD.</t>
@@ -579,7 +584,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	"catalog1.example.org." and a member zone "example.com."
 	contains a property "prop0" with string (see <xref
 	target="sec-string" />) value "Example", the corresponding RR
-	may look as follows:</t>
+	would appear as follows:</t>
 
 	<figure>
 	  <artwork>
@@ -591,7 +596,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 	"cat1.example.org." and a member zone "example.com."  contains a
 	property "prop2" with its value being an unordered list (see
 	<xref target="sec-unolist" />) of two names "a.example.com."
-	and "b.example.com.", the corresponding RRs may look as
+	and "b.example.com.", the corresponding RRs would appear as
 	follows:</t>
 
 	<figure>
@@ -643,7 +648,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 	syntax (as they are treated as regular zones), but nameservers
 	MUST NOT process such broken zones as catalog zones. For the
 	purpose of catalog processing, the broken catalogs MUST be
-	ignored.</t>
+	ignored. If a broken catalog zone was transferred, the newly
+	transferred catalog zone MUST be ignored (but the older copy of
+	the catalog zone SHOULD be left running subject to values in SOA
+	fields).</t>
 
 	<t>If there is a clash between an existing member zone's name
 	and an incoming member zone's name (via transfer or update), the
@@ -750,6 +758,7 @@ please see http://xml.resource.org/authoring/README.html. -->
     <references title="Normative references">
       <?rfc include="reference.RFC.1034.xml"?>
       <?rfc include="reference.RFC.1035.xml"?>
+      <?rfc include="reference.RFC.1982.xml"?>
       <?rfc include="reference.RFC.2119.xml"?>
       <?rfc include="reference.RFC.2136.xml"?>
       <?rfc include="reference.RFC.2606.xml"?>
