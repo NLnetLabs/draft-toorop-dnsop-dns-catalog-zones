@@ -421,8 +421,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  property, and the catalog zone name in that order, such that N
 	  is a unique owner name in the catalog zone.</t>
 
-	  <t>Then, a property containing an unordered list of names as
-	  value is specified using multiple PTR RRs <xref
+	  <t>Then, a property containing an unordered list of domain
+	  names as value is specified using multiple PTR RRs <xref
 	  target="RFC1035" /> with owner name set to N, and each RR's
 	  RDATA set to each domain name in the list of the property's
 	  value respectively.</t>
@@ -518,8 +518,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <section title="List of member zones">
 	<t>The list of member zones are specified as an unordered list
-	(see <xref target="sec-unolist" />) of names under the owner
-	name "zones" where "zones" is a sub-domain of the catalog
+	(see <xref target="sec-unolist" />) of domain names under the
+	owner name "zones" where "zones" is a sub-domain of the catalog
 	zone.</t>
 
 	<t>The names of member zones are represented on the RDATA side
@@ -594,9 +594,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 	<t>As another example, if a catalog zone is named
 	"cat1.example.org." and a member zone "example.com."  contains a
 	property "prop2" with its value being an unordered list (see
-	<xref target="sec-unolist" />) of two names "a.example.com."
-	and "b.example.com.", the corresponding RRs would appear as
-	follows:</t>
+	<xref target="sec-unolist" />) of two domain names
+	"a.example.com."  and "b.example.com.", the corresponding RRs
+	would appear as follows:</t>
 
 	<figure>
 	  <artwork>
