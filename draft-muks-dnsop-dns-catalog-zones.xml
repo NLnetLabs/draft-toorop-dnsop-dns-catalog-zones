@@ -293,7 +293,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	prop0.catalog1.example.org. 3600 IN TXT "Example"
+        prop0.catalog1.example.org. 3600 IN TXT "Example"
 	    </artwork>
 	  </figure>
 
@@ -316,7 +316,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	active.catalog1.example.org. 3600 IN TXT "false"
+        active.catalog1.example.org. 3600 IN TXT "false"
 	    </artwork>
 	  </figure>
 
@@ -354,7 +354,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	min-ttl.catalog1.example.org. 3600 IN TXT "300"
+        min-ttl.catalog1.example.org. 3600 IN TXT "300"
 	    </artwork>
 	  </figure>
 
@@ -382,7 +382,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	decay-rate.catalog1.example.org. 3600 IN TXT "15e-2"
+        decay-rate.catalog1.example.org. 3600 IN TXT "15e-2"
 	    </artwork>
 	  </figure>
 
@@ -405,7 +405,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	prop1.catalog1.example.org. 3600 IN PTR val1.example.com.
+        prop1.catalog1.example.org. 3600 IN PTR val1.example.com.
 	    </artwork>
 	  </figure>
 
@@ -435,8 +435,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	&lt;hash1&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
-	&lt;hash2&gt;.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
+        &lt;hash1&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
+        &lt;hash2&gt;.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
 	    </artwork>
 	  </figure>
 
@@ -465,8 +465,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <figure>
 	    <artwork>
-	allow-query.catalog1.example.org. 3600 IN APL (
-		1:192.0.2.0/24 2:2001:db8::/32)
+        allow-query.catalog1.example.org. 3600 IN APL (
+                1:192.0.2.0/24 2:2001:db8::/32)
 	    </artwork>
 	  </figure>
 
@@ -507,7 +507,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<figure>
 	  <artwork>
-	version.catalog1.example.org. 3600 IN TXT "1"
+        version.catalog1.example.org. 3600 IN TXT "1"
 	  </artwork>
 	</figure>
 
@@ -534,9 +534,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<figure>
 	  <artwork>
-	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
-	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
-	&lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
+        &lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
+        &lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
+        &lt;hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
 	  </artwork>
 	</figure>
       </section>
@@ -587,7 +587,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<figure>
 	  <artwork>
-	prop0.&lt;m-hash&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
+        prop0.&lt;m-hash&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
 	  </artwork>
 	</figure>
 
@@ -600,10 +600,10 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	<figure>
 	  <artwork>
-	(&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
-	 3600 IN PTR a.example.com.)
-	(&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
-	 3600 IN PTR b.example.com.)
+        (&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
+         3600 IN PTR a.example.com.)
+        (&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
+         3600 IN PTR b.example.com.)
 	  </artwork>
 	</figure>
 
@@ -612,12 +612,12 @@ please see http://xml.resource.org/authoring/README.html. -->
       <section title="Example of a catalog zone">
 	<figure>
 	  <artwork>
-	    $ORIGIN catalog.example.org.
-	    @		IN SOA	. . 1 3600 3600 86400 3600
-			IN NS	invalid.
-	    version	IN TXT	"1"
-	    (5960775ba382e7a4e09263fc06e7c00569b6a05c.zones
-	     IN PTR domain1.example.com.)
+            $ORIGIN catalog.example.org.
+            @           IN SOA  . . 1 3600 3600 86400 3600
+                        IN NS   invalid.
+            version     IN TXT  "1"
+            (5960775ba382e7a4e09263fc06e7c00569b6a05c.zones
+             IN PTR domain1.example.com.)
 	  </artwork>
 	</figure>
       </section>
