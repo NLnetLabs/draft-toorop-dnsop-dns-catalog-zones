@@ -392,11 +392,11 @@ please see http://xml.resource.org/authoring/README.html. -->
 	  implementation.</t>
 	</section>
 
-	<section title="Single names" anchor="sec-sname">
-	  <t>A property with a single name as value is specified using a
-	  PTR RR <xref target="RFC1035" /> with owner name set to the
-	  name of the property as a sub-domain of the catalog zone name,
-	  and RDATA set to the property value.</t>
+	<section title="Single domain names" anchor="sec-sname">
+	  <t>A property with a single domain name as value is specified
+	  using a PTR RR <xref target="RFC1035" /> with owner name set
+	  to the name of the property as a sub-domain of the catalog
+	  zone name, and RDATA set to the property value.</t>
 
 	  <t>For example, if a catalog zone is named
 	  "catalog1.example.org." and contains a property "prop1" with
@@ -411,7 +411,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
 	  <t>Here, "prop1" can contain multiple PTR RRs at that node of
 	  the domain name space <xref target="RFC1034" />. The single
-	  name property SHOULD be checked by the implementation.</t>
+	  domain name property SHOULD be checked by the
+	  implementation.</t>
 	</section>
 
 	<section title="Unordered list of names" anchor="sec-unolist">
