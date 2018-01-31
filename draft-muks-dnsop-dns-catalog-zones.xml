@@ -34,7 +34,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
   <front>
 
-    <title>DNS catalog zones</title>
+    <title>DNS Catalog Zones</title>
 
     <author fullname="Mukund Sivaraman" initials="M." surname="Sivaraman">
       <organization>Internet Systems Consortium</organization>
@@ -106,10 +106,10 @@ please see http://xml.resource.org/authoring/README.html. -->
     <!-- <keyword>dns</keyword> -->
 
     <abstract>
-      <t>This document describes a method for automatic zone catalog
-      provisioning and synchronization among DNS primary and secondary
-      nameservers by storing and transferring the catalogs as regular
-      DNS zones.</t>
+      <t>This document describes a method for automatic DNS zone provisioning
+      among DNS primary and secondary nameservers by storing and transferring
+      the catalog of zones to be provisioned as one or more regular DNS zones.
+      </t>
     </abstract>
 
   </front>
@@ -158,16 +158,17 @@ please see http://xml.resource.org/authoring/README.html. -->
         </list></t>
 
         <t>An implementation of catalog zones MAY allow the catalog to contain
-        as member zones other catalog zones, but template zone configuration
+        other catalog zones as member zones, but template zone configuration
         present in a catalog zone only applies to its immediate member
         zones.</t>
 
         <t>A catalog zone uses some RR TYPEs (such as PTR) with alternate
-        semantics for its purposes. Although this may be controversial, the
-        situation is similar to other similar zone-based representations such as
-        response-policy zones <xref target="RPZ" />. A design criterion of
-        catalog zones is that none of the RR TYPEs used therein may incur any
-        additional section processing during a DNS QUERY.</t>
+        semantics to those originally defined for them. Although this may be
+        controversial, the situation is similar to other similar zone-based
+        representations such as response-policy zones <xref target="RPZ"
+        />. A design criterion of catalog zones is that none of the RR TYPEs
+        used therein may incur any additional section processing during a
+        DNS QUERY.</t>
 
         <t>The configuration of member zones is specified as a set of name/value
         pairs, stored in RRs in the subtree of a node <xref target="RFC1034" />
@@ -178,13 +179,9 @@ please see http://xml.resource.org/authoring/README.html. -->
         property names and their data types is given in <xref
         target="sec-properties" />.</t>
 
-        <t>As a catalog zone is primarily intended for the management of a
-        nameserver farm, an operator may choose not to have the zone available
-        for query. In this case there is no need to provide a delegation to the
-        zone; the zone is used purely as a means of transport of information
-        between the primary and secondary nameservers. However, since the
-        catalog zone is a proper DNS zone, there is no reason why it cannot
-        be the subject of a delegation and be made available for query.</t>
+        <t>Although a catalog zone is a proper DNS zone, it is primarily
+        intended for the management of a nameserver farm.  For this reason,
+        an operator may choose not to have the zone available for query.</t>
 
         <t>TBD: Transitive catalogs</t>
       </section>
@@ -203,7 +200,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <t>The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields <xref
           target="RFC1035" /> are used during zone transfer. A catalog zone's
-          SOA SERIAL field SHOULD increase when an update is made to the catalog
+          SOA SERIAL field MUST increase when an update is made to the catalog
           zone's contents as per serial number arithmetic defined in <xref
           target="RFC1982" />. Otherwise, secondary nameservers may not notice
           updates to the catalog zone's contents.</t>
@@ -234,8 +231,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <t><list style="symbols">
               <t>The NAME field contains the owner name of the respective
-              RR. As with all DNS zones, the owner name must be a child of the
-              catalog zone name.  The structure of the names is described
+              RR. As with all DNS zones, the owner name must be a sub-domain of
+              the catalog zone.  The structure of the names is described
               in <xref target="sec-representation"/></t>
 
               <t>The TYPE field depends on the type of catalog zone property
@@ -282,13 +279,13 @@ please see http://xml.resource.org/authoring/README.html. -->
             "zones" where "zones" is a sub-domain of the catalog zone.</t>
 
             <t>The names of member zones are represented on the RDATA side
-            instead of as part of owner names so that all valid domain names may
-            be represented regardless of their length <xref target="RFC1035" />.
-            The distinguishing identifier in the NAME field of the resource record is
-            a fixed-length string; each member zone's string must be unique.
-            Although any string could be chosen, in practise it will be simpler
-            to use a hash of the fully-qualified member zone name. The hash
-            algorithm used is implementation-dependent.</t>
+            instead of as part of owner names so that all valid domain
+            names may be represented regardless of their length <xref
+            target="RFC1035" />.  The distinguishing identifier in the NAME
+            field of the resource record is a unique label that identifies
+            the member zone.  Although any string could be used, in practise
+            it is likely that a hash of the fully-qualified member zone name
+            will be easiest to use.</t>
 
             <t>For example, if a catalog zone is named "catalog1.example.org."
             and lists three zones "example.com.", "example.net." and
@@ -296,25 +293,25 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-&lt;m-hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
-&lt;m-hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
-&lt;m-hash&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
+&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
+&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
+&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
               </artwork>
             </figure>
 
-            <t>... where &lt;m-hash&gt; is the hash of the fully-qualified
-            member zone name in the RDATA field.</t>
+            <t>... where &lt;m-unique&gt; is a label that uniquely identifies
+            the member zone name in the RDATA field.</t>
           </section>
 
           <section title="Template Zone Information">
-            <t>Template zone information comprises a set of properties that are
-            applied to all member zones listed in the catalog zone unless
-            overridden my member zone-specific information.  Such information is
-            represented by domain names immediately below the level of the name
-            of the catalog zone.  For example, if a catalog zone is named
-            "catalog1.example.org." and contains a property "prop0" with a string
-            (see <xref target="sec-string" />) value "Example", the
-            corresponding RR would appear as follows:</t>
+            <t>Template zone information comprises a set of properties that
+            are applied to all member zones listed in the catalog zone unless
+            overridden my member zone-specific information.  Such information
+            is represented by domain names immediately below the level of
+            the name of the catalog zone.  For example, if a catalog zone
+            is named "catalog1.example.org." and contains a property "prop0"
+            with a string (see <xref target="sec-string" />) value "Example",
+            the corresponding RR would appear as follows:</t>
 
             <figure>
               <artwork>
@@ -343,11 +340,12 @@ prop0.catalog1.example.org. 3600 IN TXT "Example"
 
             <figure>
               <artwork>
-prop0.&lt;m-hash&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
+prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
               </artwork>
             </figure>
 
-            <t>... where "m-hash" is the hash of the fully-qualified zone name.</t>
+            <t>... where "m-unique" is a label that uniquely identifies the
+            member zone name.</t>
           </section>
 
           <section title="Catalog Zone Schema Version" anchor="sec-version">
@@ -373,7 +371,10 @@ version.catalog1.example.org. 3600 IN TXT "1"
         </section>
       </section>
 
-      <section title="Zone Property Value Data Types" anchor="sec-types">
+      <section title="Property Data Types" anchor="sec-types">
+        <t>This section lists the various data types defined for template
+        and member zone properties.</t>
+
         <section title="Strings" anchor="sec-string">
           <t>A property with a string value is specified using a single
           TXT RR <xref target="RFC1035" /> with owner name set to the
@@ -381,19 +382,15 @@ version.catalog1.example.org. 3600 IN TXT "1"
           and RDATA set to the property value.</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "prop0" with
-          string value "Example", the corresponding RR would appear as
-          follows:</t>
+          "catalog1.example.org." and a zone whose associated label is
+          &lt;m-unique&gt; contains a property "prop0" with string value
+          "Example", the corresponding RR would appear as follows:</t>
 
           <figure>
             <artwork>
-prop0.catalog1.example.org. 3600 IN TXT "Example"
+prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
             </artwork>
           </figure>
-
-          <t>Here, "prop0" can contain multiple TXT RRs at that node of
-          the domain name space <xref target="RFC1034" />. The single
-          string property SHOULD be checked by the implementation.</t>
         </section>
 
         <section title="Booleans" anchor="sec-bool">
@@ -404,8 +401,8 @@ prop0.catalog1.example.org. 3600 IN TXT "Example"
           is case-insensitive.</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "active" with
-          boolean value false, the corresponding RR would appear as
+          "catalog1.example.org." and contains a template property "active"
+          with boolean value false, the corresponding RR would appear as
           follows:</t>
 
           <figure>
@@ -413,10 +410,6 @@ prop0.catalog1.example.org. 3600 IN TXT "Example"
 active.catalog1.example.org. 3600 IN TXT "false"
             </artwork>
           </figure>
-
-          <t>Here, "active" can contain multiple TXT RRs at that node of
-          the domain name space <xref target="RFC1034" />. The single
-          boolean property SHOULD be checked by the implementation.</t>
         </section>
 
         <section title="Integers" anchor="sec-int">
@@ -442,8 +435,8 @@ active.catalog1.example.org. 3600 IN TXT "false"
           &lt;character-string&gt; <xref target="RFC1034" />.</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "min-ttl" with
-          unsigned integer value 300, the corresponding RR would appear
+          "catalog1.example.org." and contains a template property "min-ttl"
+          with unsigned integer value 300, the corresponding RR would appear
           as follows:</t>
 
           <figure>
@@ -451,10 +444,6 @@ active.catalog1.example.org. 3600 IN TXT "false"
 min-ttl.catalog1.example.org. 3600 IN TXT "300"
             </artwork>
           </figure>
-
-          <t>Here, "min-ttl" can contain multiple TXT RRs at that node
-          of the domain name space <xref target="RFC1034" />. The single
-          integer property SHOULD be checked by the implementation.</t>
         </section>
 
         <section title="Floating-Point Values" anchor="sec-float">
@@ -470,20 +459,15 @@ min-ttl.catalog1.example.org. 3600 IN TXT "300"
           &lt;character-string&gt; <xref target="RFC1034" />.</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "decay-rate"
-          with value 0.15, the corresponding RR may appear as
-          follows:</t>
+          "catalog1.example.org." and a member zone with fixed-length
+          identifier &lt;m-unique&gt; contains a property "decay-rate"
+          with value 0.15, the corresponding RR may appear as follows:</t>
 
           <figure>
             <artwork>
-decay-rate.catalog1.example.org. 3600 IN TXT "15e-2"
+decay-rate.&lt;m-unique&gt;,zones.catalog1.example.org. 3600 IN TXT "15e-2"
             </artwork>
           </figure>
-
-          <t>Here, "decay-rate" can contain multiple TXT RRs at that
-          node of the domain name space <xref target="RFC1034" />. The
-          single floating-point property SHOULD be checked by the
-          implementation.</t>
         </section>
 
         <section title="Single Domain Names" anchor="sec-sname">
@@ -493,8 +477,8 @@ decay-rate.catalog1.example.org. 3600 IN TXT "15e-2"
           zone name, and RDATA set to the property value.</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "prop1" with
-          value "val1.example.com.", the corresponding RR would appear
+          "catalog1.example.org." and contains a template property "prop1"
+          with value "val1.example.com.", the corresponding RR would appear
           as follows:</t>
 
           <figure>
@@ -502,11 +486,6 @@ decay-rate.catalog1.example.org. 3600 IN TXT "15e-2"
 prop1.catalog1.example.org. 3600 IN PTR val1.example.com.
             </artwork>
           </figure>
-
-          <t>Here, "prop1" can contain multiple PTR RRs at that node of
-          the domain name space <xref target="RFC1034" />. The single
-          domain name property SHOULD be checked by the
-          implementation.</t>
         </section>
 
         <section title="Unordered List of Domain Names" anchor="sec-unolist">
@@ -906,9 +885,9 @@ allow-query.catalog1.example.org. 3600 IN APL (
             would appear as follows:</t>
             <figure>
               <artwork>
-(&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
+(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.cat1.example.org.
    3600 IN PTR a.example.com.)
-(&lt;hash&gt;.prop2.&lt;m-hash&gt;.zones.cat1.example.org.
+(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.cat1.example.org.
    3600 IN PTR b.example.com.)
               </artwork>
             </figure>
