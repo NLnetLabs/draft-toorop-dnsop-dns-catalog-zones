@@ -180,8 +180,9 @@ please see http://xml.resource.org/authoring/README.html. -->
         target="sec-properties" />.</t>
 
         <t>Although a catalog zone is a proper DNS zone, it is primarily
-        intended for the management of a nameserver farm.  For this reason,
-        an operator may choose not to have the zone available for query.</t>
+        intended for the management of a farm of authoritative nameservers.
+        It is not expected that the content of catalog zones should be accessible
+        from any recursive nameserver.</t>
 
         <t>TBD: Transitive catalogs</t>
       </section>
@@ -207,18 +208,18 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <t>Should the zone be made available for querying, the SOA record's
           MINIMUM field's value is the negative cache time (as defined in
-          <xref target="RFC2308"/>). Otherwise, no particular recommendation is
-          made for this field.</t>
+          <xref target="RFC2308"/>).  Since recursive nameservers are not
+          expected to be able to access (and subsequently cache) entries
+          from a catalog zone a value of zero (0) is RECOMMENDED.
 
-          <t>If there is no requirement to be able to query the catalog zone
-          (i.e. is is purely a vehicle for the transfer of configuration
-          information between the primary and secondary nameservers), the NS
-          records at the apex will not be used and no parent delegation is
-          required.  However, they are still required so that catalog zones are
-          syntactically correct DNS zones. Any valid DNS name can be used in the
-          NSDNAME field of such NS records <xref target="RFC1035" /> and they
-          MUST be ignored. A single NS RR with an NSDNAME field containing the
-          absolute name "invalid." is recommended <xref target="RFC2606" />.</t>
+          <t>Since there is no requirement to be able to query the catalog zone
+          via recursive namservers the NS records at the apex will not be used
+          and no parent delegation is required.  However, they are still
+          required so that catalog zones are syntactically correct DNS zones.
+          Any valid DNS name can be used in the NSDNAME field of such NS records
+          <xref target="RFC1035" /> and they MUST be ignored. A single NS RR
+          with an NSDNAME field containing the absolute name "invalid." is
+          RECOMMENDED <xref target="RFC2606" />.</t>
         </section>
 
         <section title="Representation of Member Zone Information" anchor="sec-representation">
@@ -243,11 +244,10 @@ please see http://xml.resource.org/authoring/README.html. -->
               target="RFC1035" />. This is because some RR TYPEs such as APL
               used by catalog zones are defined only for the IN CLASS.</t>
 
-              <t>The TTL field's value is not specially defined by this
-              memo. Catalog zones are for nameserver management only and are
-              not intended for general querying.  Operators should use
-              whatever value seems convenient for any management applications
-              that may query the catalog zone.</t>
+              <t>The TTL field's value is not specially defined by this memo.
+              Catalog zones are for authoritative nameserver management only
+              and are not intended for general querying via recursive resolvers
+              and therefore a value of zero (0) is RECOMMENDED.</t>
 
               <t>The RDLENGTH field contains the length of the RDATA
               field.</t>
@@ -257,6 +257,8 @@ please see http://xml.resource.org/authoring/README.html. -->
             may use only one data type for its values. A list of permitted
             zone property names and their data types is given in <xref
             target="sec-properties" />.</t>
+
+<!-- TODO:RPB - fix this -->
 
             <t>Many properties are single-valued, but some properties can be
             collections with thousands of values. An example is the list of
@@ -602,11 +604,11 @@ allow-query.catalog1.example.org. 3600 IN APL (
           using DNS zone transfers among nameservers.</t>
 
           <t>Although they are regular DNS zones, catalog zones contain only
-          information for the management of a set of nameservers.  For this
-          reason, operators may want to limit the systems able to query these
-          zones. It may be inconvenient to serve some contents of catalog zones
-          via DNS queries anyway due to the nature of their representation. A
-          separate method of querying entries inside the catalog zone may be
+          information for the management of a set of authoritative nameservers.
+          For this reason, operators may want to limit the systems able to query
+          these zones. It may be inconvenient to serve some contents of catalog
+          zones via DNS queries anyway due to the nature of their representation.
+          A separate method of querying entries inside the catalog zone may be
           made available by nameserver implementations (see <xref
           target="sec-notes" />).</t>
 
@@ -673,7 +675,7 @@ allow-query.catalog1.example.org. 3600 IN APL (
           <t>Implementations are advised to provide a tool that uses either the
           output of AXFR or an out-of-band method to perform queries on catalog
           zones.</t>
-	</section>
+        </section>
       </section>
 
       <section title="Security Considerations">
@@ -951,7 +953,7 @@ version     IN TXT  "1"
           <t>
             draft-muks-dnsop-dns-catalog-zones-04
             <vspace/>
-            Reordering of sections into jmore logical order.<vspace/>
+            Reordering of sections into more logical order.<vspace/>
             Clarified how a catalog zone may or may not be made available for query.
           </t>
 
