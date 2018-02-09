@@ -202,7 +202,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           target="RFC1035" /> are used during zone transfer. A catalog zone's
           SOA SERIAL field MUST increase when an update is made to the catalog
           zone's contents as per serial number arithmetic defined in <xref
-          target="RFC1982" />. Otherwise, secondary nameservers may not notice
+          target="RFC1982" />. Otherwise, secondary nameservers might not notice
           updates to the catalog zone's contents.</t>
 
           <t>Should the zone be made available for querying, the SOA record's
@@ -283,9 +283,7 @@ please see http://xml.resource.org/authoring/README.html. -->
             names may be represented regardless of their length <xref
             target="RFC1035" />.  The distinguishing identifier in the NAME
             field of the resource record is a unique label that identifies
-            the member zone.  Although any string could be used, in practise
-            it is likely that a hash of the fully-qualified member zone name
-            will be easiest to use.</t>
+            the member zone.</t>
 
             <t>For example, if a catalog zone is named "catalog1.example.org."
             and lists three zones "example.com.", "example.net." and
@@ -293,14 +291,22 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
-&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
-&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
+&lt;m-unique1&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
+&lt;m-unique2&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
+&lt;m-unique3&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
               </artwork>
             </figure>
 
-            <t>... where &lt;m-unique&gt; is a label that uniquely identifies
+            <t>... where &lt;m-uniqueN&gt; is a label that uniquely identifies
             the member zone name in the RDATA field.</t>
+
+            <t>Although any legal label could be used for &lt;m-unique&gt;
+            it is RECOMMENDED that it be a value deterministically derived
+            from the fully-qualified member zone name.  The BIND9 implementation
+            uses the 40 character hexadecimal representation of the SHA-1 digest
+            <xref target="FIPS.180-4.2015" /> of the lower-cased member zone
+            name as encoded in wire format.</t>
+
           </section>
 
           <section title="Template Zone Information">
@@ -344,8 +350,8 @@ prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
               </artwork>
             </figure>
 
-            <t>... where "m-unique" is a label that uniquely identifies the
-            member zone name.</t>
+            <t>... where "m-unique" is the label that uniquely identifies the
+            member zone name as described in <xref target="sec-member-zones"/>.</t>
           </section>
 
           <section title="Catalog Zone Schema Version" anchor="sec-version">
