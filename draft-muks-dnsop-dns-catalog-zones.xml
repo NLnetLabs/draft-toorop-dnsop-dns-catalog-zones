@@ -136,13 +136,36 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       <t>The contents and representation of catalog zones are described in <xref
       target="sec-catzones" />.  Nameserver behavior is described in <xref
-      target="sec-impl" />.  A glossary of some terms used in this memo is
-      provided in <xref target="sec-glossary" />.</t>
+      target="sec-impl" />.</t>
+
+    </section>
+
+    <section title="Terminology" anchor="sec-terminology">
 
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref target="RFC2119" />.
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document
+      are to be interpreted as described in <xref target="RFC2119" />.  </t>
+
+      <t>
+        <list style="hanging" hangIndent="6">
+
+          <t hangText="Catalog zone:">A DNS zone containing a DNS
+          catalog, that is, a list of DNS zones and associated template
+          zone configuration common to all member zones.</t>
+
+          <t hangText="Member zone:">A DNS zone whose configuration is
+          published inside a catalog zone.</t>
+
+          <t hangText="Zone property:">A configuration parameter of a
+          zone, sometimes also called a zone option, represented as a
+		  key/value pair.</t>
+
+          <t hangText="$CZ">Used in examples as an abbreviation to represent
+          the domain name of the catalog zone itself (i.e. its $ORIGIN).</t>
+
+        </list>
       </t>
+
     </section>
 
     <section title="Description" anchor="sec-catzones">
@@ -209,6 +232,8 @@ please see http://xml.resource.org/authoring/README.html. -->
           the property relates to the catalog zone ifself, a member zone thereof, or
           a zone template as described in <xref target="sec-structure"/>.  The
           owner names are case insensitive.</t>
+
+          <t>RPBXXX: The general form of a Catalog Zone record is as follows:</t>
 
           <t>Each key/value pair has a defined data type, and each data type
           accordingly uses a particular RR TYPE to represent its possible values, as
@@ -305,7 +330,7 @@ please see http://xml.resource.org/authoring/README.html. -->
             from the fully-qualified member zone name.  The BIND9 implementation
             uses the 40 character hexadecimal representation of the SHA-1 digest
             <xref target="FIPS.180-4.2015" /> of the lower-cased member zone
-            name as encoded in wire format.</t>
+            name as encoded in uncompressed wire format.</t>
 
           </section>
 
@@ -377,8 +402,7 @@ version.catalog1.example.org. 3600 IN TXT "1"
         </section>
       </section>
 
-
-		<section title="Data Types" anchor="sec-types">
+      <section title="Data Types" anchor="sec-types">
 
         <t>This section lists the various data types defined for use within catalog
         zones.</t>
@@ -524,6 +548,7 @@ allow-query.catalog1.example.org. 3600 IN APL (
           />) with a suitable network and prefix to result in a single
           host address.</t>
         </section>
+
 <!--
         <section title="Comments">
           <t>Comments may be added anywhere in a catalog zone using a
@@ -533,6 +558,7 @@ allow-query.catalog1.example.org. 3600 IN APL (
         </section>
 -->
 
+<!--
         <section title="Unordered List of Domain Names" anchor="sec-unolist">
 
 <t> XXXRPB: remove this since it's handled by generic lists. </t>
@@ -567,6 +593,7 @@ allow-query.catalog1.example.org. 3600 IN APL (
           multiple PTR RRs at that node. The single domain name property
           SHOULD be checked by the implementation.</t>
         </section>
+-->
 
       </section>
 
@@ -770,43 +797,6 @@ allow-query.catalog1.example.org. 3600 IN APL (
         </front>
       </reference>
     </references>
-
-    <section title="Glossary" anchor="sec-glossary">
-      <t>
-        <list style="hanging" hangIndent="6">
-
-          <t hangText="Catalog zone:">A DNS zone containing a DNS
-          catalog, that is, a list of DNS zones and associated template
-          zone configuration common to all member zones.</t>
-
-          <t hangText="Member zone:">A DNS zone whose configuration is
-          published inside a catalog zone.</t>
-
-          <t hangText="Member zone name hash:">The hexadecimal format
-          40-digit SHA-1 <xref target="FIPS.180-4.2015" /> digest, of a
-          zone name in uncompressed wire format.</t>
-
-          <t hangText="Primary nameserver:">An authoritative server
-          configured to be the source of zone transfer to one or more
-          [secondary] nameservers. Also see <xref target="RFC7719"
-          />.</t>
-
-          <t hangText="RDATA hash:">The hexadecimal format 40-digit
-          SHA-1 <xref target="FIPS.180-4.2015" /> digest, of the RDATA
-          of the corresponding RR. For RDATA containing DNS names, no
-          name compression must be in use, i.e., the name must be in its
-          full expanded wire data format when it is hashed.</t>
-
-          <t hangText="Secondary nameserver:">An authoritative server
-          which uses zone transfer to retrieve the zone. Also see <xref
-          target="RFC7719" />.</t>
-
-          <t hangText="Zone property:">A configuration parameter of a
-          zone, sometimes also called a zone option.</t>
-
-        </list>
-      </t>
-    </section>
 
     <section title="Open issues and discussion (to be removed before final publication)">
       <t><list style="numbers">
