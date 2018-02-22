@@ -310,11 +310,23 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <section title="Vendor-specific Properties" anchor="sec-vsa">
 
-            <t>Placeholder</t>
+            <t>TBD: Prepare a list of zone configuration properties that are common
+            to DNS implementations. This is so that a company may manage a catalog
+            zone using a Windows DNS server as the primary, and a secondary
+            nameserver hosting service may pick up the common properties and may use
+            a different nameserver implementation such as BIND or NSD on a POSIX
+            operating system to serve it.</t>
+
+            <t>TBD: We may specify that unrecognized zone property names must be
+            ignored, or that nameserver specific properties must be specified using
+            the "x-" prefix similar to MIME type naming.</t>
+
+            <t>TBD: Any list of zone properties is ideally maintained as a
+            registry rather than within this memo.</t>
 
           </section>
-
         </section>
+
 
         <section title="Zone Structure" anchor="sec-structure">
 
@@ -431,38 +443,33 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="String" anchor="sec-string">
 
           <t>A key with a string value is represented with a TXT RR <xref
-          target="RFC1035" />.</t>
+          target="RFC1035" />, e.g.:</t>
+
+          <figure>
+            <artwork>
+     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "Example"
+            </artwork>
+          </figure>
 
           <t>If the RDATA is split into multiple &lt;character-string&gt; elements
           the MUST be directly concatenated without any separating character.</t>
 
-          <t>For example, if a catalog zone is named
-          "catalog1.example.org." and a zone whose associated label is
-          &lt;m-unique&gt; contains a property "prop0" with string value
-          "Example", the corresponding RR would appear as follows:</t>
-
-          <figure>
-            <artwork>
-     prop0.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "Example"
-            </artwork>
-          </figure>
         </section>
 
         <section title="Booleans" anchor="sec-bool">
 
           <t>A key with a boolean value is represented with a TXT RR containing a
           single &lt;character-string&gt; with a value of "true" for true condition
-          and "false" for false condition. The RDATA is case-insensitive.</t>
-
-          <t>For example, if a catalog zone is named "catalog1.example.org." and
-          contains a default property "active" with boolean value false, the
-          corresponding RR would appear as follows:</t>
+          and "false" for false condition, e.g:</t>
 
           <figure>
             <artwork>
-     active.defaults.$CZ 0 IN TXT "false"
+     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "false"
             </artwork>
           </figure>
+
+		  <t>The RDATA is case-insensitive.</t>
+
         </section>
 
         <section title="Integers" anchor="sec-int">
@@ -482,16 +489,15 @@ please see http://xml.resource.org/authoring/README.html. -->
           (of the type matching a 64-bit unsigned integer on that
           platform).</t>
 
-          <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a default property "min-ttl"
-          with unsigned integer value 300, the corresponding RR would appear
-          as follows:</t>
+          <t>For example, a property with an unsigned integer value of 300 would
+          appear as follows:</t>
 
           <figure>
             <artwork>
-     min-ttl.defaults.$CZ 0 IN TXT "300"
+     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "300"
             </artwork>
           </figure>
+
         </section>
 
         <section title="Floating-Point Values" anchor="sec-float">
@@ -503,14 +509,12 @@ please see http://xml.resource.org/authoring/README.html. -->
           unsuffixed "floating constant" as defined in the C programming language
           standard <xref target="ISO.9899.1990" />.</t>
 
-          <t>For example, if a catalog zone is named "catalog1.example.org." and a
-          zone whose associated label identifier &lt;m-unique&gt; contains a property
-          "decay-rate" with value 0.15, the corresponding RR may appear as
-          follows:</t>
+          <t>For example, a property with an unsigned integer value of 0.15 may
+          appear as follows:</t>
 
           <figure>
             <artwork>
-     decay-rate.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "15e-2"
+     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "15e-2"
             </artwork>
           </figure>
         </section>
@@ -518,55 +522,51 @@ please see http://xml.resource.org/authoring/README.html. -->
         <section title="Domain Name" anchor="sec-sname">
 
           <t>A key whose value is a domain name is specified using a PTR RR <xref
-          target="RFC1035" />.</t>
-
-          <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a default property "prop1"
-          with value "val1.example.com.", the corresponding RR would appear
-          as follows:</t>
+          target="RFC1035" />, e.g.:</t>
 
           <figure>
             <artwork>
-     prop1.defaults.$CZ 0 IN PTR val1.example.com.
+     example-prop.defaults.$CZ 0 IN PTR ns1.example.com.
             </artwork>
           </figure>
         </section>
 
-<!-- RPB - suggest constrain this to a single prefix -->
+        <section title="IP Prefix" anchor="sec-network">
 
-        <section title="List of Network Prefixes" anchor="sec-network">
+          <t>A property whose value is an IP network prefix is specified using an APL
+          RR <xref target="RFC3123"/>.  The negation flag ("!" in presentation format)
+          may be used to indicate all addresses not included within that prefix, e.g.
+          for use in Access Control Lists, e.g.:</t>
 
-          <t>A property with a list of network addresses as value is
-          specified using a single APL RR <xref target="RFC3123" /> with
-          owner name set to the name of the property as a sub-domain of
-          the catalog zone name, and RDATA set to the property value. In
-          its presentation format, the "!" character (corresponding to
-          the negation flag) is used to negate a network element. The
-          exact meaning of a negated network element is left to be
-          described by the property that APL is used for.</t>
-
-          <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "allow-query"
-          with value [192.0.2.0/24, 2001:db8::/32] as the list of
-          networks, the corresponding RR would appear as follows:</t>
+          <t>Although a single APL record is capable of containing multiple prefixes,
+          for consistency of representation lists of prefixes MUST use the
+          multi-valued property syntax as documented in <xref
+          target="sec-multivalue"/>, e.g.:</t>
 
           <figure>
             <artwork>
-  allow-query.defaults.$CZ 0 IN APL ( 1:192.0.2.0/24 2:2001:db8::/32)
+     $ORIGIN &lt;m-unique&gt;.zones.$CZ
+     &lt;unique-id-1&gt;.example-prop 0 IN APL ( 1:192.0.2.0/24 )
+     &lt;unique-id-2&gt;.example-prop 0 IN APL ( !1:0.0.0.0/0 )
             </artwork>
           </figure>
 
-          <t>Here, "allow-query" can contain multiple APL RRs at that
-          node of the domain name space <xref target="RFC1034" />. The
-          single APL RR property SHOULD be checked by the
-          implementation.</t>
+          <t>Implementations MUST accept only the first prefix within each APL record
+          and MUST ignore any subsequent prefixes found therein.</t>
+
         </section>
 
         <section title="Single Host Address">
-          <t>A single host address is represented using the list of
-          network addresses data type (see <xref target="sec-network"
-          />) with a suitable network and prefix to result in a single
-          host address.</t>
+
+          <t>A single host address is represented using either an A or AAAA record as
+          appropriate, e.g.:</t>
+
+          <figure>
+            <artwork>
+     example-prop1.&lt;m-unique&gt;.zones.$CZ 0 IN A 192.0.2.1
+     example-prop2.&lt;m-unique&gt;.zones.$CZ 0 IN AAAA 2001:db8::1
+            </artwork>
+          </figure>
         </section>
 
 <!--
@@ -580,28 +580,6 @@ please see http://xml.resource.org/authoring/README.html. -->
 
       </section>
 
-      <section title="Zone Configuration Properties" anchor="sec-properties">
-        <t>TBD: Prepare a list of zone configuration properties that are common
-        to DNS implementations. This is so that a company may manage a catalog
-        zone using a Windows DNS server as the primary, and a secondary
-        nameserver hosting service may pick up the common properties and may use
-        a different nameserver implementation such as BIND or NSD on a POSIX
-        operating system to serve it.</t>
-
-        <t>TBD: We may specify that unrecognized zone property names must be
-        ignored, or that nameserver specific properties must be specified using
-        the "x-" prefix similar to MIME type naming.</t>
-
-        <t>TBD: Any list of zone properties is ideally maintained as a
-        registry rather than within this memo.</t>
-
-        <section title="zone-soa-default-serial">
-          <t>TBD.</t>
-        </section>
-        <section title="zone-soa-default-refresh">
-          <t>TBD.</t>
-        </section>
-      </section>
 
 
       <section title="Nameserver Behavior" anchor="sec-impl">
@@ -737,7 +715,6 @@ please see http://xml.resource.org/authoring/README.html. -->
   <back>
 
     <references title="Normative references">
-      <?rfc include="reference.RFC.1034.xml"?>
       <?rfc include="reference.RFC.1035.xml"?>
       <?rfc include="reference.RFC.1982.xml"?>
       <?rfc include="reference.RFC.2119.xml"?>
