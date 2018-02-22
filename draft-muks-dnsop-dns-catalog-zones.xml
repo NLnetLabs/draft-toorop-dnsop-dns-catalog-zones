@@ -217,9 +217,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <t>NB:  Catalog zones use some RR TYPEs (such as PTR) with alternate
           semantics to those originally defined for them. Although this may be
           controversial, the situation is similar to other similar zone-based
-          representations such as response-policy zones <xref target="RPZ" />. A
-          design criterion of catalog zones is that none of the RR TYPEs used therein
-          may incur any additional section processing during a DNS QUERY.</t>
+          representations such as response-policy zones <xref target="RPZ" />.</t>
 
           <t>The CLASS field of every RR in a catalog zone MUST be IN (1).  This is
           because some RR TYPEs such as APL used by catalog zones are defined only
