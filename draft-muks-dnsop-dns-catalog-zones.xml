@@ -763,7 +763,6 @@ allow-query.catalog1.example.org. 3600 IN APL (
       <?rfc include="reference.RFC.2606.xml"?>
       <?rfc include="reference.RFC.2845.xml"?>
       <?rfc include="reference.RFC.3123.xml"?>
-      <?rfc include="reference.RFC.7719.xml"?>
       <?rfc include="reference.ISO.9899.1990.xml"?>
 
       <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
@@ -812,7 +811,7 @@ allow-query.catalog1.example.org. 3600 IN APL (
         <vspace blankLines="1"/>
         Will it be possible to setup a catalog zone on one nameserver as
         primary, and allow its member zones to be served by different
-        primary namesservers?
+        primary nameservers?
         </t>
         <t>Transitive relationships
         <vspace blankLines="1"/>
