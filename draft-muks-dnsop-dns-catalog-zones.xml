@@ -241,13 +241,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-      [&lt;unique_id&gt;.]&lt;key&gt;.&lt;path&gt;.$CZ 0 IN &lt;RRTYPE&gt; &lt;value&gt;
+      [&lt;unique-id&gt;.]&lt;key&gt;.&lt;path&gt;.$CZ 0 IN &lt;RRTYPE&gt; &lt;value&gt;
               </artwork>
             </figure>
 
             <t>where &lt;path&gt; is a sequence of labels with values depending on
             the purpose (and hence position) of the record within the catalog zone
-            (see <xref target="sec-structure"/>) and where the &lt;unique_id&gt;
+            (see <xref target="sec-structure"/>) and where the &lt;unique-id&gt;
             prefix is only present for multi-valued properties (see <xref
             target="sec-multivalue"/>).</t>
 
@@ -291,13 +291,14 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-      &lt;unique-prefix1&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 1"
-      &lt;unique-prefix2&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 2"
+      &lt;unique-id-1&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 1"
+      &lt;unique-id-2&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 2"
+      ...
               </artwork>
             </figure>
 
             <t>NB: a property that is specified to be multi-valued MUST be encoded
-            using the prefixed key syntax even if there is only one value
+            using the unique prefixed key syntax even if there is only one value
             present.</t>
 
             <t>The specification of any multi-valued property MUST document whether
@@ -333,16 +334,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-        &lt;m-unique1&gt;.zones.$CZ 0 IN PTR example.com.
-        &lt;m-unique2&gt;.zones.$CZ 0 IN PTR example.net.
-        &lt;m-unique3&gt;.zones.$CZ 0 IN PTR example.org.
+        &lt;m-unique-1&gt;.zones.$CZ 0 IN PTR example.com.
+        &lt;m-unique-2&gt;.zones.$CZ 0 IN PTR example.net.
+        &lt;m-unique-3&gt;.zones.$CZ 0 IN PTR example.org.
               </artwork>
             </figure>
 
-            <t>where &lt;m-uniqueN&gt; is a label that uniquely tags each record in
+            <t>where &lt;m-unique-N&gt; is a label that uniquely tags each record in
             the collection, as described in <xref target="sec-multivalue"/>.</t>
 
-            <t>Although any legal label could be used for &lt;m-uniqueN&gt;
+            <t>Although any legal label could be used for &lt;m-unique-N&gt;
             it is RECOMMENDED that it be a value deterministically derived
             from the fully-qualified member zone name.  The BIND9 implementation
             uses the 40 character hexadecimal representation of the SHA-1 digest
@@ -397,13 +398,26 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-     example-prop.&lt;m-unique&gt;.zones.$CZ. 0 IN TXT "Example"
+     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "Example"
               </artwork>
             </figure>
 
             <t>where "m-unique" is the label that uniquely identifies the member zone
             name as described in <xref target="sec-member-zones"/>.</t>
 
+            <t>NB: when a zone-specific property is multi-valued the owner name will
+            contain two unique identifiers, the left-most tagging being associated
+            with the individual value (&lt;unique-id-N&gt;) and the other
+            (&lt;m-unique&gt;) associated with the member zone itself, e.g.: </t>
+
+            <figure>
+              <artwork>
+     $ORIGIN &lt;m-unique&gt;.zones.$CZ
+     &lt;unique-id-1&gt;.example-prop 0 IN TXT "Value 1"
+     &lt;unique-id-2&gt;.example-prop 0 IN TXT "Value 2"
+     ...
+              </artwork>
+            </figure>
           </section>
 
         </section>
