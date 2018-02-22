@@ -149,9 +149,8 @@ please see http://xml.resource.org/authoring/README.html. -->
       <t>
         <list style="hanging" hangIndent="6">
 
-          <t hangText="Catalog zone:">A DNS zone containing a DNS
-          catalog, that is, a list of DNS zones and associated template
-          zone configuration common to all member zones.</t>
+          <t hangText="Catalog zone:">A DNS zone containing a DNS catalog, that
+          is, a list of DNS zones and associated zone configuration.</t>
 
           <t hangText="Member zone:">A DNS zone whose configuration is
           published inside a catalog zone.</t>
@@ -174,13 +173,13 @@ please see http://xml.resource.org/authoring/README.html. -->
 
         <t><list style="symbols">
         <t>A list of DNS zones (called "member zones").</t>
-        <t>Template zone configuration information common to all member
+        <t>Default zone configuration information common to all member
         zones.</t>
         <t>Zone-specific configuration information.</t>
         </list></t>
 
         <t>An implementation of catalog zones MAY allow the catalog to contain
-        other catalog zones as member zones, but template zone configuration
+        other catalog zones as member zones, but default zone configuration
         present in a catalog zone only applies to its immediate member
         zones.</t>
 
@@ -230,8 +229,8 @@ please see http://xml.resource.org/authoring/README.html. -->
           encapsulated within the owner name of a DNS RR and the corresponding value
           is stored in the RR's RDATA.  The specific owner name depends on whether
           the property relates to the catalog zone ifself, a member zone thereof, or
-          a zone template as described in <xref target="sec-structure"/>.  The
-          owner names are case insensitive.</t>
+          to default zone properties described in <xref target="sec-structure"/>.
+          The owner names are case insensitive.</t>
 
           <section title="Resource Record Format">
             <t>Each key/value pair has a defined data type, and each data type
@@ -360,56 +359,47 @@ please see http://xml.resource.org/authoring/README.html. -->
               </artwork>
             </figure>
 
-            <t>NB: Version 1 was used in an earlier version of this memo and
-            reflected the first implementation within BIND 9.11 and 9.12  Future
-            major releases of BIND 9 will implement Version 2.</t>
+            <t>NB: Version 1 was used in a draft version of this memo and reflected
+            the first implementation within BIND 9.11 and 9.12.  Later major releases
+            of BIND 9 implement Version 2 (or as specified in subsequent revisions of
+            this specification).</t>
 
           </section>
 
-          <section title="Template Zone Information">
-            <t>Template zone information comprises a set of properties that
-            are applied to all member zones listed in the catalog zone unless
-            overridden my member zone-specific information.  Such information
-            is represented by domain names immediately below the level of
-            the name of the catalog zone.  For example, if a catalog zone
-            is named "catalog1.example.org." and contains a property "prop0"
-            with a string (see <xref target="sec-string" />) value "Example",
-            the corresponding RR would appear as follows:</t>
+          <section title="Default Zone Configuration">
+
+            <t>Default zone configuration comprises a set of properties that are
+            applied to all member zones listed in the catalog zone unless overridden
+            my member zone-specific information.</t>
+
+            <t>All such properties are stored as child nodes of the owner name
+            "defaults" itself a direct child node of the catalog zone, e.g.:</t>
 
             <figure>
               <artwork>
-prop0.catalog1.example.org. 0 IN TXT "Example"
+     example-prop.defaults.$CZ 0 IN TXT "Example"
               </artwork>
             </figure>
 
-            <t>Property names can be any valid label, with the exception of:</t>
-
-            <t><list style="symbols">
-              <t>version - reserved for schema version information (see <xref
-              target="sec-version" />).</t>
-              <t>zones - reserved for the list of member zones (see <xref
-              target="sec-member-zones" />).</t>
-            </list></t>
           </section>
 
           <section title="Zone Properties Specific to a Member Zone">
-            <t>Template zone properties can be overridden on a per-zone basis by
+
+            <t>Default zone properties can be overridden on a per-zone basis by
             specifying the property under the the sub-domain associated with the
-            member zone in the list of zones.  For example, if a catalog zone is
-            named "catalog1.example.org." and a member zone "example.com."
-            contains a property "prop0" with string (see <xref
-            target="sec-string" />) value "Example", the corresponding RR would
-            appear as follows:</t>
+            member zone in the list of zones, e.g.:</t>
 
             <figure>
               <artwork>
-     prop0.&lt;m-unique&gt;.zones.$CZ. 0 IN TXT "Example"
+     example-prop.&lt;m-unique&gt;.zones.$CZ. 0 IN TXT "Example"
               </artwork>
             </figure>
 
-            <t>... where "m-unique" is the label that uniquely identifies the
-            member zone name as described in <xref target="sec-member-zones"/>.</t>
+            <t>where "m-unique" is the label that uniquely identifies the member zone
+            name as described in <xref target="sec-member-zones"/>.</t>
+
           </section>
+
         </section>
       </section>
 
@@ -445,7 +435,7 @@ prop0.catalog1.example.org. 0 IN TXT "Example"
           and "false" for false condition. The RDATA is case-insensitive.</t>
 
           <t>For example, if a catalog zone is named "catalog1.example.org." and
-          contains a template property "active" with boolean value false, the
+          contains a default property "active" with boolean value false, the
           corresponding RR would appear as follows:</t>
 
           <figure>
@@ -473,7 +463,7 @@ prop0.catalog1.example.org. 0 IN TXT "Example"
           platform).</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a template property "min-ttl"
+          "catalog1.example.org." and contains a default property "min-ttl"
           with unsigned integer value 300, the corresponding RR would appear
           as follows:</t>
 
@@ -511,7 +501,7 @@ prop0.catalog1.example.org. 0 IN TXT "Example"
           target="RFC1035" />.</t>
 
           <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a template property "prop1"
+          "catalog1.example.org." and contains a default property "prop1"
           with value "val1.example.com.", the corresponding RR would appear
           as follows:</t>
 
@@ -795,13 +785,13 @@ prop0.catalog1.example.org. 0 IN TXT "Example"
         based on the location of the primary in the hierarchy. It may
         not be possible to specify this within a catalog zone.
         </t>
-        <t>Templates
+        <!-- <t>Templates
         <vspace blankLines="1"/>
         Are support for config and zone data templates useful at this
         level? They would add complexity across implementations. If
         added, it would be better to restrict templates at the primary
         nameserver and let the secondary receive regular expanded zones.
-        </t>
+        </t> -->
         <t>Overriding controls
         <vspace blankLines="1"/>
         A way to override zone config options (as prescribed by the
@@ -809,32 +799,32 @@ prop0.catalog1.example.org. 0 IN TXT "Example"
         would be configured outside catalog zones, it may be better to
         leave this to implementations.
         </t>
-        <t>Use of hashing
+        <!-- <t>Use of hashing
         <vspace blankLines="1"/>
         Should use of hashing be completely removed, and replaced with
         the same common owner name for all property RRs in a collection?
         Both IXFR and DNS UPDATE allow changing individual RRs in a
         RRset.
-        </t>
-        <t>Choice of hash function
+        </t> -->
+        <!-- <t>Choice of hash function
         <vspace blankLines="1"/>
         Should a different faster hash function be chosen to replace
         SHA-1 when computing catalog member zone name hashes?
-        </t>
-        <t>Overriding existing RR types
+        </t> -->
+        <!-- <t>Overriding existing RR types
         <vspace blankLines="1"/>
         This memo currently overrides only the PTR RR TYPE's meaning as
         PTR is currently used for reverse lookups. But such overridden
         use seems like a non-issue as PTR is defined to be a pointer to
         any name in <xref target="RFC1035" />.
-        </t>
-        <t>APL limits
+        </t> -->
+        <!-- <t>APL limits
         <vspace blankLines="1"/>
         APL can only support as many networks as can fit in its
         RDATA. Though a very large number of networks can be listed in a
         single RDATA field, it is still limited in size. Will this
         limitation become a problem for any users?
-        </t>
+        </t> -->
       </list></t>
     </section>
 
