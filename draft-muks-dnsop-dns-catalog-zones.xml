@@ -297,8 +297,9 @@ please see http://xml.resource.org/authoring/README.html. -->
               </artwork>
             </figure>
 
-            <t>NB: propertythat is specified to be multi-valued MUST be encoded using
-            the prefixed key syntax even if there is only one value present.</t>
+            <t>NB: a property that is specified to be multi-valued MUST be encoded
+            using the prefixed key syntax even if there is only one value
+            present.</t>
 
             <t>The specification of any multi-valued property MUST document whether
             the collection represents either an ordered or un-ordered list.  In the
@@ -402,7 +403,7 @@ prop0.catalog1.example.org. 0 IN TXT "Example"
 
             <figure>
               <artwork>
-prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "Example"
+     prop0.&lt;m-unique&gt;.zones.$CZ. 0 IN TXT "Example"
               </artwork>
             </figure>
 
@@ -432,7 +433,7 @@ prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "Example"
 
           <figure>
             <artwork>
-prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "Example"
+     prop0.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "Example"
             </artwork>
           </figure>
         </section>
@@ -449,7 +450,7 @@ prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "Example"
 
           <figure>
             <artwork>
-active.catalog1.example.org. 0 IN TXT "false"
+     active.defaults.$CZ 0 IN TXT "false"
             </artwork>
           </figure>
         </section>
@@ -478,7 +479,7 @@ active.catalog1.example.org. 0 IN TXT "false"
 
           <figure>
             <artwork>
-min-ttl.catalog1.example.org. 0 IN TXT "300"
+     min-ttl.defaults.$CZ 0 IN TXT "300"
             </artwork>
           </figure>
         </section>
@@ -499,7 +500,7 @@ min-ttl.catalog1.example.org. 0 IN TXT "300"
 
           <figure>
             <artwork>
-decay-rate.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "15e-2"
+     decay-rate.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "15e-2"
             </artwork>
           </figure>
         </section>
@@ -516,7 +517,7 @@ decay-rate.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "15e-2"
 
           <figure>
             <artwork>
-prop1.catalog1.example.org. 0 IN PTR val1.example.com.
+     prop1.defaults.$CZ 0 IN PTR val1.example.com.
             </artwork>
           </figure>
         </section>
@@ -541,8 +542,7 @@ prop1.catalog1.example.org. 0 IN PTR val1.example.com.
 
           <figure>
             <artwork>
-allow-query.catalog1.example.org. 0 IN APL (
-    1:192.0.2.0/24 2:2001:db8::/32)
+  allow-query.defaults.$CZ 0 IN APL ( 1:192.0.2.0/24 2:2001:db8::/32)
             </artwork>
           </figure>
 
@@ -849,9 +849,9 @@ allow-query.catalog1.example.org. 0 IN APL (
             would appear as follows:</t>
             <figure>
               <artwork>
-(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.cat1.example.org.
+(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.$CZ
    0 IN PTR a.example.com.)
-(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.cat1.example.org.
+(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.$CZ
    0 IN PTR b.example.com.)
               </artwork>
             </figure>
