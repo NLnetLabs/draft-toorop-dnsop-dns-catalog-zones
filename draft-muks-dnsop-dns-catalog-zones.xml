@@ -158,9 +158,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <t hangText="Zone property:">A configuration parameter of a
           zone, sometimes also called a zone option, represented as a
-		  key/value pair.</t>
+          key/value pair.</t>
 
-          <t hangText="$CZ">Used in examples as an abbreviation to represent
+          <t hangText="$CZ:">Used in examples as an abbreviation to represent
           the domain name of the catalog zone itself (i.e. its $ORIGIN).</t>
 
         </list>
@@ -233,44 +233,58 @@ please see http://xml.resource.org/authoring/README.html. -->
           a zone template as described in <xref target="sec-structure"/>.  The
           owner names are case insensitive.</t>
 
-          <t>RPBXXX: The general form of a Catalog Zone record is as follows:</t>
+          <section title="Resource Record Format">
+            <t>Each key/value pair has a defined data type, and each data type
+            accordingly uses a particular RR TYPE to represent its possible values, as
+            specified in <xref target="sec-types" />.</t>
 
-          <t>Each key/value pair has a defined data type, and each data type
-          accordingly uses a particular RR TYPE to represent its possible values, as
-          specified in <xref target="sec-types" />.</t>
+            <t>The general form of a catalog zone record is as follows:</t>
 
-          <t>NB:  Catalog zones use some RR TYPEs (such as PTR) with alternate
-          semantics to those originally defined for them. Although this may be
-          controversial, the situation is similar to other similar zone-based
-          representations such as response-policy zones <xref target="RPZ" />.</t>
+            <figure>
+              <artwork>
+      [&lt;unique_id&gt;.]&lt;key&gt;.&lt;path&gt;.$CZ 0 IN &lt;RRTYPE&gt; &lt;value&gt;
+              </artwork>
+            </figure>
 
-          <t>The CLASS field of every RR in a catalog zone MUST be IN (1).  This is
-          because some RR TYPEs such as APL used by catalog zones are defined only
-          for the IN class.</t>
+            <t>where &lt;path&gt; is a sequence of labels with values depending on
+            the purpose (and hence position) of the record within the catalog zone
+            (see <xref target="sec-structure"/>) and where the &lt;unique_id&gt;
+            prefix is only present for multi-valued properties (see <xref
+            target="sec-multivalue"/>).</t>
 
-          <t>The TTL field's value is not specially defined by this memo.  Catalog
-          zones are for authoritative nameserver management only and are not intended
-          for general querying via recursive resolvers and therefore a value of zero
-          (0) is RECOMMENDED.</t>
+            <t>NB: Catalog zones use some RR TYPEs (such as PTR) with alternate
+            semantics to those originally defined for them. Although this may be
+            controversial, the situation is similar to other similar zone-based
+            representations such as response-policy zones <xref target="RPZ" />.</t>
 
-		  <section title="Multi-valued Keys">
+            <t>The CLASS field of every RR in a catalog zone MUST be IN (1).  This is
+            because some RR TYPEs such as APL used by catalog zones are defined only
+            for the IN class.</t>
 
-            <t>Some key/value pairs do not represent single values but instead
-            represent a collection of values.  The specification for each key
-            describes whether that key is single-valued or multi-valued.  A
-            multi-valued key is encoded with a single RR per value, with the owner
-            name of each value preceded with an additional unique (user specified)
-            DNS label.</t>
+            <t>The TTL field's value is not specially defined by this memo.  Catalog
+            zones are for authoritative nameserver management only and are not intended
+            for general querying via recursive resolvers and therefore a value of zero
+            (0) is RECOMMENDED.</t>
 
             <t>It is an error for any single owner name within a catalog zone (other
             than the apex of the zone itself) to have more than one RR associated with
             it.</t>
 
+          </section>
+
+          <section title="Multi-valued Properties" anchor="sec-multivalue">
+
+            <t>Some properties do not represent single values but instead represent a
+            collection of values.  The specification for each property describes
+            whether it is single-valued or multi-valued.  A multi-valued property is
+            encoded as multiple RRs where the owner name of each individual RR
+            contains a unique (user specified) DNS label.</t>
+
             <t>So, while a single-valued key might be represented like this:</t>
 
             <figure>
               <artwork>
-              &lt;key&gt;.$ORIGIN IN TXT "value"
+              &lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value"
               </artwork>
             </figure>
 
@@ -278,16 +292,16 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-    &lt;prefix1&gt;.&lt;key&gt;.$ORIGIN IN TXT "value 1"
-    &lt;prefix2&gt;.&lt;key&gt;.$ORIGIN IN TXT "value 2"
+      &lt;unique-prefix1&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 1"
+      &lt;unique-prefix2&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 2"
               </artwork>
             </figure>
 
-            <t>NB: a key that is specified to be multi-valued MUST be encoded using
+            <t>NB: propertythat is specified to be multi-valued MUST be encoded using
             the prefixed key syntax even if there is only one value present.</t>
 
-            <t>The specification of any multi-valued key MUST document whether the
-            collection represents either an ordered or un-ordered list.  In the
+            <t>The specification of any multi-valued property MUST document whether
+            the collection represents either an ordered or un-ordered list.  In the
             former case the ordering of the prefixes according to the usual DNS
             canonical name ordering will determine the sort order.</t>
 
@@ -299,33 +313,30 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <section title="List of Member Zones" anchor="sec-member-zones">
 
-            <t>The list of member zones are specified as a collection domain names
-            under the owner name "zones" where "zones" is a direct sub-domain of the
-            catalog zone.</t>
+            <t>The list of member zones is specified as a multi-valued collection of
+            domain names under the owner name "zones" where "zones" is a direct child
+            domain of the catalog zone.</t>
 
             <t>The names of member zones are represented on the RDATA side
             (instead of as a part of owner names) so that all valid domain
             names may be represented regardless of their length <xref
-            target="RFC1035" />.  The distinguishing identifier in the NAME
-            field of the resource record is a unique label that identifies
-            the member zone.</t>
+            target="RFC1035" />.</t>
 
-            <t>For example, if a catalog zone is named "catalog1.example.org."
-            and lists three zones "example.com.", "example.net." and
-            "example.org.", the RRs would appear as follows:</t>
+            <t>For example, if a catalog zone lists three zones "example.com.",
+            "example.net." and "example.org.", the RRs would appear as follows:</t>
 
             <figure>
               <artwork>
-&lt;m-unique1&gt;.zones.catalog1.example.org. 3600 IN PTR example.com.
-&lt;m-unique2&gt;.zones.catalog1.example.org. 3600 IN PTR example.net.
-&lt;m-unique3&gt;.zones.catalog1.example.org. 3600 IN PTR example.org.
+        &lt;m-unique1&gt;.zones.$CZ 3600 IN PTR example.com.
+        &lt;m-unique2&gt;.zones.$CZ 3600 IN PTR example.net.
+        &lt;m-unique3&gt;.zones.$CZ 3600 IN PTR example.org.
               </artwork>
             </figure>
 
-            <t>... where &lt;m-uniqueN&gt; is a label that uniquely identifies
-            the member zone name in the RDATA field.</t>
+            <t>where &lt;m-uniqueN&gt; is a label that uniquely tags each record in
+            the collection, as described in <xref target="sec-multivalue"/>.</t>
 
-            <t>Although any legal label could be used for &lt;m-unique&gt;
+            <t>Although any legal label could be used for &lt;m-uniqueN&gt;
             it is RECOMMENDED that it be a value deterministically derived
             from the fully-qualified member zone name.  The BIND9 implementation
             uses the 40 character hexadecimal representation of the SHA-1 digest
@@ -555,43 +566,6 @@ allow-query.catalog1.example.org. 3600 IN APL (
           scheme such as NOTE RRs <xref target="I-D.hunt-note-rr"
           />. This memo does not depend on NOTE RRs and it is only
           suggested here as an informative reference.</t>
-        </section>
--->
-
-<!--
-        <section title="Unordered List of Domain Names" anchor="sec-unolist">
-
-<t> XXXRPB: remove this since it's handled by generic lists. </t>
-
-          <t>Let N be an absolute name formed by concatenating the RDATA
-          hash (see <xref target="sec-glossary" />), the name of the
-          property, and the catalog zone name in that order, such that N
-          is a unique owner name in the catalog zone.</t>
-
-          <t>Then, a property containing an unordered list of domain
-          names as value is specified using multiple PTR RRs <xref
-          target="RFC1035" /> with owner name set to N, and each RR's
-          RDATA set to each domain name in the list of the property's
-          value respectively.</t>
-
-          <t>For example, if a catalog zone is named
-          "catalog1.example.org." and contains a property "prop2" with
-          its value being an unordered list of two names
-          "a.example.com." and "b.example.com.", the corresponding RRs
-          would appear as follows:</t>
-
-          <figure>
-            <artwork>
-&lt;hash1&gt;.prop2.catalog1.example.org. 3600 IN PTR a.example.com.
-&lt;hash2&gt;.prop2.catalog1.example.org. 3600 IN PTR b.example.com.
-            </artwork>
-          </figure>
-
-          <t>Here, "prop2"'s subtree child nodes (in the domain name
-          space <xref target="RFC1034" />) can contain multiple PTR RRs
-          at each child. For example, &lt;hash1&gt;.prop2 may contain
-          multiple PTR RRs at that node. The single domain name property
-          SHOULD be checked by the implementation.</t>
         </section>
 -->
 
