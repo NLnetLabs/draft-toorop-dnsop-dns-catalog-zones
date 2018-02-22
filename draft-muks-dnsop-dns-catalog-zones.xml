@@ -327,9 +327,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-        &lt;m-unique1&gt;.zones.$CZ 3600 IN PTR example.com.
-        &lt;m-unique2&gt;.zones.$CZ 3600 IN PTR example.net.
-        &lt;m-unique3&gt;.zones.$CZ 3600 IN PTR example.org.
+        &lt;m-unique1&gt;.zones.$CZ 0 IN PTR example.com.
+        &lt;m-unique2&gt;.zones.$CZ 0 IN PTR example.net.
+        &lt;m-unique3&gt;.zones.$CZ 0 IN PTR example.org.
               </artwork>
             </figure>
 
@@ -345,6 +345,26 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           </section>
 
+          <section title="Catalog Zone Schema Version" anchor="sec-version">
+            <t>The catalog zone schema version is specified by an unsigned
+            integer property with the property name "version". All catalog zones
+            MUST have this property present. Primary and secondary nameservers
+            MUST NOT use catalog zones with an unexpected value in this
+            property, but they may be transferred as ordinary zones. For this
+            memo, the "version" property value MUST be set to 2, i.e.</t>
+
+            <figure>
+              <artwork>
+            version.$CZ 0 IN TXT "2"
+              </artwork>
+            </figure>
+
+            <t>NB: Version 1 was used in an earlier version of this memo and
+            reflected the first implementation within BIND 9.11 and 9.12  Future
+            major releases of BIND 9 will implement Version 2.</t>
+
+          </section>
+
           <section title="Template Zone Information">
             <t>Template zone information comprises a set of properties that
             are applied to all member zones listed in the catalog zone unless
@@ -357,7 +377,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-prop0.catalog1.example.org. 3600 IN TXT "Example"
+prop0.catalog1.example.org. 0 IN TXT "Example"
               </artwork>
             </figure>
 
@@ -382,33 +402,12 @@ prop0.catalog1.example.org. 3600 IN TXT "Example"
 
             <figure>
               <artwork>
-prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
+prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "Example"
               </artwork>
             </figure>
 
             <t>... where "m-unique" is the label that uniquely identifies the
             member zone name as described in <xref target="sec-member-zones"/>.</t>
-          </section>
-
-          <section title="Catalog Zone Schema Version" anchor="sec-version">
-            <t>The catalog zone schema version is specified by an unsigned
-            integer property with the property name "version". All catalog zones
-            MUST have this property present. Primary and secondary nameservers
-            MUST NOT use catalog zones with an unexpected value in this
-            property, but they may be transferred as ordinary zones. For this
-            memo, the "version" property value MUST be set to 1.</t>
-
-            <t>For example, if a catalog zone is named "catalog1.example.org.",
-            the corresponding RR MUST look as follows:</t>
-
-            <figure>
-              <artwork>
-version.catalog1.example.org. 3600 IN TXT "1"
-              </artwork>
-            </figure>
-
-            <t>The single TXT RR property SHOULD be checked by the
-            implementation.</t>
           </section>
         </section>
       </section>
@@ -433,7 +432,7 @@ version.catalog1.example.org. 3600 IN TXT "1"
 
           <figure>
             <artwork>
-prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
+prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "Example"
             </artwork>
           </figure>
         </section>
@@ -450,7 +449,7 @@ prop0.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "Example"
 
           <figure>
             <artwork>
-active.catalog1.example.org. 3600 IN TXT "false"
+active.catalog1.example.org. 0 IN TXT "false"
             </artwork>
           </figure>
         </section>
@@ -479,7 +478,7 @@ active.catalog1.example.org. 3600 IN TXT "false"
 
           <figure>
             <artwork>
-min-ttl.catalog1.example.org. 3600 IN TXT "300"
+min-ttl.catalog1.example.org. 0 IN TXT "300"
             </artwork>
           </figure>
         </section>
@@ -500,7 +499,7 @@ min-ttl.catalog1.example.org. 3600 IN TXT "300"
 
           <figure>
             <artwork>
-decay-rate.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "15e-2"
+decay-rate.&lt;m-unique&gt;.zones.catalog1.example.org. 0 IN TXT "15e-2"
             </artwork>
           </figure>
         </section>
@@ -517,7 +516,7 @@ decay-rate.&lt;m-unique&gt;.zones.catalog1.example.org. 3600 IN TXT "15e-2"
 
           <figure>
             <artwork>
-prop1.catalog1.example.org. 3600 IN PTR val1.example.com.
+prop1.catalog1.example.org. 0 IN PTR val1.example.com.
             </artwork>
           </figure>
         </section>
@@ -542,7 +541,7 @@ prop1.catalog1.example.org. 3600 IN PTR val1.example.com.
 
           <figure>
             <artwork>
-allow-query.catalog1.example.org. 3600 IN APL (
+allow-query.catalog1.example.org. 0 IN APL (
     1:192.0.2.0/24 2:2001:db8::/32)
             </artwork>
           </figure>
@@ -851,9 +850,9 @@ allow-query.catalog1.example.org. 3600 IN APL (
             <figure>
               <artwork>
 (&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.cat1.example.org.
-   3600 IN PTR a.example.com.)
+   0 IN PTR a.example.com.)
 (&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.cat1.example.org.
-   3600 IN PTR b.example.com.)
+   0 IN PTR b.example.com.)
               </artwork>
             </figure>
 
@@ -861,7 +860,7 @@ allow-query.catalog1.example.org. 3600 IN APL (
             <figure>
               <artwork>
 $ORIGIN catalog.example.org.
-@           IN SOA  . . 1 3600 3600 86400 3600
+@           IN SOA  . . 1 3600 3600 86400 0
             IN NS   invalid.
 version     IN TXT  "1"
 (5960775ba382e7a4e09263fc06e7c00569b6a05c.zones
