@@ -888,10 +888,9 @@ version     IN TXT  "1"
           </t>
 
           <t>
-            draft-muks-dnsop-dns-catalog-zones-04
-            <vspace/>
+            draft-muks-dnsop-dns-catalog-zones-04<vspace/>
             Reordering of sections into more logical order.<vspace/>
-            Clarified how a catalog zone may or may not be made available for query.
+            Separation of multi-valued properties into their own category.
           </t>
 
         </list>
