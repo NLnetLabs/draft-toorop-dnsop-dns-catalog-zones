@@ -159,7 +159,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           zone, sometimes also called a zone option, represented as a
           key/value pair.</t>
 
-          <t hangText="$CATZ:">Used in examples as an abbreviation to represent
+          <t hangText="$CATZ:">Used in examples as a placeholder to represent
           the domain name of the catalog zone itself (c.f. $ORIGIN).</t>
 
         </list>
@@ -189,7 +189,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
         <t>A catalog zone is primarily intended for the management of a farm of
         authoritative nameservers.  It is not expected that the content of catalog
-        zones should be accessible from any recursive nameserver.</t>
+        zones will be accessible from any recursive nameserver.</t>
 
       </section>
 
@@ -228,7 +228,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <t>A catalog zone contains a set of key/value pairs, where each key is
           encapsulated within the owner name of a DNS RR and the corresponding value
           is stored in the RR's RDATA.  The specific owner name depends on whether
-          the property relates to the catalog zone ifself, a member zone thereof, or
+          the property relates to the catalog zone itself, a member zone thereof, or
           to default zone properties described in <xref target="sec-structure"/>.
           The owner names are case insensitive.</t>
 
@@ -379,9 +379,7 @@ please see http://xml.resource.org/authoring/README.html. -->
             </figure>
 
             <t>NB: Version 1 was used in a draft version of this memo and reflected
-            the first implementation within BIND 9.11 and 9.12.  Later major releases
-            of BIND 9 implement Version 2 (or as specified in subsequent revisions of
-            this specification).</t>
+            the implementation first found in BIND 9.11.</t>
 
           </section>
 
@@ -647,18 +645,17 @@ please see http://xml.resource.org/authoring/README.html. -->
           automatically synchronized by the secondary after the catalog zone is
           configured.</t>
 
-          <t>An administrator would want to look at data inside a catalog zone.
-          Typical queries may include dumping the list of member zones, dumping
-          a member zone's effective configuration, querying a specific property
-          value of a member zone, etc.  Because of the syntax of catalog zones,
-          it may not be possible to perform these queries intuitively, or in
-          some cases, at all, using DNS QUERY. The list of member zones may not
-          fit in a single DNS message. The set of present properties for a zone
-          cannot be queried using a single DNS QUERY.</t>
+          <t>An administrator may want to look at data inside a catalog zone.
+          Typical queries might include dumping the list of member zones, dumping a
+          member zone's effective configuration, querying a specific property value
+          of a member zone, etc.  Because of the structure of catalog zones, it may
+          not be possible to perform these queries intuitively, or in some cases, at
+          all, using DNS QUERY.  For example it is not possible to enumerate the
+          contents of a multi-valued property (such as the list of member zones) with
+          a single QUERY.  Implementations are therefore advised to provide a tool
+          that uses either the output of AXFR or an out-of-band method to perform
+          queries on catalog zones.</t>
 
-          <t>Implementations are advised to provide a tool that uses either the
-          output of AXFR or an out-of-band method to perform queries on catalog
-          zones.</t>
         </section>
       </section>
 
@@ -671,15 +668,15 @@ please see http://xml.resource.org/authoring/README.html. -->
         secondary nameserver SHOULD abandon an update to a catalog zone that was
         received without using TSIG.</t>
 
-        <t>DNS UPDATE <xref target="RFC2136" /> to catalog zones similarly
-        SHOULD be authenticated using TSIG.</t>
+        <t>Use of DNS UPDATE <xref target="RFC2136" /> to modify the content of
+        catalog zones SHOULD similarly be authenticated using TSIG.</t>
 
         <t>Zone transfers of member zones SHOULD similarly be authenticated
         using TSIG <xref target="RFC2845" />. The TSIG shared secrets used for
         member zones MUST NOT be mentioned anywhere in the catalog zone data.
         However, key identifiers may be shared within catalog zones.</t>
 
-        <t>Catalog zones do not need to be signed using DNSSEC; their zone
+        <t>Catalog zones do not need to be signed using DNSSEC, their zone
         transfers being authenticated by TSIG. Signed zones MUST be handled
         normally by nameservers, and their contents MUST NOT be
         DNSSEC-validated.</t>
@@ -701,13 +698,10 @@ please see http://xml.resource.org/authoring/README.html. -->
         both share this scheme of representing the catalog as a regular DNS
         zone.</t>
 
-        <t>Thanks to Brian Conry, Evan Hunt, and Victoria Risk for reviewing
-        draft proposals and providing support, comments and suggestions. Thanks
-        to Tony Finch and Patrik Lundin for reviewing the draft and providing
-        comments.</t>
+        <t>Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk
+        and Carsten Strettman for reviewing draft proposals and offering comments and
+        suggestions.</t>
 
-        <t>Thanks to BIND users who reviewed draft proposals and offered
-        comments and suggestions.</t>
       </section>
 
   </middle>
