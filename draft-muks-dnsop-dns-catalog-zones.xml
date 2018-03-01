@@ -159,8 +159,8 @@ please see http://xml.resource.org/authoring/README.html. -->
           zone, sometimes also called a zone option, represented as a
           key/value pair.</t>
 
-          <t hangText="$CZ:">Used in examples as an abbreviation to represent
-          the domain name of the catalog zone itself (i.e. its $ORIGIN).</t>
+          <t hangText="$CATZ:">Used in examples as an abbreviation to represent
+          the domain name of the catalog zone itself (c.f. $ORIGIN).</t>
 
         </list>
       </t>
@@ -241,7 +241,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-      [&lt;unique-id&gt;.]&lt;key&gt;.&lt;path&gt;.$CZ 0 IN &lt;RRTYPE&gt; &lt;value&gt;
+      [&lt;unique-id&gt;.]&lt;key&gt;.&lt;path&gt;.$CATZ 0 IN &lt;RRTYPE&gt; &lt;value&gt;
               </artwork>
             </figure>
 
@@ -283,7 +283,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-              &lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value"
+              &lt;key&gt;.&lt;path&gt;.$CATZ IN TXT "value"
               </artwork>
             </figure>
 
@@ -291,8 +291,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-      &lt;unique-id-1&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 1"
-      &lt;unique-id-2&gt;.&lt;key&gt;.&lt;path&gt;.$CZ IN TXT "value 2"
+      &lt;unique-id-1&gt;.&lt;key&gt;.&lt;path&gt;.$CATZ IN TXT "value 1"
+      &lt;unique-id-2&gt;.&lt;key&gt;.&lt;path&gt;.$CATZ IN TXT "value 2"
       ...
               </artwork>
             </figure>
@@ -346,9 +346,9 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-        &lt;m-unique-1&gt;.zones.$CZ 0 IN PTR example.com.
-        &lt;m-unique-2&gt;.zones.$CZ 0 IN PTR example.net.
-        &lt;m-unique-3&gt;.zones.$CZ 0 IN PTR example.org.
+        &lt;m-unique-1&gt;.zones.$CATZ 0 IN PTR example.com.
+        &lt;m-unique-2&gt;.zones.$CATZ 0 IN PTR example.net.
+        &lt;m-unique-3&gt;.zones.$CATZ 0 IN PTR example.org.
               </artwork>
             </figure>
 
@@ -374,7 +374,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-            version.$CZ 0 IN TXT "2"
+            version.$CATZ 0 IN TXT "2"
               </artwork>
             </figure>
 
@@ -396,7 +396,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-     example-prop.defaults.$CZ 0 IN TXT "Example"
+     example-prop.defaults.$CATZ 0 IN TXT "Example"
               </artwork>
             </figure>
 
@@ -410,7 +410,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "Example"
+     example-prop.&lt;m-unique&gt;.zones.$CATZ 0 IN TXT "Example"
               </artwork>
             </figure>
 
@@ -424,7 +424,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
             <figure>
               <artwork>
-     $ORIGIN &lt;m-unique&gt;.zones.$CZ
+     $ORIGIN &lt;m-unique&gt;.zones.$CATZ
      &lt;unique-id-1&gt;.example-prop 0 IN TXT "Value 1"
      &lt;unique-id-2&gt;.example-prop 0 IN TXT "Value 2"
      ...
@@ -447,7 +447,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "Example"
+     example-prop.&lt;m-unique&gt;.zones.$CATZ 0 IN TXT "Example"
             </artwork>
           </figure>
 
@@ -464,7 +464,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "false"
+     example-prop.&lt;m-unique&gt;.zones.$CATZ 0 IN TXT "false"
             </artwork>
           </figure>
 
@@ -494,7 +494,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "300"
+     example-prop.&lt;m-unique&gt;.zones.$CATZ 0 IN TXT "300"
             </artwork>
           </figure>
 
@@ -514,7 +514,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     example-prop.&lt;m-unique&gt;.zones.$CZ 0 IN TXT "15e-2"
+     example-prop.&lt;m-unique&gt;.zones.$CATZ 0 IN TXT "15e-2"
             </artwork>
           </figure>
         </section>
@@ -526,7 +526,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     example-prop.defaults.$CZ 0 IN PTR ns1.example.com.
+     example-prop.defaults.$CATZ 0 IN PTR ns1.example.com.
             </artwork>
           </figure>
         </section>
@@ -545,7 +545,7 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     $ORIGIN &lt;m-unique&gt;.zones.$CZ
+     $ORIGIN &lt;m-unique&gt;.zones.$CATZ
      &lt;unique-id-1&gt;.example-prop 0 IN APL ( 1:192.0.2.0/24 )
      &lt;unique-id-2&gt;.example-prop 0 IN APL ( !1:0.0.0.0/0 )
             </artwork>
@@ -563,8 +563,8 @@ please see http://xml.resource.org/authoring/README.html. -->
 
           <figure>
             <artwork>
-     example-prop1.&lt;m-unique&gt;.zones.$CZ 0 IN A 192.0.2.1
-     example-prop2.&lt;m-unique&gt;.zones.$CZ 0 IN AAAA 2001:db8::1
+     example-prop1.&lt;m-unique&gt;.zones.$CATZ 0 IN A 192.0.2.1
+     example-prop2.&lt;m-unique&gt;.zones.$CATZ 0 IN AAAA 2001:db8::1
             </artwork>
           </figure>
         </section>
@@ -836,9 +836,9 @@ please see http://xml.resource.org/authoring/README.html. -->
             would appear as follows:</t>
             <figure>
               <artwork>
-(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.$CZ
+(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.$CATZ
    0 IN PTR a.example.com.)
-(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.$CZ
+(&lt;hash&gt;.prop2.&lt;m-unique&gt;.zones.$CATZ
    0 IN PTR b.example.com.)
               </artwork>
             </figure>
