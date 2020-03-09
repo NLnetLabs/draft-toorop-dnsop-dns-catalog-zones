@@ -1,7 +1,16 @@
-all: draft-muks-dnsop-dns-catalog-zones.txt draft-muks-dnsop-dns-catalog-zones.html
+VERSION = 00
+DOCNAME = draft-toorop-dnsop-dns-catalog-zones
 
-draft-muks-dnsop-dns-catalog-zones.txt: draft-muks-dnsop-dns-catalog-zones.xml
-	xml2rfc $<
+all: $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
 
-draft-muks-dnsop-dns-catalog-zones.html: draft-muks-dnsop-dns-catalog-zones.xml
-	xml2rfc --html $<
+$(DOCNAME)-$(VERSION).txt: $(DOCNAME).xml
+	xml2rfc --text -o $@ $<
+
+$(DOCNAME)-$(VERSION).html: $(DOCNAME).xml
+	xml2rfc --html -o $@ $<
+
+$(DOCNAME).xml: $(DOCNAME).md
+	sed 's/@DOCNAME@/$(DOCNAME)-$(VERSION)/g' $< | mmark --xml2 --page > $@
+
+clean:
+	rm -f $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
