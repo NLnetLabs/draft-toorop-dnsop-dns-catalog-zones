@@ -15,6 +15,17 @@ stream = "IETF"
 status = "standard"
 
 [[author]]
+initials = "P."
+surname = "van Dijk"
+fullname = "Peter van Dijk"
+organization = "PowerDNS"
+[author.address]
+ email = "peter.van.dijk@powerdns.com"
+[author.address.postal]
+ city = "Den Haag"
+ country = "Netherlands"
+
+[[author]]
 initials = "L."
 surname = "Peltan"
 fullname = "Libor Peltan"
