@@ -553,7 +553,7 @@ This document has no IANA actions.
 
 # Acknowledgements
 
-Our deepest thanks and appreciation go to Mukund Sivaraman, Stephen Morris,
+Our deepest thanks and appreciation go to Stephen Morris,
 Ray Bellis and Witold Krecicki who initiated this draft and did the bulk of
 the work.
 
