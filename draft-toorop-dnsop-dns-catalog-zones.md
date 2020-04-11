@@ -109,17 +109,10 @@ BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all
 capitals, as shown here.
 
 Catalog zone
-: A DNS zone containing a DNS catalog, that is, a list of DNS zones and
-  associated zone configuration.
+: A DNS zone containing a DNS catalog, that is, a list of DNS zones.
 
 Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
-
-Zone property
-: A configuration parameter of a zone, sometimes also called a zone option,
-  represented as a key/value pair.
-  This document does not describe or define zone properties.
-  Implementations of catalog zones however may have Zone properties defined.
 
 $CATZ
 : Used in examples as a placeholder to represent the domain name of the
@@ -131,19 +124,12 @@ A catalog zone is a specially crafted DNS zone that contains, as DNS zone data:
 
 * A list of DNS zones (called "member zones").
 
-An implementation of catalog zones MAY have 
+Implementations of catalog zones SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
-* Default zone configuration information common to all member zones.
+Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
+A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
 
-* Zone-specific configuration information.
-
-Zone properties are not described nor defined in this document.
-Implementations of catalog zones MAY have zone properties defined.
-Implementations of catalog zones SHOULD ignore zone properties or any other RR in the catalog zone which is meaningless or useless to the implementation.
-
-An implementation of catalog zones MAY allow the catalog to contain other
-catalog zones as member zones, but default zone configuration present in a
-catalog zone only applies to its immediate member zones.
+An implementation of catalog zones MAY allow the catalog to contain other catalog zones as member zones.
 
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
@@ -222,59 +208,6 @@ RECOMMENDED.
 It is an error for any single owner name within a catalog zone (other
 than the apex of the zone itself) to have more than one RR associated
 with it.
-
-## Zone properties {#zoneproperties}
-
-TBD: Remove this section too?
-
-Zone properties are not described nor defined in this document.
-Catalog zones are still advantageous without zone properties.
-Authoritative server could be preconfigured with multiple catalog zones, each associated with a different set of configurations.
-A member zone can be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
-
-Implementations of catalog zones MAY have zone properties defined.
-Implementations of catalog zones SHOULD ignore zone properties or any other RR in the catalog zone which is meaningless or useless to the implementation.
-
-When implementations do have zone properties, it is RECOMMENDED those properties are in the spots described in (#defaultzoneconfig) and (#memberzoneconfig).
-When implementations do have zone properties, the property names MUST NOT start with "cz-"; i.e. the letter "C" followed by the letter "Z" followed by a dash ("-").
-
-### Default Zone Configuration {#defaultzoneconfig}
-
-Default zone configuration comprises a set of properties that are applied to
-all member zones listed in the catalog zone unless overridden my member
-zone-specific information.
-
-All such properties are stored as child nodes of the owner name "defaults"
-itself a direct child node of the catalog zone, e.g.:
-
-~~~ ascii-art
-<property-name>.defaults.$CATZ 0 IN TXT "Example"
-~~~
-
-where `<property-name>` does not start with "cz-";
-
-### Zone Properties Specific to a Member Zone {#memberzoneconfig}
-
-Default zone properties can be overridden on a per-zone basis by specifying the
-property under the sub-domain associated with the member zone in the list
-of zones, e.g.:
-
-~~~ ascii-art
-<property-name>.<m-unique>.zones.$CATZ 0 IN TXT "Example"
-~~~
-
-where "m-unique" is the label that uniquely identifies the member zone name as described in (#listofmemberzones) and where `<property-name>` does not start with "cz-".
-
-### Vendor-specific Properties
-
-TBD: Prepare a list of zone configuration properties that are common to DNS
-implementations.  This is so that a company may manage a catalog zone using a
-Windows DNS server as the primary, and a secondary nameserver hosting service
-may pick up the common properties and may use a different nameserver
-implementation such as BIND or NSD on a POSIX operating system to serve it.
-
-TBD: Any list of zone properties is ideally maintained as a registry rather
-than within this memo.
 
 # Nameserver Behavior {#behavior}
 
@@ -422,32 +355,6 @@ suggestions.
 
 {backmatter}
 
-# Open issues and discussion (to be removed before final publication)
-
-Config options
-: We want catalog zones to be adopted by multiple DNS implementations.  Towards
-  this, we have to generalize zone config options and adopt a minimal set that
-  we can expect most implementations to support.
-
-Catalog zone and member zones on different primary nameservers
-: Will it be possible to setup a catalog zone on one nameserver as
-  primary, and allow its member zones to be served by different
-  primary nameservers?
-
-Transitive relationships
-: For a catalog zone, a secondary nameserver may be a primary
-  nameserver to a different set of nameservers in a nameserver
-  farm.  In these transitive relationships, zone configuration
-  options (such as also-notify and allow-transfer) may differ based
-  on the location of the primary in the hierarchy.  It may not be
-  possible to specify this within a catalog zone.
-
-Overriding controls
-: A way to override zone config options (as prescribed by the
-  catalog zones) on secondary nameservers was requested.  As this
-  would be configured outside catalog zones, it may be better to
-  leave this to implementations.
-
 # Change History (to be removed before final publication)
 
 * draft-muks-dnsop-dns-catalog-zones-00
@@ -485,3 +392,6 @@ Overriding controls
 * draft-toorop-dnsop-dns-catalog-zones-01
 
 > Remove data type definitions for zone properties
+  Removing configuration of member zones through zone properties altogether
+
+> Remove Open issues and discussion Appendix, which was about zone options (including primary/secondary relationships) only.
