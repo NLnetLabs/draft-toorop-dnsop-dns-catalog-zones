@@ -258,8 +258,6 @@ When zones are deleted from a catalog zone, a primary MAY delete the member
 zone immediately after notifying secondaries.  It is up to the secondary
 nameserver to handle this condition correctly.
 
-TBD: Transitive primary-secondary relationships
-
 # Updating Catalog Zones
 
 TBD: Explain updating catalog zones using DNS UPDATE.
