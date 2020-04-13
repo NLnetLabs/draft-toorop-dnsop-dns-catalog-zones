@@ -194,9 +194,11 @@ For example, if a catalog zone lists three zones "example.com.",
 
 where `<m-unique-N>` is a label that uniquely tags each record in the collection.
 
-The reason for the `<m-unique-N>` label is that catalog zones could contain a larger number of zones.
-The number of zones might be larger than that what can be conveyed in a single "zones" RRset in a zone transfer.
-Uniquely tagging each zone makes sure the list can be split over multiple transfer messages.
+Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
+Having the zones uniquely tagged with the `<m-unique-N>` label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.
+
+The `<m-unique-N>` label also enables the state for a zone to be reset. (see #zonereset)
+As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone MUST remain the same.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -257,6 +259,13 @@ before any update to the list of member zones is visible in the catalog zone.
 When zones are deleted from a catalog zone, a primary MAY delete the member
 zone immediately after notifying secondaries.  It is up to the secondary
 nameserver to handle this condition correctly.
+
+{#zonereset}
+When the `<m-unique-N>` label of a member zone changes, all it's associated state MUST be reset, including the zone itself.
+This can be relevant for example when zone ownership is changed.
+In that case one does not want the new owner to inherit the metadata.
+Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
+A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
 
 # Updating Catalog Zones
 
