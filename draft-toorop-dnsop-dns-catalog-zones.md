@@ -80,20 +80,14 @@ zones to be provisioned as one or more regular DNS zones.
 
 # Introduction
 
-This is a simple resubmit of `draft-muks-dnsop-dns-catalog-zones-04` with
-the authors replaced. The new authors are representatives of Open Source DNS
-implementations and a DNS Operator who want to work and cooperate on
-progressing this draft to produce a cross-implementation DNS Catalog Zones
-standard.
-
 The data in a DNS zone is synchronized amongst its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in [@!RFC1035]) is not automatically synchronized
 with the secondaries.  To add or remove a zone, the administrator of a DNS
 nameserver farm not only has to add or remove the zone from the primary, they
 must also add/remove the zone from all secondaries, either manually or via an
-external application.  This can be both inconvenient and error-prone; it will
-also be dependent on the nameserver implementation.
+external application.  This can be both inconvenient and error-prone; it is 
+also dependent on the nameserver implementation.
 
 This document describes a method in which the catalog is represented as a
 regular DNS zone (called a "catalog zone" here), and transferred using DNS zone
@@ -115,15 +109,10 @@ BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all
 capitals, as shown here.
 
 Catalog zone
-: A DNS zone containing a DNS catalog, that is, a list of DNS zones and
-  associated zone configuration.
+: A DNS zone containing a DNS catalog, that is, a list of DNS zones.
 
 Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
-
-Zone property
-: A configuration parameter of a zone, sometimes also called a zone option,
-  represented as a key/value pair.
 
 $CATZ
 : Used in examples as a placeholder to represent the domain name of the
@@ -135,13 +124,12 @@ A catalog zone is a specially crafted DNS zone that contains, as DNS zone data:
 
 * A list of DNS zones (called "member zones").
 
-* Default zone configuration information common to all member zones.
+Implementations of catalog zones SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
-* Zone-specific configuration information.
+Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
+A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
 
-An implementation of catalog zones MAY allow the catalog to contain other
-catalog zones as member zones, but default zone configuration present in a
-catalog zone only applies to its immediate member zones.
+An implementation of catalog zones MAY allow the catalog to contain other catalog zones as member zones.
 
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
@@ -156,7 +144,7 @@ zones will be accessible from any recursive nameserver.
 ## SOA and NS Records
 
 As with any other DNS zone, a catalog zone MUST have a syntactically correct
-SOA record and one or more NS records at its apex.
+SOA record and at least one NS record at its apex.
 
 The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields [@!RFC1035] are used
 during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
@@ -169,134 +157,12 @@ field's value is the negative cache time (as defined in [@!RFC2308]).  Since
 recursive nameservers are not expected to be able to access (and subsequently
 cache) entries from a catalog zone a value of zero (0) is RECOMMENDED.
 
-Since there is no requirement to be able to query the catalog zone via
-recursive namservers the NS records at the apex will not be used and no parent
-delegation is required.  However, they are still required so that catalog zones
-are syntactically correct DNS zones.  Any valid DNS name can be used in the
-NSDNAME field of such NS records [@!RFC1035] and they MUST be ignored.  A single
-NS RR with an NSDNAME field containing the absolute name "invalid." is
-RECOMMENDED [@!RFC2606].
+There is no requirement to be able to query the catalog zone via recursive nameservers.
+Implementations of catalog zones MUST ignore and MUST NOT assume or require NS records at the apex.
+However, at least one is still required so that catalog zones are syntactically correct DNS zones.
+A single NS RR with an NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
 
-## Zone Data
-
-A catalog zone contains a set of key/value pairs, where each key is
-encapsulated within the owner name of a DNS RR and the corresponding value is
-stored in the RR's RDATA.  The specific owner name depends on whether the
-property relates to the catalog zone itself, a member zone thereof, or to
-default zone properties described in (#zonestructure).
-The owner names are case insensitive.
-
-### Resource Record Format
-
-Each key/value pair has a defined data type, and each data type accordingly
-uses a particular RR TYPE to represent its possible values, as specified in
-(#datatypes).
-
-The general form of a catalog zone record is as follows:
-
-~~~ ascii-art
-  [<unique-id>.]<key>.<path>.$CATZ 0 IN <RRTYPE> <value>
-~~~
-
-where `<path>` is a sequence of labels with values depending on the purpose
-(and hence position) of the record within the catalog zone (see
-(#zonestructure)) and where the `<unique-id>` prefix is only present for
-multi-valued properties (see (#multivaluedprops)).
-
-NB: Catalog zones use some RR TYPEs (such as PTR) with alternate semantics to
-those originally defined for them.  Although this may be controversial, the
-situation is similar to other similar zone-based representations such as
-response-policy zones [@RPZ].
-
-The CLASS field of every RR in a catalog zone MUST be IN (1).  This is because
-some RR TYPEs such as APL used by catalog zones are defined only for the IN
-class.
-
-The TTL field's value is not specially defined by this memo.  Catalog zones are
-for authoritative nameserver management only and are not intended for general
-querying via recursive resolvers and therefore a value of zero (0) is
-RECOMMENDED.
-
-It is an error for any single owner name within a catalog zone (other
-than the apex of the zone itself) to have more than one RR associated
-with it.
-
-### Multi-valued Properties {#multivaluedprops}
-
-Some properties do not represent single values but instead represent a
-collection of values.  The specification for each property describes whether it
-is single-valued or multi-valued.  A multi- valued property is encoded as
-multiple RRs where the owner name of each individual RR contains a unique (user
-specified) DNS label.
-
-So, while a single-valued key might be represented like this:
-
-~~~ ascii-art
-<key>.<path>.$CATZ IN TXT "value"
-~~~
-
-a multi-valued key would be represented like this:
-
-~~~ ascii-art
-<unique-id-1>.<key>.<path>.$CATZ IN TXT "value 1"
-<unique-id-2>.<key>.<path>.$CATZ IN TXT "value 2"
-...
-~~~
-
-NB: a property that is specified to be multi-valued MUST be encoded using the
-unique prefixed key syntax even if there is only one value present.
-
-The specification of any multi-valued property MUST document whether the
-collection represents either an ordered or unordered list.  In the former case
-the ordering of the prefixes according to the usual DNS canonical name ordering
-will determine the sort order.
-
-### Vendor-specific Properties
-
-TBD: Prepare a list of zone configuration properties that are common to DNS
-implementations.  This is so that a company may manage a catalog zone using a
-Windows DNS server as the primary, and a secondary nameserver hosting service
-may pick up the common properties and may use a different nameserver
-implementation such as BIND or NSD on a POSIX operating system to serve it.
-
-TBD: We may specify that unrecognized zone property names must be ignored, or
-that nameserver specific properties must be specified using the "x-" prefix
-similar to MIME type naming.
-
-TBD: Any list of zone properties is ideally maintained as a registry rather
-than within this memo.
-
-## Zone Structure {#zonestructure}
-
-### List of Member Zones {#listofmemberzones}
-
-The list of member zones is specified as a multi-valued collection of domain
-names under the owner name "zones" where "zones" is a direct child domain of
-the catalog zone.
-
-The names of member zones are represented on the RDATA side (instead of as a
-part of owner names) so that all valid domain names may be represented
-regardless of their length [@!RFC1035].
-
-For example, if a catalog zone lists three zones "example.com.",
-"example.net." and "example.org.", the RRs would appear as follows:
-
-~~~ asci-art
-<m-unique-1>.zones.$CATZ 0 IN PTR example.com.
-<m-unique-2>.zones.$CATZ 0 IN PTR example.net.
-<m-unique-3>.zones.$CATZ 0 IN PTR example.org.
-~~~
-
-where `<m-unique-N>` is a label that uniquely tags each record in the
-collection, as described in (#multivaluedprops).
-
-Although any legal label could be used for `<m-unique-N>` it is RECOMMENDED that
-it be a value deterministically derived from the fully-qualified member zone
-name.  The BIND9 implementation uses the 40 character hexadecimal
-representation of the SHA-1 digest [@!FIPS.180-4.2015] of the lower-cased member
-zone name as encoded in uncompressed wire format.
-
-### Catalog Zone Schema Version
+## Catalog Zone Schema Version
 
 The catalog zone schema version is specified by an unsigned integer property
 with the property name "version".  All catalog zones MUST have this property
@@ -311,148 +177,37 @@ version.$CATZ 0 IN TXT "2"
 NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
 
-### Default Zone Configuration
+## List of Member Zones {#listofmemberzones}
 
-Default zone configuration comprises a set of properties that are applied to
-all member zones listed in the catalog zone unless overridden my member
-zone-specific information.
+The list of member zones is specified as a collection of domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
-All such properties are stored as child nodes of the owner name "defaults"
-itself a direct child node of the catalog zone, e.g.:
+The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length [@!RFC1035].
 
-~~~ ascii-art
-example-prop.defaults.$CATZ 0 IN TXT "Example"
+For example, if a catalog zone lists three zones "example.com.",
+"example.net." and "example.org.", the RRs would appear as follows:
+
+~~~ asci-art
+<m-unique-1>.zones.$CATZ 0 IN PTR example.com.
+<m-unique-2>.zones.$CATZ 0 IN PTR example.net.
+<m-unique-3>.zones.$CATZ 0 IN PTR example.org.
 ~~~
 
-### Zone Properties Specific to a Member Zone
+where `<m-unique-N>` is a label that uniquely tags each record in the collection.
 
-Default zone properties can be overridden on a per-zone basis by specifying the
-property under the the sub-domain associated with the member zone in the list
-of zones, e.g.:
+The reason for the `<m-unique-N>` label is that catalog zones could contain a larger number of zones.
+The number of zones might be larger than that what can be conveyed in a single "zones" RRset in a zone transfer.
+Uniquely tagging each zone makes sure the list can be split over multiple transfer messages.
 
-~~~ ascii-art
-example-prop.<m-unique>.zones.$CATZ 0 IN TXT "Example"
-~~~
+The CLASS field of every RR in a catalog zone MUST be IN (1).
 
-where "m-unique" is the label that uniquely identifies the member
-zone name as described in (#listofmemberzones).
+The TTL field's value is not specially defined by this memo.  Catalog zones are
+for authoritative nameserver management only and are not intended for general
+querying via recursive resolvers and therefore a value of zero (0) is
+RECOMMENDED.
 
-NB: when a zone-specific property is multi-valued the owner name will contain
-two unique identifiers, the left-most tagging being associated with the
-individual value (`<unique-id-N>`) and the other (`<m-unique>`) associated with the
-member zone itself, e.g.:
-
-~~~ ascii-art
-$ORIGIN <m-unique>.zones.$CATZ
-<unique-id-1>.example-prop 0 IN TXT "Value 1"
-<unique-id-2>.example-prop 0 IN TXT "Value 2"
-...
-~~~
-
-# Data Types {#datatypes}
-
-   This section lists the various data types defined for use within
-   catalog zones.
-
-## String
-
-A key with a string value is represented with a TXT RR [@!RFC1035], e.g.:
-
-~~~ ascii-art
-example-prop.<m-unique>.zones.$CATZ 0 IN TXT "Example"
-~~~
-
-If the RDATA is split into multiple `<character-string>` elements the
-MUST be directly concatenated without any separating character.
-
-## Booleans
-
-A key with a boolean value is represented with a TXT RR containing a single
-`<character-string>` with a value of "true" for true condition and "false" for
-false condition, e.g:
-
-~~~ ascii-art
-example-prop.<m-unique>.zones.$CATZ 0 IN TXT "false"
-~~~
-
-The RDATA is case-insensitive.
-
-## Integers
-
-A key with an integer value is specified using a TXT RR containing a single
-`<character-string>`.
-
-A signed integer's TXT RDATA uses the representation of an unsuffixed "integer
-constant" as defined in the C programming language standard [@!ISO.9899.1990]
-(of the type matching a 64-bit signed integer on that platform), with an
-optional minus prefix.
-
-An unsigned integer's TXT RDATA uses the representation of an unsuffixed
-"integer constant" as defined in the C programming language standard
-[@!ISO.9899.1990] (of the type matching a 64-bit unsigned integer on that
-platform).
-
-For example, a property with an unsigned integer value of 300 would appear as
-follows:
-
-~~~ ascii-art
-example-prop.<m-unique>.zones.$CATZ 0 IN TXT "300"
-~~~
-
-## Floating-Point Values
-
-A key with a floating-point value is specified using a TXT RR containing a
-single `<character-string>`.
-
-A floating-point value's TXT RDATA uses the representation of an unsuffixed
-"floating constant" as defined in the C programming language standard
-[@!ISO.9899.1990].
-
-For example, a property with an unsigned integer value of 0.15 may appear as
-follows:
-
-~~~ ascii-art
-example-prop.<m-unique>.zones.$CATZ 0 IN TXT "15e-2"
-~~~
-
-## Domain Name
-
-A key whose value is a domain name is specified using a PTR RR [@!RFC1035],
-e.g.:
-
-~~~ ascii-art
-example-prop.defaults.$CATZ 0 IN PTR ns1.example.com.
-~~~
-
-## IP Prefix
-
-A property whose value is an IP network prefix is specified using an APL RR
-[@!RFC3123].  The negation flag ("!" in presentation format) may be used to
-indicate all addresses not included within that prefix, e.g.  for use in Access
-Control Lists, e.g.:
-
-Although a single APL record is capable of containing multiple prefixes, for
-consistency of representation lists of prefixes MUST use the multi-valued
-property syntax as documented in (#multivaluedprops), e.g.:
-
-~~~ ascii-art
-$ORIGIN <m-unique>.zones.$CATZ
-<unique-id-1>.example-prop 0 IN APL ( 1:192.0.2.0/24 )
-<unique-id-2>.example-prop 0 IN APL ( !1:0.0.0.0/0 )
-~~~
-
-Implementations MUST accept only the first prefix within each APL record and
-MUST ignore any subsequent prefixes found therein.
-
-## Single Host Address
-
-A single host address is represented using either an A or AAAA record as
-appropriate, e.g.:
-
-~~~ ascii-art
-example-prop1.<m-unique>.zones.$CATZ 0 IN A 192.0.2.1
-example-prop2.<m-unique>.zones.$CATZ 0 IN AAAA 2001:db8::1
-~~~
+It is an error for any single owner name within a catalog zone (other
+than the apex of the zone itself) to have more than one RR associated
+with it.
 
 # Nameserver Behavior {#behavior}
 
@@ -502,8 +257,6 @@ before any update to the list of member zones is visible in the catalog zone.
 When zones are deleted from a catalog zone, a primary MAY delete the member
 zone immediately after notifying secondaries.  It is up to the secondary
 nameserver to handle this condition correctly.
-
-TBD: Transitive primary-secondary relationships
 
 # Updating Catalog Zones
 
@@ -600,32 +353,6 @@ suggestions.
 
 {backmatter}
 
-# Open issues and discussion (to be removed before final publication)
-
-Config options
-: We want catalog zones to be adopted by multiple DNS implementations.  Towards
-  this, we have to generalize zone config options and adopt a minimal set that
-  we can expect most implementations to support.
-
-Catalog zone and member zones on different primary nameservers
-: Will it be possible to setup a catalog zone on one nameserver as
-  primary, and allow its member zones to be served by different
-  primary nameservers?
-
-Transitive relationships
-: For a catalog zone, a secondary nameserver may be a primary
-  nameserver to a different set of nameservers in a nameserver
-  farm.  In these transitive relationships, zone configuration
-  options (such as also-notify and allow-transfer) may differ based
-  on the location of the primary in the hierarchy.  It may not be
-  possible to specify this within a catalog zone.
-
-Overriding controls
-: A way to override zone config options (as prescribed by the
-  catalog zones) on secondary nameservers was requested.  As this
-  would be configured outside catalog zones, it may be better to
-  leave this to implementations.
-
 # Change History (to be removed before final publication)
 
 * draft-muks-dnsop-dns-catalog-zones-00
@@ -660,3 +387,9 @@ Overriding controls
 
 > New authors to pickup the editor pen on this draft
 
+* draft-toorop-dnsop-dns-catalog-zones-01
+
+> Remove data type definitions for zone properties
+  Removing configuration of member zones through zone properties altogether
+
+> Remove Open issues and discussion Appendix, which was about zone options (including primary/secondary relationships) only.
