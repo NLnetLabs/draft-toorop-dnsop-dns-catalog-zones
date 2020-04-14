@@ -164,11 +164,10 @@ A single NS RR with an NSDNAME field containing the absolute name "invalid." is 
 
 ## Catalog Zone Schema Version
 
-The catalog zone schema version is specified by an unsigned integer property
-with the property name "version".  All catalog zones MUST have this property
-present.  Primary and secondary nameservers MUST NOT use catalog zones with an
-unexpected value in this property, but they may be transferred as ordinary
-zones.  For this memo, the "version" property value MUST be set to 2, i.e.
+The catalog zone schema version is specified by an integer value embeded in a TXT RR named "version.$CATZ". 
+All catalog zones MUST have a TXT RRset named "version.$CATZ" with at least one RR. 
+Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the "version.$CATZ" TXT RRset, but they may be transferred as ordinary zones.
+For this memo, the value of one of the RRs in the "version.$CATZ" TXT RRset MUST be set to "2", i.e.
 
 ~~~ ascii-art
 version.$CATZ 0 IN TXT "2"
