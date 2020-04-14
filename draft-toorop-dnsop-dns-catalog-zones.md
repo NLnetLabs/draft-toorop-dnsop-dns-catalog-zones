@@ -197,8 +197,8 @@ where `<m-unique-N>` is a label that uniquely tags each record in the collection
 Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
 Having the zones uniquely tagged with the `<m-unique-N>` label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.
 
-The `<m-unique-N>` label also enables the state for a zone to be reset. (see #zonereset)
-As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone MUST remain the same.
+The `<m-unique-N>` label also enables the state for a zone to be reset. (see (#zonereset))
+As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone SHOULD remain the same.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -261,7 +261,7 @@ zone immediately after notifying secondaries.  It is up to the secondary
 nameserver to handle this condition correctly.
 
 {#zonereset}
-When the `<m-unique-N>` label of a member zone changes, all it's associated state MUST be reset, including the zone itself.
+When the `<m-unique-N>` label of a member zone changes, all its associated state MUST be reset, including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
