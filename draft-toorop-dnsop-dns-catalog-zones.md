@@ -6,7 +6,7 @@ category = "std"
 ipr = "trust200902"
 area = "Internet"
 workgroup = "DNSOP Working Group"
-date = 2020-04-14T11:00:00Z
+date = 2020-05-06T11:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
@@ -191,7 +191,8 @@ For example, if a catalog zone lists three zones "example.com.",
 <m-unique-3>.zones.$CATZ 0 IN PTR example.org.
 ~~~
 
-where `<m-unique-N>` is a label that uniquely tags each record in the collection.
+where `<m-unique-N>` is a label that tags each record in the collection.
+Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.
 
 Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
 Having the zones uniquely tagged with the `<m-unique-N>` label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.
@@ -206,9 +207,8 @@ for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers and therefore a value of zero (0) is
 RECOMMENDED.
 
-It is an error for any single owner name within a catalog zone (other
-than the apex of the zone itself) to have more than one RR associated
-with it.
+Each RRSet of catalog zone, with the exception of zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of
+sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
 
 # Nameserver Behavior {#behavior}
 
