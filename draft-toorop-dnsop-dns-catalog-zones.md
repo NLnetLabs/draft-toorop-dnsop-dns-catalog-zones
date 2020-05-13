@@ -289,8 +289,8 @@ output of AXFR or an out-of-band method to perform queries on catalog zones.
 
 # Security Considerations
 
-As catalog zones are transmitted using DNS zone transfers, it is absolutely
-essential for these transfers to be protected from unexpected modifications on
+As catalog zones are transmitted using DNS zone transfers, it is key 
+for these transfers to be protected from unexpected modifications on
 the route.  So, catalog zone transfers SHOULD be authenticated using TSIG
 [@!RFC2845].  A primary nameserver SHOULD NOT serve a catalog zone for transfer
 without using TSIG and a secondary nameserver SHOULD abandon an update to a
