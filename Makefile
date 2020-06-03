@@ -1,5 +1,5 @@
-VERSION = 01
-DOCNAME = draft-toorop-dnsop-dns-catalog-zones
+VERSION = 00
+DOCNAME = draft-ietf-dnsop-dns-catalog-zones
 
 all: $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
 
