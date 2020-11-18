@@ -10,7 +10,7 @@ $(DOCNAME)-$(VERSION).html: $(DOCNAME).xml
 	xml2rfc --html -o $@ $<
 
 $(DOCNAME).xml: $(DOCNAME).md
-	sed 's/@DOCNAME@/$(DOCNAME)-$(VERSION)/g' $< | mmark --xml2 --page > $@
+	sed 's/@DOCNAME@/$(DOCNAME)-$(VERSION)/g' $< | mmark > $@
 
 clean:
 	rm -f $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
