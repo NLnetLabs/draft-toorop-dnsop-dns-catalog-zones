@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>DNS Catalog Zones - Implementations</title>
+  <title>DNS Catalog Zones - Implementations &amp; Interoperability</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -564,11 +564,11 @@ border-color: #4078c0;
 <body>
 <font size="2">
 <a href="about.html">About</a> | 
-<a href="implementations.html">Implementations</a> |
+<a href="implementations.html">Implementations &amp; Interoperability</a> |
 <a href="draft-ietf-dnsop-dns-catalog-zones.html">draft-ietf-dnsop-dns-catalog-zones</a>
 </font>
 <header id="title-block-header">
-<h1 class="title">DNS Catalog Zones - Implementations</h1>
+<h1 class="title">DNS Catalog Zones - Implementations &amp; Interoperability</h1>
 </header>
 <ul>
 <li>Knot DNS has DNS Catalog Zones since <a href="https://www.knot-dns.cz/2020-09-09-version-300.html">Knot DNS Version 3.0.0</a>
@@ -577,6 +577,43 @@ border-color: #4078c0;
 <li><a href="https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate">catalog_generate</a> Branch for generating Catalog Zones</li>
 </ul></li>
 <li><a href="https://github.com/PowerDNS/powercatz/">PowerCATZ</a> program to handle Catalog Zones with PowerDNS</li>
+<li><a href="https://github.com/IETF-Hackathon/NSDCatZ">NSDCatZ</a> PoC scripts for producing and consuming Catalog Zones with NSD (version from <a href="https://github.com/NLnetLabs/nsd/tree/zone-verification">zone-verification branch</a>)</li>
 </ul>
+<table>
+<thead>
+<tr class="header">
+<th>Server</th>
+<th>Software</th>
+<th>catalog1.</th>
+<th>catalog2.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>ns1.zones.cat</code></td>
+<td>NSD</td>
+<td><strong>Producer</strong></td>
+<td>Consumer</td>
+</tr>
+<tr class="even">
+<td><code>ns2.zones.cat</code></td>
+<td>NSD</td>
+<td>Consumer</td>
+<td>Consumer</td>
+</tr>
+<tr class="odd">
+<td><code>ns3.zones.cat</code></td>
+<td>Knot DNS</td>
+<td>Consumer</td>
+<td><strong>Producer</strong></td>
+</tr>
+<tr class="even">
+<td><code>ns4.zones.cat</code></td>
+<td>PowerDNS</td>
+<td>Consumer</td>
+<td>Consumer</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
