@@ -6,7 +6,7 @@ category = "std"
 ipr = "trust200902"
 area = "Internet"
 workgroup = "DNSOP Working Group"
-date = 2020-06-03T07:00:00Z
+date = 2020-12-04T15:00:00Z
 
 [seriesInfo]
 name = "Internet-Draft"
@@ -164,10 +164,10 @@ A single NS RR with an NSDNAME field containing the absolute name "invalid." is 
 
 ## Catalog Zone Schema Version
 
-The catalog zone schema version is specified by an integer value embeded in a TXT RR named "version.$CATZ". 
-All catalog zones MUST have a TXT RRset named "version.$CATZ" with at least one RR. 
-Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the "version.$CATZ" TXT RRset, but they may be transferred as ordinary zones.
-For this memo, the value of one of the RRs in the "version.$CATZ" TXT RRset MUST be set to "2", i.e.
+The catalog zone schema version is specified by an integer value embeded in a TXT RR named `version.$CATZ`. 
+All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR. 
+Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
+For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
 
 ~~~ ascii-art
 version.$CATZ 0 IN TXT "2"
@@ -207,7 +207,7 @@ for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers and therefore a value of zero (0) is
 RECOMMENDED.
 
-Each RRSet of catalog zone, with the exception of zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of
+Each RRSet of catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
 sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
 
 # Nameserver Behavior {#behavior}
@@ -292,7 +292,7 @@ output of AXFR or an out-of-band method to perform queries on catalog zones.
 As catalog zones are transmitted using DNS zone transfers, it is key 
 for these transfers to be protected from unexpected modifications on
 the route.  So, catalog zone transfers SHOULD be authenticated using TSIG
-[@!RFC2845].  A primary nameserver SHOULD NOT serve a catalog zone for transfer
+[@!RFC8945].  A primary nameserver SHOULD NOT serve a catalog zone for transfer
 without using TSIG and a secondary nameserver SHOULD abandon an update to a
 catalog zone that was received without using TSIG.
 
@@ -300,7 +300,7 @@ Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD
 similarly be authenticated using TSIG.
 
 Zone transfers of member zones SHOULD similarly be authenticated using TSIG
-[@!RFC2845].  The TSIG shared secrets used for member zones MUST NOT be mentioned
+[@!RFC8945].  The TSIG shared secrets used for member zones MUST NOT be mentioned
 anywhere in the catalog zone data.  However, key identifiers may be shared
 within catalog zones.
 
@@ -328,7 +328,7 @@ syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk and
-Carsten Strettman for reviewing draft proposals and offering comments and
+Carsten Strotmann for reviewing draft proposals and offering comments and
 suggestions.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
