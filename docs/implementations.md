@@ -4,8 +4,9 @@
   * [Documentation](https://www.knot-dns.cz/docs/3.0/html/configuration.html#catalog-zones)
   * [catalog_generate](https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate) Branch for generating Catalog Zones
 * [PowerCATZ](https://github.com/PowerDNS/powercatz/) program to handle Catalog Zones with PowerDNS
-* [NSDCatZ](https://github.com/IETF-Hackathon/NSDCatZ) PoC scripts for producing and consuming Catalog Zones with NSD (version from [zone-verification branch](https://github.com/NLnetLabs/nsd/tree/zone-verification))
+* [NSDCatZ](https://github.com/IETF-Hackathon/NSDCatZ) PoC scripts for producing and consuming Catalog Zones with NSD (version from [zone-verification branch](https://github.com/NLnetLabs/nsd/tree/zone-verification)) created during the hackathon at the IETF109.
 
+## Results from interoperability testing during the hackathon:
 
 | Server          | Software | catalog1.    | catalog2.    |
 |-----------------|----------|--------------|--------------|
