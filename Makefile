@@ -1,4 +1,4 @@
-VERSION = 00
+VERSION = 01
 DOCNAME = draft-ietf-dnsop-dns-catalog-zones
 
 all: $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
