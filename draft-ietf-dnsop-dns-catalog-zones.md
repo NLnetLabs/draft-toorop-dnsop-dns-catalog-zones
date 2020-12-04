@@ -492,7 +492,7 @@ Carsten Strotmann,  for reviewing draft proposals and offering comments and
 suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
-during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Špaček,
+during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Spacek,
 Brian Dickson for further brainstorming and discussing the `serial` property
 and how it would work best with catalog zones.
 
