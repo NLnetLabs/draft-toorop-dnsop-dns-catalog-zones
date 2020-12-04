@@ -214,33 +214,44 @@ sufficiently strong hash function, with small probablity that unrelated records 
 
 The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
-unreliable due to lost UDP packets used to send the NOTIFY, or secondary
-nameservers temporarily not being reachable. In such cases the secondary might
-pickup the change only after the refresh timer runs out, which might be long
-and out of the control of the DNS operator.  Alternatively updates of zones MAY
-be signalled via catalog zones with the help of a `serial` property.
+unreliable due to packet loss, or secondary nameservers temporarily not being
+reachable. In such cases the secondary might pickup the change only after the
+refresh timer runs out, which might be long and out of the control of the
+nameserver operator. Low refresh values in the zones being served can alleviate
+update delays, but burdens the primary nameserver more severely with more
+refresh queries, especially with larger numbers of secondary nameservers
+serving large numbers of zones.  Alternatively updates of zones MAY be
+signalled via catalog zones with the help of a `serial` property.
 
 The serial number in the SOA record of the most recent version of a member zone
 MAY be provided by a `serial` property.  When a `serial` property is present
-for a member zone in the catalog, implementations of catalog zones MAY assume
-this number to be the current serial number in the SOA record of the most
-recent version of the member zone.
+for a member zone, implementations of catalog zones MAY assume this number to
+be the current serial number in the SOA record of the most recent version of
+the member zone.
 
 Nameservers that are secondary for that member zone, MAY compare the `serial`
 property with the SOA serial since the last time the zone was fetched. When the
 `serial` property is larger, the secondary MAY initiate a zone tranfer
-immediately without doing an SOA query first. The transfer MUST be aborted
-immediately when the serial number of the SOA resource record does not match
-the `serial` property. In that case the zone transfer should be retried after
-the time given in the retry field of the SOA record of the member zone, or
-earlier if a new SOA serial number is learned (via an updated `serial` property
-of the member zone, or via NOTIFY [@!RFC1996]).
+immediately without doing a SOA query first. The transfer MUST be aborted
+immediately when the serial number of the SOA resource record in the transfer
+is not larger than the SOA serial of the zone currently being served. In that
+case the zone transfer should be retried after the time given in the retry
+field of the SOA record of the member zone, or earlier if a new SOA serial
+number is learned via an updated `serial` property, or via NOTIFY [@!RFC1996].
 
 When a `serial` property is present for a member zone and it matches the SOA
 serial of that member zone.  Implementations of catalog zones which are
 secondary for that member zone MAY ignore the refresh time in the SOA record of
 the member zone and rely on updates via the `serial` property of the member
-zone only.
+zone. A refresh timer of a catalog zone MUST not be ignored.
+
+Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
+secondary nameservers which are known to process the `serial` property of the
+member zones in that catalog. However they MAY also combine signalling of zone
+changes with the `serial` property of a member zone, as well as sending DNS
+NOTIFY messages, to anticipate slow updates of the catalog zone (due to packet
+loss or other reasons) and to cater for secondaries that do not process the
+`serial` property.
 
 All comparisons of serial numbers MUST use "Serial number arithmetic", as
 defined in [@!RFC1982]
@@ -443,8 +454,8 @@ suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
 during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Špaček,
-Brian Dickson for further brainstorming and discussions surrounding the
-`serial` property and how it can be best part of catalog zones.
+Brian Dickson for further brainstorming and discussing the `serial` property
+and how it would work best with catalog zones.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
   <front>
