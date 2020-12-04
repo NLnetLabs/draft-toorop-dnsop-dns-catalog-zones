@@ -169,9 +169,9 @@ All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one 
 Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
 For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
 
-~~~ ascii-art
+``` dns-zone
 version.$CATZ 0 IN TXT "2"
-~~~
+```
 
 NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
@@ -185,11 +185,11 @@ The names of member zones are represented on the RDATA side (instead of as a par
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the RRs would appear as follows:
 
-~~~ asci-art
+```
 <m-unique-1>.zones.$CATZ 0 IN PTR example.com.
 <m-unique-2>.zones.$CATZ 0 IN PTR example.net.
 <m-unique-3>.zones.$CATZ 0 IN PTR example.org.
-~~~
+```
 
 where `<m-unique-N>` is a label that tags each record in the collection.
 Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.
@@ -209,6 +209,139 @@ RECOMMENDED.
 
 Each RRSet of catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
 sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
+
+# The Serial Property
+
+The current default mechanism for prompting notifications of zone changes from
+a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
+unreliable due to packet loss, or secondary nameservers temporarily not being
+reachable. In such cases the secondary might pick up the change only after the
+refresh timer runs out, which might be long and out of the control of the
+nameserver operator. Low refresh values in the zones being served can alleviate
+update delays, but burdens the primary nameserver more severely with more
+refresh queries, especially with larger numbers of secondary nameservers
+serving large numbers of zones.  Alternatively updates of zones MAY be
+signalled via catalog zones with the help of a `serial` property.
+
+The serial number in the SOA record of the most recent version of a member zone
+MAY be provided by a `serial` property.  When a `serial` property is present
+for a member zone, implementations of catalog zones MAY assume this number to
+be the current serial number in the SOA record of the most recent version of
+the member zone.
+
+Nameservers that are secondary for that member zone, MAY compare the `serial`
+property with the SOA serial since the last time the zone was fetched. When the
+`serial` property is larger, the secondary MAY initiate a zone tranfer
+immediately without doing a SOA query first. The transfer MUST be aborted
+immediately when the serial number of the SOA resource record in the transfer
+is not larger than the SOA serial of the zone currently being served. In that
+case the zone transfer should be retried after the time given in the retry
+field of the SOA record of the member zone, or earlier if a new SOA serial
+number is learned via an updated `serial` property, or via NOTIFY [@!RFC1996].
+
+When a `serial` property is present for a member zone and it matches the SOA
+serial of that member zone, implementations of catalog zones which are
+secondary for that member zone MAY ignore the refresh time in the SOA record of
+the member zone and rely on updates via the `serial` property of the member
+zone. A refresh timer of a catalog zone MUST not be ignored.
+
+Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
+secondary nameservers which are known to process the `serial` property of the
+member zones in that catalog. However they MAY also combine signalling of zone
+changes with the `serial` property of a member zone, as well as sending DNS
+NOTIFY messages, to anticipate slow updates of the catalog zone (due to packet
+loss or other reasons) and to cater for secondaries that do not process the
+`serial` property.
+
+All comparisons of serial numbers MUST use "Serial number arithmetic", as
+defined in [@!RFC1982]
+
+**Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3).
+
+## The SERIAL Resource Record {#serialrr}
+
+The `serial` property value is provided with a SERIAL Resource Record. The Type
+value for the SERIAL RR is TBD. The SERIAL RR is class independent. The RDATA
+of the resource record consist of a single field: Serial.
+
+## SERIAL RDATA Wire Format {#serialrrwf}
+
+The SERIAL RDATA wire format is encoded as follows:
+
+```
+                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                            Serial                             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+### The Serial Field
+
+The Serial field is a 32-bit unsigned integer in network byte order.
+It is the serial number of the member zone's SOA record ([@!RFC1035] section 3.3.13).
+
+## SERIAL Presentation Format {#serialrrpf}
+
+The presentation format of the RDATA portion is as follows:
+
+The Serial fields is represented as an unsigned decimal integer.
+
+## SERIAL RR Usage - option 1 {#serialrr1}
+
+The `serial` property of a member zone is provided by a SERIAL RRset with a
+single SERIAL RR named `serial.<m-unique-N>.zones.$CATZ`.
+
+For example, if a catalog zone lists three zones "example.com.", "example.net."
+and "example.org.", and a `serial` property is provided for each of them, the
+RRs would appear as follows:
+
+```
+<m-unique-1>.zones.$CATZ        0 IN PTR    example.com.
+serial.<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
+<m-unique-2>.zones.$CATZ        0 IN PTR    example.net.
+serial.<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
+<m-unique-3>.zones.$CATZ        0 IN PTR    example.org.
+serial.<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
+```
+
+## SERIAL RR Usage - option 2 {#serialrr2}
+
+The `serial` property of a member zone is provided by a SERIAL RRset on the
+same owner name as the PTR RR of the member zone.
+
+For example, if a catalog zone lists three zones "example.com.", "example.net."
+and "example.org.", and a `serial` property is provided for each of them, the
+RRs would appear as follows:
+
+```
+<m-unique-1>.zones.$CATZ 0 IN PTR    example.com.
+<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
+<m-unique-2>.zones.$CATZ 0 IN PTR    example.net.
+<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
+<m-unique-3>.zones.$CATZ 0 IN PTR    example.org.
+<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
+```
+
+## Serial property as TXT RR - option 3 {#serialrr3}
+
+The `serial` property of a member zone is provided by a TXT RRset with a
+single TXT RR named `serial.<m-unique-N>.zones.$CATZ`. The TXT RR contains a
+single RDATA field consisting of the textual representation of the SOA serial
+number.
+
+For example, if a catalog zone lists three zones "example.com.", "example.net."
+and "example.org.", and a `serial` property is provided for each of them, the
+RRs would appear as follows:
+
+```
+<m-unique-1>.zones.$CATZ        0 IN PTR example.com.
+serial.<m-unique-1>.zones.$CATZ 0 IN TXT 2020111712
+<m-unique-2>.zones.$CATZ        0 IN PTR example.net.
+serial.<m-unique-2>.zones.$CATZ 0 IN TXT 2020111709
+<m-unique-3>.zones.$CATZ        0 IN PTR example.org.
+serial.<m-unique-3>.zones.$CATZ 0 IN TXT 2020112405
+```
 
 # Nameserver Behavior {#behavior}
 
@@ -357,6 +490,11 @@ catalog as a regular DNS zone.
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk and
 Carsten Strotmann,  for reviewing draft proposals and offering comments and
 suggestions.
+
+Thanks to Klaus Darilion who came up with the idea for the `serial` property
+during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Špaček,
+Brian Dickson for further brainstorming and discussing the `serial` property
+and how it would work best with catalog zones.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
   <front>
