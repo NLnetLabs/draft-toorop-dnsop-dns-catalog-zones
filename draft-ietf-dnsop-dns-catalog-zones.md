@@ -169,9 +169,9 @@ All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one 
 Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
 For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
 
-~~~ ascii-art
+``` dns-zone
 version.$CATZ 0 IN TXT "2"
-~~~
+```
 
 NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
@@ -185,11 +185,11 @@ The names of member zones are represented on the RDATA side (instead of as a par
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the RRs would appear as follows:
 
-~~~ asci-art
+```
 <m-unique-1>.zones.$CATZ 0 IN PTR example.com.
 <m-unique-2>.zones.$CATZ 0 IN PTR example.net.
 <m-unique-3>.zones.$CATZ 0 IN PTR example.org.
-~~~
+```
 
 where `<m-unique-N>` is a label that tags each record in the collection.
 Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.
@@ -268,13 +268,13 @@ of the resource record consist of a single field: Serial.
 
 The SERIAL RDATA wire format is encoded as follows:
 
-~~~ ascii-art
+```
                      1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                            Serial                             |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~~~
+```
 
 ### The Serial Field
 
@@ -296,14 +296,14 @@ For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a `serial` property is provided for each of them, the
 RRs would appear as follows:
 
-~~~ asci-art
+```
 <m-unique-1>.zones.$CATZ        0 IN PTR    example.com.
 serial.<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
 <m-unique-2>.zones.$CATZ        0 IN PTR    example.net.
 serial.<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
 <m-unique-3>.zones.$CATZ        0 IN PTR    example.org.
 serial.<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-~~~
+```
 
 ## SERIAL RR Usage - option 2 {#serialrr2}
 
@@ -314,14 +314,14 @@ For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a `serial` property is provided for each of them, the
 RRs would appear as follows:
 
-~~~ asci-art
+```
 <m-unique-1>.zones.$CATZ 0 IN PTR    example.com.
 <m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
 <m-unique-2>.zones.$CATZ 0 IN PTR    example.net.
 <m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
 <m-unique-3>.zones.$CATZ 0 IN PTR    example.org.
 <m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-~~~
+```
 
 ## Serial property as TXT RR - option 3 {#serialrr3}
 
@@ -334,17 +334,14 @@ For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a `serial` property is provided for each of them, the
 RRs would appear as follows:
 
-~~~ asci-art
+```
 <m-unique-1>.zones.$CATZ        0 IN PTR example.com.
 serial.<m-unique-1>.zones.$CATZ 0 IN TXT 2020111712
 <m-unique-2>.zones.$CATZ        0 IN PTR example.net.
 serial.<m-unique-2>.zones.$CATZ 0 IN TXT 2020111709
 <m-unique-3>.zones.$CATZ        0 IN PTR example.org.
 serial.<m-unique-3>.zones.$CATZ 0 IN TXT 2020112405
-~~~
-
-
-
+```
 
 # Nameserver Behavior {#behavior}
 
