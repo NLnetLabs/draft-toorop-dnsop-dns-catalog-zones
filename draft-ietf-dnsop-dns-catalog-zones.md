@@ -215,7 +215,7 @@ sufficiently strong hash function, with small probablity that unrelated records 
 The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
 unreliable due to packet loss, or secondary nameservers temporarily not being
-reachable. In such cases the secondary might pickup the change only after the
+reachable. In such cases the secondary might pick up the change only after the
 refresh timer runs out, which might be long and out of the control of the
 nameserver operator. Low refresh values in the zones being served can alleviate
 update delays, but burdens the primary nameserver more severely with more
@@ -240,7 +240,7 @@ field of the SOA record of the member zone, or earlier if a new SOA serial
 number is learned via an updated `serial` property, or via NOTIFY [@!RFC1996].
 
 When a `serial` property is present for a member zone and it matches the SOA
-serial of that member zone.  Implementations of catalog zones which are
+serial of that member zone, implementations of catalog zones which are
 secondary for that member zone MAY ignore the refresh time in the SOA record of
 the member zone and rely on updates via the `serial` property of the member
 zone. A refresh timer of a catalog zone MUST not be ignored.
@@ -289,7 +289,7 @@ The Serial fields is represented as an unsigned decimal integer.
 
 ## SERIAL RR Usage - option 1 {#serialrr1}
 
-The `serial` property of a member zone is provided by an SERIAL RRset with a
+The `serial` property of a member zone is provided by a SERIAL RRset with a
 single SERIAL RR named `serial.<m-unique-N>.zones.$CATZ`.
 
 For example, if a catalog zone lists three zones "example.com.", "example.net."
@@ -307,7 +307,7 @@ serial.<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 
 ## SERIAL RR Usage - option 2 {#serialrr2}
 
-The `serial` property of a member zone is provided by an SERIAL RRset on the
+The `serial` property of a member zone is provided by a SERIAL RRset on the
 same owner name as the PTR RR of the member zone.
 
 For example, if a catalog zone lists three zones "example.com.", "example.net."
@@ -325,7 +325,7 @@ RRs would appear as follows:
 
 ## Serial property as TXT RR - option 3 {#serialrr3}
 
-The `serial` property of a member zone is provided by an TXT RRset with a
+The `serial` property of a member zone is provided by a TXT RRset with a
 single TXT RR named `serial.<m-unique-N>.zones.$CATZ`. The TXT RR contains a
 single RDATA field consisting of the textual representation of the SOA serial
 number.
