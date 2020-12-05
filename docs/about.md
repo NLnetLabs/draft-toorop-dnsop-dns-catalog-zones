@@ -9,6 +9,11 @@ DNS Catalog Zones is a method in which a catalog of zones is represented as a re
 
 ## News
 
+- 4 December 2020
+  - A new version [01](https://datatracker.ietf.org/doc/draft-ietf-dnsop-dns-catalog-zones/01/) of the draft is posted, with:
+    - A new section [The Serial Property](https://www.ietf.org/archive/id/draft-ietf-dnsop-dns-catalog-zones-01.html#name-the-serial-property), introducing a new mechanism which can help with disseminating zones from the primary to the secondary nameservers in a timely fashion more reliably.
+    - A new section [Implementation Status](https://www.ietf.org/archive/id/draft-ietf-dnsop-dns-catalog-zones-01.html#name-implementation-status) listing production ready, upcoming and Proof of Concept implementations, and reporting on interoperability of the different implementations.
+
 - 20 November 2020
   - First stab at interoperability testing during [the hackathon at IETF109](https://trac.ietf.org/trac/ietf/meeting/wiki/109hackathon#DNS).
     Results presented at the DNSOP WG session (<[video](https://www.youtube.com/watch?v=R13CeJng9JI&t=167)> <[slides](https://datatracker.ietf.org/meeting/109/materials/slides-109-dnsop-sessb-dns-hackathon-results-00)>)
