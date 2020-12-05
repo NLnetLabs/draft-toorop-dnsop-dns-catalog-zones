@@ -1,5 +1,6 @@
-VERSION = 01
+VERSION = 02
 DOCNAME = draft-ietf-dnsop-dns-catalog-zones
+today := $(shell TZ=UTC date +%Y-%m-%dT00:00:00Z)
 
 all: $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
 
@@ -10,7 +11,8 @@ $(DOCNAME)-$(VERSION).html: $(DOCNAME).xml
 	xml2rfc --html -o $@ $<
 
 $(DOCNAME).xml: $(DOCNAME).md
-	sed 's/@DOCNAME@/$(DOCNAME)-$(VERSION)/g' $< | mmark > $@
+	sed -e 's/@DOCNAME@/$(DOCNAME)-$(VERSION)/g' \
+	    -e 's/@TODAY@/${today}/g'  $< | mmark > $@
 
 clean:
 	rm -f $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html

@@ -6,7 +6,7 @@ category = "std"
 ipr = "trust200902"
 area = "Internet"
 workgroup = "DNSOP Working Group"
-date = 2020-12-04T15:00:00Z
+date = @TODAY@
 
 [seriesInfo]
 name = "Internet-Draft"
@@ -560,9 +560,20 @@ and how it would work best with catalog zones.
 
 > New authors to pickup the editor pen on this draft
 
-* draft-toorop-dnsop-dns-catalog-zones-01
-
 > Remove data type definitions for zone properties
   Removing configuration of member zones through zone properties altogether
 
 > Remove Open issues and discussion Appendix, which was about zone options (including primary/secondary relationships) only.
+
+* draft-toorop-dnsop-dns-catalog-zones-01
+
+> Added a new section "The Serial Property", introducing a new mechanism
+  which can help with disseminating zones from the primary to the secondary
+  nameservers in a timely fashion more reliably.
+
+> Three different ways to provide a "serial" property with a member zone are
+  offered to or the workgroup for discussion.
+
+> Added a new section "Implementation Status", listing production ready,
+  upcoming and Proof of Concept implementations, and reporting on
+  interoperability of the different implementations.
