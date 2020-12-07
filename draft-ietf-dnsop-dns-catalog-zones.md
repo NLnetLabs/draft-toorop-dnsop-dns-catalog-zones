@@ -231,13 +231,9 @@ the member zone.
 
 Nameservers that are secondary for that member zone, MAY compare the `serial`
 property with the SOA serial since the last time the zone was fetched. When the
-`serial` property is larger, the secondary MAY initiate a zone tranfer
-immediately without doing a SOA query first. The transfer MUST be aborted
-immediately when the serial number of the SOA resource record in the transfer
-is not larger than the SOA serial of the zone currently being served. In that
-case the zone transfer should be retried after the time given in the retry
-field of the SOA record of the member zone, or earlier if a new SOA serial
-number is learned via an updated `serial` property, or via NOTIFY [@!RFC1996].
+`serial` property is larger, the secondary MAY initiate a zone transfer
+immediately without doing a SOA query first. The SOA query may be omitted,
+because the SOA serial has been obtained reliably via the catalog zone already.
 
 When a `serial` property is present for a member zone and it matches the SOA
 serial of that member zone, implementations of catalog zones which are
