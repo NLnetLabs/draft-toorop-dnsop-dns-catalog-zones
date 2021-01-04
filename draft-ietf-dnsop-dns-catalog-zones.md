@@ -373,9 +373,11 @@ ignored.  If a broken catalog zone was transferred, the newly transferred
 catalog zone MUST be ignored (but the older copy of the catalog zone SHOULD
 be left running subject to values in SOA fields).
 
-If there is a clash between an existing member zone's name and an incoming
-member zone's name (via transfer or update), the new instance of the zone MUST
-be ignored and an error SHOULD be logged.
+## New member zones
+
+If there is a clash between an existing zone and an incoming member zone's name
+(via transfer or update), the new instance of the zone MUST be ignored and an
+error SHOULD be logged.
 
 When zones are introduced into a catalog zone, a primary SHOULD first make the
 new zones available for transfers before making the updated catalog zone
@@ -384,22 +386,30 @@ Note that secondary nameservers may attempt to transfer the catalog zone upon
 refresh timeout, so care must be taken to make the member zones available
 before any update to the list of member zones is visible in the catalog zone.
 
-When zones are deleted from a catalog zone, a primary MAY delete the member
-zone immediately after notifying secondaries.  It is up to the secondary
-nameserver to handle this condition correctly.
+## Resetting a zone's associated state {#zonereset}
 
-{#zonereset}
 When the `<m-unique-N>` label of a member zone changes, all its associated state MUST be reset, including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
 A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
 
-# Updating Catalog Zones
+## Deleting and "moving" member zones
 
-TBD: Explain updating catalog zones using DNS UPDATE.
+When zones are deleted from a catalog zone, a primary MAY delete the member
+zone immediately after notifying secondaries.
 
-## Implementation Notes {#implementationnotes}
+When a zone is deleted from a catalog zone, a secondary MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone in the first place.
+Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state MUST be removed from the secondary.
+
+Subsequently, after removal, a secondary MUST check if another catalog zone is present which has the zone as a member.
+In that case the zone must be configured and associated according to the set of configuration associated with that catalog zone.
+If there are multiple other catalog zones which have the previously removed zone as member, one should be picked randomly.
+
+If a member zone, after removal, is associated with another catalog zone, and the `<m-unique-N>` label of the member zone remains the same, the associated state data MUST NOT be removed.
+This is to facilitate "moving" a member zone from one catalog zone to another without having to retransfer the zone content or reestablish other associated state.
+
+# Implementation Notes {#implementationnotes}
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
