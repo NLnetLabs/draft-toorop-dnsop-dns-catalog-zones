@@ -80,7 +80,7 @@ zones to be provisioned as one or more regular DNS zones.
 
 # Introduction
 
-The data in a DNS zone is synchronized amongst its primary and secondary
+The content of a DNS zone is synchronized amongst its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in [@!RFC1035]) is not automatically synchronized
 with the secondaries.  To add or remove a zone, the administrator of a DNS
@@ -91,10 +91,10 @@ also dependent on the nameserver implementation.
 
 This document describes a method in which the catalog is represented as a
 regular DNS zone (called a "catalog zone" here), and transferred using DNS zone
-transfers.  As zones are added to or removed from the catalog zone, the changes
-are propagated to the secondary nameservers in the normal way.  The secondary
+transfers.  As zones are added to or removed from the catalog zone, these changes
+are distributed to the secondary nameservers in the normal way.  The secondary
 nameservers then add/remove/modify the zones they serve in accordance with the
-changes to the zone.
+changes to the catalog zone.
 
 The contents and representation of catalog zones are described in (#description).
 Nameserver behavior is described in (#behavior).
@@ -109,7 +109,7 @@ BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all
 capitals, as shown here.
 
 Catalog zone
-: A DNS zone containing a DNS catalog, that is, a list of DNS zones.
+: A DNS zone containing a DNS catalog, that is, a list of DNS zones and associated properties.
 
 Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
@@ -120,15 +120,16 @@ $CATZ
 
 # Description {#description}
 
-A catalog zone is a specially crafted DNS zone that contains, as DNS zone data:
+A catalog zone is a specially crafted DNS zone that contains, as DNS zone content:
 
-* A list of DNS zones (called "member zones").
+* A list of DNS zones (called "member zones"), plus properties associated with those zones.
 
 Implementations of catalog zones SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
 Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
 A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
 
+[FIXME: what is the point? How would the secondary know that a member zone is another catalog zone?]
 An implementation of catalog zones MAY allow the catalog to contain other catalog zones as member zones.
 
 Although the contents of a catalog zone are interpreted and acted upon by
@@ -152,6 +153,7 @@ update is made to the catalog zone's contents as per serial number arithmetic
 defined in [@!RFC1982].  Otherwise, secondary nameservers might not notice
 updates to the catalog zone's contents.
 
+[FIXME: this ignores that the negative TTL is min(SOA TTL, SOA MINIMUM). I also don't think this argument for zero is very strong.]
 Should the zone be made available for querying, the SOA record's MINIMUM
 field's value is the negative cache time (as defined in [@!RFC2308]).  Since
 recursive nameservers are not expected to be able to access (and subsequently
@@ -197,18 +199,22 @@ Nameservers MUST accept catalog zones even with those labels not really unique; 
 Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
 Having the zones uniquely tagged with the `<m-unique-N>` label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.
 
-The `<m-unique-N>` label also enables the state for a zone to be reset. (see (#zonereset))
+The `<m-unique-N>` label also enables the state for a zone to be reset (see (#zonereset)).
 As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone SHOULD remain the same.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
+[FIXME: how about turning this around? Because they are not for querying, queries to it should be discouraged by using a huge TTL]
 The TTL field's value is not specially defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers and therefore a value of zero (0) is
 RECOMMENDED.
 
-Each RRSet of catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
+[FIXME: earlier we said that the version RRset could have multiple entries]
+Each RRSet of a catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
 sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
+
+[FIXME: this would be a good spot to write an introduction to properties]
 
 # The Serial Property
 
@@ -216,11 +222,11 @@ The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
 unreliable due to packet loss, or secondary nameservers temporarily not being
 reachable. In such cases the secondary might pick up the change only after the
-refresh timer runs out, which might be long and out of the control of the
-nameserver operator. Low refresh values in the zones being served can alleviate
-update delays, but burdens the primary nameserver more severely with more
+refresh timer runs out, which might take long time and be out of the control of the
+primary nameserver operator. Low refresh values in the zones being served can alleviate
+update delays, but burdens both the primary and secondary nameservers with more
 refresh queries, especially with larger numbers of secondary nameservers
-serving large numbers of zones.  Alternatively updates of zones MAY be
+serving large numbers of zones.  To mitigate this, updates of zones MAY be
 signalled via catalog zones with the help of a `serial` property.
 
 The serial number in the SOA record of the most recent version of a member zone
@@ -252,7 +258,7 @@ loss or other reasons) and to cater for secondaries that do not process the
 All comparisons of serial numbers MUST use "Serial number arithmetic", as
 defined in [@!RFC1982]
 
-**Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3).
+**Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3). Additionally, https://mailarchive.ietf.org/arch/msg/dnsop/DcdnwolVVpMjQzR4gtlrLyXsYtk/ suggests reusing CSYNC instead of creating a new SERIAL rrtype. (That message also contains other ideas not yet fully considered by the authors.)
 
 ## The SERIAL Resource Record {#serialrr}
 
@@ -364,6 +370,7 @@ be operated by different administrators.  The secondary nameservers may be
 configured to synchronize catalog zones from the primary, but the primary's
 administrators may not have any administrative access to the secondaries.
 
+[FIXME: what does 'be left running subject to values in SOA fields' mean functionally? Should the secondary remove all member zones when the catalog zone EXPIREs?)]
 A catalog zone can be updated via DNS UPDATE on a reference primary nameserver,
 or via zone transfers.  Nameservers MAY allow loading and transfer of broken
 zones with incorrect catalog zone syntax (as they are treated as regular
@@ -373,10 +380,12 @@ ignored.  If a broken catalog zone was transferred, the newly transferred
 catalog zone MUST be ignored (but the older copy of the catalog zone SHOULD
 be left running subject to values in SOA fields).
 
+[FIXME: reword this if we do coo, or the CSYNC immediate flag, or something else]
 If there is a clash between an existing member zone's name and an incoming
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
+[FIXME: all this ordering of operation might be an undue burden on implementations. What's the harm in a secondary failing to get a member zone immediately, and then getting it successfully a minute later?]
 When zones are introduced into a catalog zone, a primary SHOULD first make the
 new zones available for transfers before making the updated catalog zone
 available for transfer, or sending NOTIFY for the catalog zone to secondaries.
@@ -385,7 +394,7 @@ refresh timeout, so care must be taken to make the member zones available
 before any update to the list of member zones is visible in the catalog zone.
 
 When zones are deleted from a catalog zone, a primary MAY delete the member
-zone immediately after notifying secondaries.  It is up to the secondary
+zone immediately.  It is up to the secondary
 nameserver to handle this condition correctly.
 
 {#zonereset}
@@ -393,7 +402,7 @@ When the `<m-unique-N>` label of a member zone changes, all its associated state
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
+This reset is tied to `<m-unique-N` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
 
 # Updating Catalog Zones
 
@@ -483,8 +492,8 @@ implemented a similar approach and reviewed it.  Catalog zones borrows some
 syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
-Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk and
-Carsten Strotmann,  for reviewing draft proposals and offering comments and
+Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
+Carsten Strotmann, Peter Thomassen and Kees Monshouwer for reviewing draft proposals and offering comments and
 suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
