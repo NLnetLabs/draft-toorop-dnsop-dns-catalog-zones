@@ -15,4 +15,4 @@ $(DOCNAME).xml: $(DOCNAME).md
 	    -e 's/@TODAY@/${today}/g'  $< | mmark > $@ || rm -f $@
 
 clean:
-	rm -f $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
+	rm -f $(DOCNAME).xml $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
