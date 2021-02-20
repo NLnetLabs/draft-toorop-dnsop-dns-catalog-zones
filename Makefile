@@ -12,7 +12,7 @@ $(DOCNAME)-$(VERSION).html: $(DOCNAME).xml
 
 $(DOCNAME).xml: $(DOCNAME).md
 	sed -e 's/@DOCNAME@/$(DOCNAME)-$(VERSION)/g' \
-	    -e 's/@TODAY@/${today}/g'  $< | mmark > $@
+	    -e 's/@TODAY@/${today}/g'  $< | mmark > $@ || rm -f $@
 
 clean:
 	rm -f $(DOCNAME)-$(VERSION).txt $(DOCNAME)-$(VERSION).html
