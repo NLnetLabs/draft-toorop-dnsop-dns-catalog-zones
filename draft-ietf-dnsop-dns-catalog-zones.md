@@ -114,20 +114,36 @@ Catalog zone
 Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
 
-$CATZ
+`$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself (c.f. $ORIGIN).
+
+Member node
+: The DNS name at which the RRset pointing to the member zone name is located (two levels below `$CATZ`).
 
 # Description {#description}
 
 A catalog zone is a specially crafted DNS zone that contains, as DNS zone data:
 
-* A list of DNS zones (called "member zones").
+1. a list of DNS zones (called "member zones"),
+2. zone freshness information (optional, (#serialsignalling)),
+3. catalog zone migration pointers for moving member zones (optional,
+   (#migrations)),
+4. extra member zone properties for zone-specific configuration (optional,
+   (#properties)).
+
+While the first piece of data (the list of member zones) is mandatory, points
+2--4 are optional and fully orthogonal. Implementations of catalog zones may
+choose to support any combination or none of these. Even when implementations
+support such additional functionality, there is no obligation for each member
+zone to carry the pieces of data associated with it. For a catalog zone entry
+to be valid, it suffices that its member zone PTR record be present (see
+(#listofmemberzones); no other RRs at or below the member node are required.
 
 Implementations of catalog zones SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
 Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
-A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
+A member zone can as such be reconfigured with a different set of preconfigured settings by ceasing its membership in one catalog zone and making it a member of another.
 
 An implementation of catalog zones MAY allow the catalog to contain other catalog zones as member zones.
 
@@ -164,9 +180,9 @@ A single NS RR with an NSDNAME field containing the absolute name "invalid." is 
 
 ## Catalog Zone Schema Version
 
-The catalog zone schema version is specified by an integer value embeded in a TXT RR named `version.$CATZ`. 
+The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
 All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR. 
-Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
+Primary and secondary nameservers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
 For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
 
 ``` dns-zone
@@ -178,12 +194,12 @@ the implementation first found in BIND 9.11.
 
 ## List of Member Zones {#listofmemberzones}
 
-The list of member zones is specified as a collection of domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
+The list of member zones is specified as a collection of members nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length [@!RFC1035].
 
 For example, if a catalog zone lists three zones "example.com.",
-"example.net." and "example.org.", the RRs would appear as follows:
+"example.net." and "example.org.", the member node RRs would appear as follows:
 
 ```
 <m-unique-1>.zones.$CATZ 0 IN PTR example.com.
@@ -191,14 +207,20 @@ For example, if a catalog zone lists three zones "example.com.",
 <m-unique-3>.zones.$CATZ 0 IN PTR example.org.
 ```
 
-where `<m-unique-N>` is a label that tags each record in the collection.
-Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.
+where `<m-unique-N>` is a predictable label based on the member zone name,
+tagging each member zone in the collection. Typically, `<m-unique-N>` will be
+the output of a sufficiently strong hash function. [FIXME: Static algorithm? Or encode next to the version RR under $CATZ?]
+
+The predictability of the member node label is necessary for reliably handling
+orphaned catalog zones migrations (see (#orphanedmigrations)). Predictable
+labels further enable future use of catalog zone lookups based on the member
+zone name alone. [NOTE: In previous iterations, changing the member node label was used to indicate the need for a zone reset. The same can be achieved using the "epoch" property, see (#properties).]
+
+There is a small probability that unrelated records fall within the same RRSet. Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.
+[NOTE: NSEC3 relies on SHA-1 and suffers from the same problem, but apparently it is has not been an issue.]
 
 Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
 Having the zones uniquely tagged with the `<m-unique-N>` label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.
-
-The `<m-unique-N>` label also enables the state for a zone to be reset. (see (#zonereset))
-As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone SHOULD remain the same.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -207,10 +229,9 @@ for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers and therefore a value of zero (0) is
 RECOMMENDED.
 
-Each RRSet of catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
-sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
+Each member node RRset SHOULD consist of just one RR.
 
-# The Serial Property
+## Serial signalling {#serialsignalling}
 
 The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
@@ -218,126 +239,137 @@ unreliable due to packet loss, or secondary nameservers temporarily not being
 reachable. In such cases the secondary might pick up the change only after the
 refresh timer runs out, which might be long and out of the control of the
 nameserver operator. Low refresh values in the zones being served can alleviate
-update delays, but burdens the primary nameserver more severely with more
+update delays, but burden the primary nameserver more severely with more
 refresh queries, especially with larger numbers of secondary nameservers
-serving large numbers of zones.  Alternatively updates of zones MAY be
-signalled via catalog zones with the help of a `serial` property.
+serving large numbers of zones.  Alternatively, updates of zones MAY be
+signalled via catalog zones by means of a CSYNC RR located at the member node [@!RFC7477].
 
 The serial number in the SOA record of the most recent version of a member zone
-MAY be provided by a `serial` property.  When a `serial` property is present
-for a member zone, implementations of catalog zones MAY assume this number to
-be the current serial number in the SOA record of the most recent version of
-the member zone.
+MAY be provided by the CSYNC RR.  When a CSYNC RR is present at a member node,
+implementations of catalog zones MAY ssume this number to be the current serial
+number in the SOA record of the most recent version of the member zone.
 
-Nameservers that are secondary for that member zone, MAY compare the `serial`
-property with the SOA serial since the last time the zone was fetched. When the
-`serial` property is larger, the secondary MAY initiate a zone transfer
-immediately without doing a SOA query first. The SOA query may be omitted,
-because the SOA serial has been obtained reliably via the catalog zone already.
+Nameservers that are secondary for that member zone MAY process the CSYNC RR as
+follows:
 
-When a `serial` property is present for a member zone and it matches the SOA
+1. If the "immediate" flag of the CSYNC RR is not set, no further processing 
+   occurs. (The member zone is considered frozen.)
+
+2. If the serial given in the CSYNC RR is equal to the serial of the zone
+   currently being served, no further processing occurs.
+
+3. Otherwise, the secondary MAY initiate a zone transfer unless inhibited by
+   the presence of the CSYNC RR's "soaminimum" flag. If the flag is set, the
+   zone transfer may only be initiated if the serial in the CSYNC RR is larger
+   than the serial of the zone currently being served. (In the absence of the
+   flag, decreasing serials are permissible.)
+
+If a zone transfer is initiated, the secondary may do so without doing an SOA
+query first. The SOA query may be omitted because the SOA serial has already
+been obtained reliably via the catalog zone.
+
+When a CSYNC RR is present at a member node and its serial matches the SOA
 serial of that member zone, implementations of catalog zones which are
 secondary for that member zone MAY ignore the refresh time in the SOA record of
-the member zone and rely on updates via the `serial` property of the member
-zone. A refresh timer of a catalog zone MUST not be ignored.
+the member zone and rely on updates signalled through the CSYNC RR's serial
+field. A refresh timer of a catalog zone MUST not be ignored. [FIXME: Why? A catalog zone may be a member zone of another catalog zone (e.g. one catalog per customer). If SOA refresh of sub-catalog zones can be ignored, this would enable freezing a customer by unsetting its catalog zone's CSYNC immediate flag. Is there a reason to not allow such configuration?]
 
 Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
-secondary nameservers which are known to process the `serial` property of the
-member zones in that catalog. However they MAY also combine signalling of zone
-changes with the `serial` property of a member zone, as well as sending DNS
+secondary nameservers for member zones whose CSYNC RR is known to be processed
+by the secondary. However, they MAY also combine signalling
+of zone changes through the CSYNC RR of a member zone, as well as sending DNS
 NOTIFY messages, to anticipate slow updates of the catalog zone (due to packet
 loss or other reasons) and to cater for secondaries that do not process the
-`serial` property.
+CSYNC RR.
 
 All comparisons of serial numbers MUST use "Serial number arithmetic", as
 defined in [@!RFC1982]
 
-**Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3).
 
-## The SERIAL Resource Record {#serialrr}
+## Migrating zones between catalogs {#migrations}
 
-The `serial` property value is provided with a SERIAL Resource Record. The Type
-value for the SERIAL RR is TBD. The SERIAL RR is class independent. The RDATA
-of the resource record consist of a single field: Serial.
+If there is a clash between an existing member zone's name and an incoming
+member zone's name (via transfer or update), this may be an attempt to do a Change Of Ownership.
+As described in (#behavior), the appearance of a new member node conflicting
+with another catalog zone's existing member node is of no consequence for the
+moment (the new member node is ignored).
 
-## SERIAL RDATA Wire Format {#serialrrwf}
+To signal that a member zone should be transferred from one catalog zone to
+another, the new member node is provisioned in the receiving catalog zone, and
+a CNAME record pointing at the new member node is created at the old member
+node. Any other RRsets present at or below the old member node are removed.
 
-The SERIAL RDATA wire format is encoded as follows:
+When discovering such a CNAME record, a secondary SHOULD verify that it points
+to a member node that belongs to a known catalog zone and has a matching PTR
+RR. If this is the case, the secondary SHOULD henceforth consider the zone a
+member of the receiving catalog zone.
 
-```
-                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                            Serial                             |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-```
+If a secondary encounters a member node with a CNAME RR whose target is not a
+valid member node, the member zone is considered orphaned and an error SHOULD
+be logged.
 
-### The Serial Field
+{#orphanedmigrations}
 
-The Serial field is a 32-bit unsigned integer in network byte order.
-It is the serial number of the member zone's SOA record ([@!RFC1035] section 3.3.13).
+The secondary MUST NOT delete orphaned member zones. To that end, the secondary
+needs to distinguish orphaned member zones from properly deleted member zones,
+both of which do no longer appear in member node PTR records ("former member
+zone"). Such former member zones MUST NOT be deleted as long as there exists an
+RR at their member node.
 
-## SERIAL Presentation Format {#serialrrpf}
+In order to check for the presence of any RR at the member node of a former
+member zone, its `<m-unique-N>` label needs to be determined. This can be done,
+for instance, by looking it up from the deleted PTR RRs present in an IXFR
+catalog zone transfer, of by recomputing the hash of its name.
 
-The presentation format of the RDATA portion is as follows:
+A primary coordinating such a transition SHOULD first make the catalog zone
+with the new member node available for transfer before making the old catalog
+zone (equipped with the CNAME RR) available for transfer, or sending NOTIFY for
+the old catalog zone to secondaries. Note that secondary nameservers may
+attempt to transfer the old catalog zone upon refresh timeout, so care must be
+taken to make the catalog zone with the new member node available before any
+update to the corresponding member node is visible in the old catalog zone.
 
-The Serial fields is represented as an unsigned decimal integer.
+The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
+The old owner then removes the remaining CNAME RR from the old catalog.
 
-## SERIAL RR Usage - option 1 {#serialrr1}
 
-The `serial` property of a member zone is provided by a SERIAL RRset with a
-single SERIAL RR named `serial.<m-unique-N>.zones.$CATZ`.
+## Properties {#properties}
 
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
+The data structures described in the previous sections allow handling
 
-```
-<m-unique-1>.zones.$CATZ        0 IN PTR    example.com.
-serial.<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
-<m-unique-2>.zones.$CATZ        0 IN PTR    example.net.
-serial.<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
-<m-unique-3>.zones.$CATZ        0 IN PTR    example.org.
-serial.<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-```
+* the list of zones a secondary should serve, including additions and removals
+  (by means of a member node PTR record),
+* optionally, signalling serials for triggering zone transfers (by means of a
+  member node CSYNC record),
+* optionally, signalling migration of member zones between catalogs (by means
+  of a member node CNAME record).
 
-## SERIAL RR Usage - option 2 {#serialrr2}
+While the first functionality is mandatory, the other two functionalities are
+completely orthogonal: implementations of catalog zones may independently
+support any combination thereof, or none at all.
 
-The `serial` property of a member zone is provided by a SERIAL RRset on the
-same owner name as the PTR RR of the member zone.
+As a third functionality that is optional and orthogonal, member zones may be
+assigned additional properties represented by RRsets below the corresponding
+member node. While property semantics and record type choice are up to the
+respective implementor, the following property might be of particular interest:
 
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
+* `epoch.<m-unique-N>.zones.$CATZ  0  IN  TXT  "..."`
 
-```
-<m-unique-1>.zones.$CATZ 0 IN PTR    example.com.
-<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
-<m-unique-2>.zones.$CATZ 0 IN PTR    example.net.
-<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
-<m-unique-3>.zones.$CATZ 0 IN PTR    example.org.
-<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-```
+  When a member zone's epoch changes, the secondary server resets the member
+  zone's state. The steps entailed in the process depend on the operational
+  context of the secondary (e.g. regenerate DNSSEC keys). [NOTE: inspired by Debian package version epochs]
 
-## Serial property as TXT RR - option 3 {#serialrr3}
+Similarly, one may configure a `group.<m-unique-N>.zones.$CATZ` property, such
+that administrators may impose extra configuration on a member zone depending
+on the value of the group property. In case the group configuration can itself
+be represented by a set of member zone properties, an alternative grouping
+method may be to configure the properties under a different DNS node, and point
+to it using a DNAME RR at the member node of each affected member zone. This
+way, the management of the group settings can then administratively be
+decoupled from the management of the catalog.
 
-The `serial` property of a member zone is provided by a TXT RRset with a
-single TXT RR named `serial.<m-unique-N>.zones.$CATZ`. The TXT RR contains a
-single RDATA field consisting of the textual representation of the SOA serial
-number.
+Implementors are free to add other properties according to their needs.
 
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
-
-```
-<m-unique-1>.zones.$CATZ        0 IN PTR example.com.
-serial.<m-unique-1>.zones.$CATZ 0 IN TXT 2020111712
-<m-unique-2>.zones.$CATZ        0 IN PTR example.net.
-serial.<m-unique-2>.zones.$CATZ 0 IN TXT 2020111709
-<m-unique-3>.zones.$CATZ        0 IN PTR example.org.
-serial.<m-unique-3>.zones.$CATZ 0 IN TXT 2020112405
-```
 
 # Nameserver Behavior {#behavior}
 
@@ -388,12 +420,6 @@ When zones are deleted from a catalog zone, a primary MAY delete the member
 zone immediately after notifying secondaries.  It is up to the secondary
 nameserver to handle this condition correctly.
 
-{#zonereset}
-When the `<m-unique-N>` label of a member zone changes, all its associated state MUST be reset, including the zone itself.
-This can be relevant for example when zone ownership is changed.
-In that case one does not want the new owner to inherit the metadata.
-Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
 
 # Updating Catalog Zones
 
@@ -411,7 +437,7 @@ queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases, at all, using DNS QUERY.
-For example it is not possible to enumerate the contents of a multi-valued
+For example, it is not possible to enumerate the contents of a multi-valued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.
@@ -460,7 +486,7 @@ within catalog zones.
 
 Catalog zones do not need to be signed using DNSSEC, their zone transfers being
 authenticated by TSIG.  Signed zones MUST be handled normally by nameservers,
-and their contents MUST NOT be DNSSEC- validated.
+and their contents MUST NOT be DNSSEC-validated. [FIXME: Why?!]
 
 # IANA Considerations
 
