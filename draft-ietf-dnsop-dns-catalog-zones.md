@@ -174,7 +174,7 @@ the implementation first found in BIND 9.11.
 
 ## List of Member Zones {#listofmemberzones}
 
-The list of member zones is specified as a collection of members nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
+The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length [@!RFC1035].
 
@@ -455,8 +455,11 @@ zone immediately.  It is up to the secondary
 nameserver to handle this condition correctly.
 
 {#zonereset}
+
+[FIXME: we now have two mechanisms to reset zones and we should bring that back to one at some point.]
+
 When the `<unique-N>` label of a member zone changes and the zone does not have an
-poch property (see (#epochproperty)), all its associated state MUST be reset,
+epoch property (see (#epochproperty)), all its associated state MUST be reset,
 including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
