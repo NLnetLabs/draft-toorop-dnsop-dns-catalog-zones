@@ -465,6 +465,25 @@ This reset is tied to `<m-unique-N` because A simple removal followed by an addi
 If an epoch property is present, the steps in (#epochproperty) describe how
 to signal a zone reset.
 
+# Migrating zones between catalogs
+
+[FIXME: clarify 2119 status of this and other properties and features. MUST? SHOULD? MAY? Because this one has security implications, also clearly note how ownership changes work without coo - namely, removing a member zone from catz A will cause catz B or C or D to pick up the zone on their next refresh. ]
+
+If there is a clash between an existing member zone's name and an incoming
+member zone's name (via transfer or update), this may be an attempt to do a Change Of Ownership.
+
+A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently owning the zone.
+The 'coo' property looks like "coo.<m-unique-N>.old.catalog PTR new.catalog".
+
+If there is no 'coo' property that resolves the clash, the zone remains owned by its current catalog and an error may be logged.
+
+If there is a 'coo' property that resolves the clash, member zone ownership is transferred to 'new.catalog'.
+
+[FIXME: remove this after we agree on what IDs even mean and how zone resets work within and between catalog zones] If `<m-unique-N>` for the member zone is different in the new catalog zone, associated state is reset as described earlier, including existing zone data.
+
+The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
+The old owner then removes the member zone from `old.catalog`.
+
 # Updating Catalog Zones
 
 TBD: Explain updating catalog zones using DNS UPDATE.
