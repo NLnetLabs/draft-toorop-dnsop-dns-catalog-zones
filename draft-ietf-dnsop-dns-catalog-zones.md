@@ -172,20 +172,6 @@ version.$CATZ 0 IN TXT "2"
 NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
 
-## Catalog Zone Epoch {#catalogepoch}
-
-[FIXME: SHOULD, MUST?]
-Each catalog zone SHOULD have a TIMESTAMP RR named `epoch.$CATZ` with exactly
-one RR.  For new catalog zones, the value is set to the unix timestamp of the
-inception of the catalog zone.  (For the definition of the TIMESTAMP resource
-record, see (#timestamprr).)
-
-After a catalog zone update, secondaries may find that the value of the
-TIMESTAMP RR differs, indicating that member node labels have been recomputed
-with a different salt.  Secondaries MUST handle this situation transparently.
-For details, see (#listofmemberzones).
-
-
 ## List of Member Zones {#listofmemberzones}
 
 The list of member zones is specified as a collection of members nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
@@ -201,39 +187,16 @@ For example, if a catalog zone lists three zones "example.com.",
 <m-unique-3>.zones.$CATZ 0 IN PTR example.org.
 ```
 
-where for a given member zone, `<m-unique-N>` is computed as follows:
-
-1. Start with the member zone name in canonical form, that is:
-   * with the name fully expanded (no DNS name compression) and fully
-     qualified, and
-   * with all uppercase US-ASCII letters replaced by the corresponding
-     lowercase US-ASCII letters;
-2. Append the wire format content of the TIMESTAMP RR located at `epoch.$CATZ`,
-   if present;
-3. Compute the SHA-1 hash of the string assembled in the previous steps;
-4. Check whether the hash value is unique (not seen for another member zone),
-5. If this is the case, convert the hash output to "Base 32 Encoding with
-   Extended Hex Alphabet" as specified in [@!RFC4648] and return; otherwise,
-   set the catalog zone epoch ((#catalogepoch)) to the current time, and
-   recompute member node labels for all member zones.
-
-[NOTE: The base32 output will produce 32 digits, no padding required.]
-
-The procedure is analogous to the calculation of NSEC3 RR owner names
-([@!RFC5155]) and produces unique and collision-resistant, yet predictable
-member node labels.
+where `<m-unique-N>` is a label that tags each record in the collection.
+`<m-unique-N>` has a unique value in the collection.
 
 Member node labels carry no informational meaning beyond labeling member zones.
-If a secondary finds that the member node for a given member zone has changed,
-this does not indicate anything about the member zone itself; it is merely the
-member node that has been renamed. Secondaries MUST handle this case
-transparently. (It is not necessary to handle the epoch change explicitly in
-any way, as long as changing member node labels are handled transparently.)
+A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
 
 Having the zones uniquely tagged with the `<m-unique-N>` label ensures that
 additional RRs can be added at or below the member node, for signifying
 member-zone-specific information (described below). Further, if member zones
-do not share a PTR RRSet, the list of member zones can be split over multiple
+do not share a PTR RRset, the list of member zones can be split over multiple
 DNS messages in a zone transfer.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
@@ -242,8 +205,48 @@ The TTL field's value is not defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers.
 
-[FIXME: this would be a good spot to write an introduction to properties]
+# Properties {#properties}
 
+Member zones may optionally be assigned additional properties represented by
+RRsets below the corresponding member node. This document suggests a few
+properties which are all optional to implement.
+
+## The Group Property
+
+The group property identifies a set of configuration settings specific for the
+zone. The group property is represented by a TXT Resource Record, for example:
+
+```
+<m-unique-1>.zones.$CATZ        0 IN PTR    example.com.
+group.<m-unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
+<m-unique-2>.zones.$CATZ        0 IN PTR    example.net.
+group.<m-unique-2>.zones.$CATZ  0 IN TXT    nodnssec
+```
+
+## Custom properties (#customproperties)
+
+Implementations and operators of catalog zones may choose to provide their own properties
+below the label `private-extension.<unique-N>.zones.$CATZ`. `private-extension` is not a
+placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
+
+## The Epoch Property (#epochproperty)
+
+The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
+
+* `epoch.<m-unique-N>.zones.$CATZ  0  IN  TIMESTAMP  ...`
+
+  When a member zone's epoch changes, the secondary server resets the member
+  zone's state. The secondary can detect a member zone epoch change as follows:
+
+  - When the epoch changes, the primary will set the TIMESTAMP RR of the member
+    zone's epoch property to the current time.
+
+  - When the secondary processes a member node with an epoch property that
+    is larger than the point in time when the member zone itself was last
+    retrieved, then a new epoch has begun.
+
+  The steps entailed in the process of resetting the zone state depend on the
+  operational context of the secondary (e.g. regenerate DNSSEC keys).
 
 ### The TIMESTAMP Resource Record {#timestamprr}
 
@@ -280,40 +283,7 @@ epoch.$CATZ                     0 IN TIMESTAMP    20210304124652
 epoch.<m-unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
 ```
 
-
-## Properties {#properties}
-
-Member zones may optionally be assigned additional properties represented by
-RRsets below the corresponding member node. While property semantics and record
-type choice are up to the respective implementor, the following property might
-be of particular interest:
-
-* `epoch.<m-unique-N>.zones.$CATZ  0  IN  TIMESTAMP  ...`
-
-  When a member zone's epoch changes, the secondary server resets the member
-  zone's state. The secondary can detect a member zone epoch change as follows:
-
-  - When the epoch changes, the primary will set the TIMESTAMP RR of the member
-    zone's epoch property to the current time.
-
-  - When the secondary processes a member node with an epoch property that
-    is larger than the point in time when the member zone itself was last
-    retrieved, then a new epoch has begun.
-
-  The steps entailed in the process of resetting the zone state depend on the
-  operational context of the secondary (e.g. regenerate DNSSEC keys).
-  [NOTE: The RR could also live at the member node itself (and not below).]
-
-[NOTE: The rest of the section can go away if groups are not desired.]
-
-Similarly, one may configure a `group.<m-unique-N>.zones.$CATZ` property, such
-that administrators may impose extra configuration on a member zone depending
-on the value of the group property.
-
-Implementors are free to add other properties according to their needs.
-
-
-# The Serial Property
+## The Serial Property
 
 The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
@@ -357,13 +327,13 @@ defined in [@!RFC1982]
 
 **Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3). Additionally, https://mailarchive.ietf.org/arch/msg/dnsop/DcdnwolVVpMjQzR4gtlrLyXsYtk/ suggests reusing CSYNC instead of creating a new SERIAL rrtype. (That message also contains other ideas not yet fully considered by the authors.)
 
-## The SERIAL Resource Record {#serialrr}
+### The SERIAL Resource Record {#serialrr}
 
 The `serial` property value is provided with a SERIAL Resource Record. The Type
 value for the SERIAL RR is TBD. The SERIAL RR is class independent. The RDATA
 of the resource record consist of a single field: Serial.
 
-## SERIAL RDATA Wire Format {#serialrrwf}
+### SERIAL RDATA Wire Format {#serialrrwf}
 
 The SERIAL RDATA wire format is encoded as follows:
 
@@ -375,18 +345,18 @@ The SERIAL RDATA wire format is encoded as follows:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-### The Serial Field
+#### The Serial Field
 
 The Serial field is a 32-bit unsigned integer in network byte order.
 It is the serial number of the member zone's SOA record ([@!RFC1035] section 3.3.13).
 
-## SERIAL Presentation Format {#serialrrpf}
+### SERIAL Presentation Format {#serialrrpf}
 
 The presentation format of the RDATA portion is as follows:
 
 The Serial fields is represented as an unsigned decimal integer.
 
-## SERIAL RR Usage - option 1 {#serialrr1}
+### SERIAL RR Usage - option 1 {#serialrr1}
 
 The `serial` property of a member zone is provided by a SERIAL RRset with a
 single SERIAL RR named `serial.<m-unique-N>.zones.$CATZ`.
@@ -404,7 +374,7 @@ serial.<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
 serial.<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
-## SERIAL RR Usage - option 2 {#serialrr2}
+### SERIAL RR Usage - option 2 {#serialrr2}
 
 The `serial` property of a member zone is provided by a SERIAL RRset on the
 same owner name as the PTR RR of the member zone.
@@ -422,7 +392,7 @@ RRs would appear as follows:
 <m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
-## Serial property as TXT RR - option 3 {#serialrr3}
+### Serial property as TXT RR - option 3 {#serialrr3}
 
 The `serial` property of a member zone is provided by a TXT RRset with a
 single TXT RR named `serial.<m-unique-N>.zones.$CATZ`. The TXT RR contains a
@@ -484,11 +454,16 @@ zone immediately.  It is up to the secondary
 nameserver to handle this condition correctly.
 
 {#zonereset}
-When the `<m-unique-N>` label of a member zone changes, all its associated state MUST be reset, including the zone itself.
+When the `<m-unique-N>` label of a member zone changes and the zone does not have an
+poch property (see (#epochproperty)), all its associated state MUST be reset,
+including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
 This reset is tied to `<m-unique-N` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
+
+If an epoch property is present, the steps in (#epochproperty) describe how
+to signal a zone reset.
 
 # Updating Catalog Zones
 
