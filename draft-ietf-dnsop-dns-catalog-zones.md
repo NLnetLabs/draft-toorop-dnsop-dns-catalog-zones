@@ -385,14 +385,6 @@ If there is a clash between an existing member zone's name and an incoming
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
-[FIXME: all this ordering of operation might be an undue burden on implementations. What's the harm in a secondary failing to get a member zone immediately, and then getting it successfully a minute later?]
-When zones are introduced into a catalog zone, a primary SHOULD first make the
-new zones available for transfers before making the updated catalog zone
-available for transfer, or sending NOTIFY for the catalog zone to secondaries.
-Note that secondary nameservers may attempt to transfer the catalog zone upon
-refresh timeout, so care must be taken to make the member zones available
-before any update to the list of member zones is visible in the catalog zone.
-
 When zones are deleted from a catalog zone, a primary MAY delete the member
 zone immediately.  It is up to the secondary
 nameserver to handle this condition correctly.
