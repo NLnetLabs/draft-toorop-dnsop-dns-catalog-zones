@@ -182,18 +182,18 @@ For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:
 
 ```
-<m-unique-1>.zones.$CATZ 0 IN PTR example.com.
-<m-unique-2>.zones.$CATZ 0 IN PTR example.net.
-<m-unique-3>.zones.$CATZ 0 IN PTR example.org.
+<unique-1>.zones.$CATZ 0 IN PTR example.com.
+<unique-2>.zones.$CATZ 0 IN PTR example.net.
+<unique-3>.zones.$CATZ 0 IN PTR example.org.
 ```
 
-where `<m-unique-N>` is a label that tags each record in the collection.
-`<m-unique-N>` has a unique value in the collection.
+where `<unique-N>` is a label that tags each record in the collection.
+`<unique-N>` has a unique value in the collection.
 
 Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
 
-Having the zones uniquely tagged with the `<m-unique-N>` label ensures that
+Having the zones uniquely tagged with the `<unique-N>` label ensures that
 additional RRs can be added at or below the member node, for signifying
 member-zone-specific information (described below). Further, if member zones
 do not share a PTR RRset, the list of member zones can be split over multiple
@@ -213,14 +213,15 @@ properties which are all optional to implement.
 
 ## The Group Property
 
-The group property identifies a set of configuration settings specific for the
-zone. The group property is represented by a TXT Resource Record, for example:
+The group property allows to add at most one tag per member zone.
+The consumer might handle/configure member zones differently based on the tag.
+The group property is represented by a TXT Resource Record, for example:
 
 ```
-<m-unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<m-unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
-<m-unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<m-unique-2>.zones.$CATZ  0 IN TXT    nodnssec
+<unique-1>.zones.$CATZ        0 IN PTR    example.com.
+group.<unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
+<unique-2>.zones.$CATZ        0 IN PTR    example.net.
+group.<unique-2>.zones.$CATZ  0 IN TXT    nodnssec
 ```
 
 ## Custom properties {#customproperties}
@@ -233,7 +234,7 @@ placeholder, so a custom property would have the domain name `<your-label>.priva
 
 The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
 
-* `epoch.<m-unique-N>.zones.$CATZ  0  IN  TIMESTAMP  ...`
+* `epoch.<unique-N>.zones.$CATZ  0  IN  TIMESTAMP  ...`
 
   When a member zone's epoch changes, the secondary server resets the member
   zone's state. The secondary can detect a member zone epoch change as follows:
@@ -279,8 +280,8 @@ The presentation format is identical to that of the Signature Expiration and
 Inception Fields of the RRSIG RR ([@!RFC4034] section 3.2). Example:
 
 ```
-epoch.$CATZ                     0 IN TIMESTAMP    20210304124652
-epoch.<m-unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
+epoch.$CATZ                   0 IN TIMESTAMP    20210304124652
+epoch.<unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
 ```
 
 ## The Serial Property
@@ -359,19 +360,19 @@ The Serial fields is represented as an unsigned decimal integer.
 ### SERIAL RR Usage - option 1 {#serialrr1}
 
 The `serial` property of a member zone is provided by a SERIAL RRset with a
-single SERIAL RR named `serial.<m-unique-N>.zones.$CATZ`.
+single SERIAL RR named `serial.<unique-N>.zones.$CATZ`.
 
 For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a `serial` property is provided for each of them, the
 RRs would appear as follows:
 
 ```
-<m-unique-1>.zones.$CATZ        0 IN PTR    example.com.
-serial.<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
-<m-unique-2>.zones.$CATZ        0 IN PTR    example.net.
-serial.<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
-<m-unique-3>.zones.$CATZ        0 IN PTR    example.org.
-serial.<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
+<unique-1>.zones.$CATZ        0 IN PTR    example.com.
+serial.<unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
+<unique-2>.zones.$CATZ        0 IN PTR    example.net.
+serial.<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
+<unique-3>.zones.$CATZ        0 IN PTR    example.org.
+serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
 ### SERIAL RR Usage - option 2 {#serialrr2}
@@ -384,18 +385,18 @@ and "example.org.", and a `serial` property is provided for each of them, the
 RRs would appear as follows:
 
 ```
-<m-unique-1>.zones.$CATZ 0 IN PTR    example.com.
-<m-unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
-<m-unique-2>.zones.$CATZ 0 IN PTR    example.net.
-<m-unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
-<m-unique-3>.zones.$CATZ 0 IN PTR    example.org.
-<m-unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
+<unique-1>.zones.$CATZ 0 IN PTR    example.com.
+<unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
+<unique-2>.zones.$CATZ 0 IN PTR    example.net.
+<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
+<unique-3>.zones.$CATZ 0 IN PTR    example.org.
+<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
 ### Serial property as TXT RR - option 3 {#serialrr3}
 
 The `serial` property of a member zone is provided by a TXT RRset with a
-single TXT RR named `serial.<m-unique-N>.zones.$CATZ`. The TXT RR contains a
+single TXT RR named `serial.<unique-N>.zones.$CATZ`. The TXT RR contains a
 single RDATA field consisting of the textual representation of the SOA serial
 number.
 
@@ -404,12 +405,12 @@ and "example.org.", and a `serial` property is provided for each of them, the
 RRs would appear as follows:
 
 ```
-<m-unique-1>.zones.$CATZ        0 IN PTR example.com.
-serial.<m-unique-1>.zones.$CATZ 0 IN TXT 2020111712
-<m-unique-2>.zones.$CATZ        0 IN PTR example.net.
-serial.<m-unique-2>.zones.$CATZ 0 IN TXT 2020111709
-<m-unique-3>.zones.$CATZ        0 IN PTR example.org.
-serial.<m-unique-3>.zones.$CATZ 0 IN TXT 2020112405
+<unique-1>.zones.$CATZ        0 IN PTR example.com.
+serial.<unique-1>.zones.$CATZ 0 IN TXT 2020111712
+<unique-2>.zones.$CATZ        0 IN PTR example.net.
+serial.<unique-2>.zones.$CATZ 0 IN TXT 2020111709
+<unique-3>.zones.$CATZ        0 IN PTR example.org.
+serial.<unique-3>.zones.$CATZ 0 IN TXT 2020112405
 ```
 
 # Nameserver Behavior {#behavior}
@@ -454,13 +455,13 @@ zone immediately.  It is up to the secondary
 nameserver to handle this condition correctly.
 
 {#zonereset}
-When the `<m-unique-N>` label of a member zone changes and the zone does not have an
+When the `<unique-N>` label of a member zone changes and the zone does not have an
 poch property (see (#epochproperty)), all its associated state MUST be reset,
 including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-This reset is tied to `<m-unique-N` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
+This reset is tied to `<unique-N` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
 
 If an epoch property is present, the steps in (#epochproperty) describe how
 to signal a zone reset.
@@ -473,13 +474,13 @@ If there is a clash between an existing member zone's name and an incoming
 member zone's name (via transfer or update), this may be an attempt to do a Change Of Ownership.
 
 A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently owning the zone.
-The 'coo' property looks like "coo.<m-unique-N>.old.catalog PTR new.catalog".
+The 'coo' property looks like "coo.<unique-N>.old.catalog PTR new.catalog".
 
 If there is no 'coo' property that resolves the clash, the zone remains owned by its current catalog and an error may be logged.
 
 If there is a 'coo' property that resolves the clash, member zone ownership is transferred to 'new.catalog'.
 
-[FIXME: remove this after we agree on what IDs even mean and how zone resets work within and between catalog zones] If `<m-unique-N>` for the member zone is different in the new catalog zone, associated state is reset as described earlier, including existing zone data.
+[FIXME: remove this after we agree on what IDs even mean and how zone resets work within and between catalog zones] If `<unique-N>` for the member zone is different in the new catalog zone, associated state is reset as described earlier, including existing zone data.
 
 The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
 The old owner then removes the member zone from `old.catalog`.
