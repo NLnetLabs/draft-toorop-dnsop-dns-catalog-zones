@@ -16,7 +16,7 @@ primary and secondary nameservers by storing and transferring the catalog of
 zones to be provisioned as one or more regular DNS zones. 
     " name="description">
 <meta content="xml2rfc 3.4.0" name="generator">
-<meta content="draft-ietf-dnsop-dns-catalog-zones-01" name="ietf.draft">
+<meta content="draft-ietf-dnsop-dns-catalog-zones-02" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.4.0
     Python 3.8.6
@@ -1166,11 +1166,11 @@ dt+dd:empty::before{
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">dns-catalog-zones</td>
-<td class="right">December 2020</td>
+<td class="right">February 2021</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">van Dijk, et al.</td>
-<td class="center">Expires 7 June 2021</td>
+<td class="center">Expires 26 August 2021</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1180,15 +1180,15 @@ dt+dd:empty::before{
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">DNSOP Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-ietf-dnsop-dns-catalog-zones-01</dd>
+<dd class="internet-draft">draft-ietf-dnsop-dns-catalog-zones-02</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2020-12-04" class="published">4 December 2020</time>
+<time datetime="2021-02-22" class="published">22 February 2021</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2021-06-07">7 June 2021</time></dd>
+<dd class="expires"><time datetime="2021-08-26">26 August 2021</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1239,7 +1239,7 @@ zones to be provisioned as one or more regular DNS zones.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 7 June 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 26 August 2021.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1248,7 +1248,7 @@ zones to be provisioned as one or more regular DNS zones.<a href="#section-abstr
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2020 IETF Trust and the persons identified as the
+            Copyright (c) 2021 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1267,97 +1267,114 @@ zones to be provisioned as one or more regular DNS zones.<a href="#section-abstr
         <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
 <a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
         </h2>
-<nav class="toc"><ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.1">
+<nav class="toc"><ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.1">
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="xref">1</a>.  <a href="#name-introduction" class="xref">Introduction</a><a href="#section-toc.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.2">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.2">
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-terminology" class="xref">Terminology</a><a href="#section-toc.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.3">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1" class="keepWithNext"><a href="#section-3" class="xref">3</a>.  <a href="#name-description" class="xref">Description</a><a href="#section-toc.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.4">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.4">
             <p id="section-toc.1-1.4.1"><a href="#section-4" class="xref">4</a>.  <a href="#name-catalog-zone-structure" class="xref">Catalog Zone Structure</a><a href="#section-toc.1-1.4.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.4.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="xref">4.1</a>.  <a href="#name-soa-and-ns-records" class="xref">SOA and NS Records</a><a href="#section-toc.1-1.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.4.2.2">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.4.2.2">
                 <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="xref">4.2</a>.  <a href="#name-catalog-zone-schema-version" class="xref">Catalog Zone Schema Version</a><a href="#section-toc.1-1.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.4.2.3">
+              <li class="toc ulEmpty compact" id="section-toc.1-1.4.2.3">
                 <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="xref">4.3</a>.  <a href="#name-list-of-member-zones" class="xref">List of Member Zones</a><a href="#section-toc.1-1.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-the-serial-property" class="xref">The Serial Property</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-the-serial-resource-record" class="xref">The SERIAL Resource Record</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="xref">5</a>.  <a href="#name-properties" class="xref">Properties</a><a href="#section-toc.1-1.5.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="xref">5.1</a>.  <a href="#name-the-group-property" class="xref">The Group Property</a><a href="#section-toc.1-1.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-serial-rdata-wire-format" class="xref">SERIAL RDATA Wire Format</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.5.2.2.2.1">
-                    <p id="section-toc.1-1.5.2.2.2.1.1"><a href="#section-5.2.1" class="xref">5.2.1</a>.  <a href="#name-the-serial-field" class="xref">The Serial Field</a><a href="#section-toc.1-1.5.2.2.2.1.1" class="pilcrow">¶</a></p>
+              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="xref">5.2</a>.  <a href="#name-custom-properties" class="xref">Custom properties</a><a href="#section-toc.1-1.5.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="xref">5.3</a>.  <a href="#name-the-epoch-property" class="xref">The Epoch Property</a><a href="#section-toc.1-1.5.2.3.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.5.2.3.2.1">
+                    <p id="section-toc.1-1.5.2.3.2.1.1"><a href="#section-5.3.1" class="xref">5.3.1</a>.  <a href="#name-the-timestamp-resource-reco" class="xref">The TIMESTAMP Resource Record</a><a href="#section-toc.1-1.5.2.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.3">
-                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="xref">5.3</a>.  <a href="#name-serial-presentation-format" class="xref">SERIAL Presentation Format</a><a href="#section-toc.1-1.5.2.3.1" class="pilcrow">¶</a></p>
+              <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="xref">5.4</a>.  <a href="#name-the-serial-property" class="xref">The Serial Property</a><a href="#section-toc.1-1.5.2.4.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4.2.1">
+                    <p id="section-toc.1-1.5.2.4.2.1.1"><a href="#section-5.4.1" class="xref">5.4.1</a>.  <a href="#name-the-serial-resource-record" class="xref">The SERIAL Resource Record</a><a href="#section-toc.1-1.5.2.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.4">
-                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="xref">5.4</a>.  <a href="#name-serial-rr-usage-option-1" class="xref">SERIAL RR Usage - option 1</a><a href="#section-toc.1-1.5.2.4.1" class="pilcrow">¶</a></p>
+                  <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4.2.2">
+                    <p id="section-toc.1-1.5.2.4.2.2.1"><a href="#section-5.4.2" class="xref">5.4.2</a>.  <a href="#name-serial-rdata-wire-format" class="xref">SERIAL RDATA Wire Format</a><a href="#section-toc.1-1.5.2.4.2.2.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.5">
-                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="xref">5.5</a>.  <a href="#name-serial-rr-usage-option-2" class="xref">SERIAL RR Usage - option 2</a><a href="#section-toc.1-1.5.2.5.1" class="pilcrow">¶</a></p>
+                  <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4.2.3">
+                    <p id="section-toc.1-1.5.2.4.2.3.1"><a href="#section-5.4.3" class="xref">5.4.3</a>.  <a href="#name-serial-presentation-format" class="xref">SERIAL Presentation Format</a><a href="#section-toc.1-1.5.2.4.2.3.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="compact toc ulEmpty" id="section-toc.1-1.5.2.6">
-                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="xref">5.6</a>.  <a href="#name-serial-property-as-txt-rr-o" class="xref">Serial property as TXT RR - option 3</a><a href="#section-toc.1-1.5.2.6.1" class="pilcrow">¶</a></p>
+                  <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4.2.4">
+                    <p id="section-toc.1-1.5.2.4.2.4.1"><a href="#section-5.4.4" class="xref">5.4.4</a>.  <a href="#name-serial-rr-usage-option-1" class="xref">SERIAL RR Usage - option 1</a><a href="#section-toc.1-1.5.2.4.2.4.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4.2.5">
+                    <p id="section-toc.1-1.5.2.4.2.5.1"><a href="#section-5.4.5" class="xref">5.4.5</a>.  <a href="#name-serial-rr-usage-option-2" class="xref">SERIAL RR Usage - option 2</a><a href="#section-toc.1-1.5.2.4.2.5.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="toc ulEmpty compact" id="section-toc.1-1.5.2.4.2.6">
+                    <p id="section-toc.1-1.5.2.4.2.6.1"><a href="#section-5.4.6" class="xref">5.4.6</a>.  <a href="#name-serial-property-as-txt-rr-o" class="xref">Serial property as TXT RR - option 3</a><a href="#section-toc.1-1.5.2.4.2.6.1" class="pilcrow">¶</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.6">
+          <li class="toc ulEmpty compact" id="section-toc.1-1.6">
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="xref">6</a>.  <a href="#name-nameserver-behavior" class="xref">Nameserver Behavior</a><a href="#section-toc.1-1.6.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.6.2.1">
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.6.2.1">
                 <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="xref">6.1</a>.  <a href="#name-general-requirements" class="xref">General Requirements</a><a href="#section-toc.1-1.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-updating-catalog-zones" class="xref">Updating Catalog Zones</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
-<ul class="compact toc ulEmpty">
-<li class="compact toc ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="xref">7.1</a>.  <a href="#name-implementation-notes" class="xref">Implementation Notes</a><a href="#section-toc.1-1.7.2.1.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="xref">7</a>.  <a href="#name-migrating-zones-between-cat" class="xref">Migrating zones between catalogs</a><a href="#section-toc.1-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-updating-catalog-zones" class="xref">Updating Catalog Zones</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
+<ul class="toc ulEmpty compact">
+<li class="toc ulEmpty compact" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="xref">8.1</a>.  <a href="#name-implementation-notes" class="xref">Implementation Notes</a><a href="#section-toc.1-1.8.2.1.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="xref">8</a>.  <a href="#name-implementation-status" class="xref">Implementation Status</a><a href="#section-toc.1-1.8.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-implementation-status" class="xref">Implementation Status</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="xref">9</a>.  <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.9.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-security-considerations" class="xref">Security Considerations</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#section-10" class="xref">10</a>. <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.10.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-iana-considerations" class="xref">IANA Considerations</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#section-11" class="xref">11</a>. <a href="#name-acknowledgements" class="xref">Acknowledgements</a><a href="#section-toc.1-1.11.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="xref">12</a>. <a href="#name-acknowledgements" class="xref">Acknowledgements</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#section-12" class="xref">12</a>. <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.12.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="xref">13</a>. <a href="#name-normative-references" class="xref">Normative References</a><a href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#section-13" class="xref">13</a>. <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.13.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="xref">14</a>. <a href="#name-informative-references" class="xref">Informative References</a><a href="#section-toc.1-1.14.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.14">
-            <p id="section-toc.1-1.14.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-change-history-to-be-remove" class="xref">Change History (to be removed before final publication)</a><a href="#section-toc.1-1.14.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#section-appendix.a" class="xref">Appendix A</a>.  <a href="#name-change-history-to-be-remove" class="xref">Change History (to be removed before final publication)</a><a href="#section-toc.1-1.15.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="compact toc ulEmpty" id="section-toc.1-1.15">
-            <p id="section-toc.1-1.15.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.15.1" class="pilcrow">¶</a></p>
+          <li class="toc ulEmpty compact" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#section-appendix.b" class="xref"></a><a href="#name-authors-addresses" class="xref">Authors' Addresses</a><a href="#section-toc.1-1.16.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </nav>
@@ -1368,22 +1385,27 @@ zones to be provisioned as one or more regular DNS zones.<a href="#section-abstr
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">The data in a DNS zone is synchronized amongst its primary and secondary
+<p id="section-1-1"><strong>DISCLAIMER:</strong> The authors wish to apologize for the current state of the
+document, which is in a bit of a rough and somewhat inconsistent shape. It
+contains multiple different approaches for similar tasks, some of which are
+described spread out over the document. We will work with the DNSOP working
+group to improve on this.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The content of a DNS zone is synchronized amongst its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>) is not automatically synchronized
 with the secondaries.  To add or remove a zone, the administrator of a DNS
 nameserver farm not only has to add or remove the zone from the primary, they
 must also add/remove the zone from all secondaries, either manually or via an
 external application.  This can be both inconvenient and error-prone; it is
-also dependent on the nameserver implementation.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document describes a method in which the catalog is represented as a
+also dependent on the nameserver implementation.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document describes a method in which the catalog is represented as a
 regular DNS zone (called a "catalog zone" here), and transferred using DNS zone
-transfers.  As zones are added to or removed from the catalog zone, the changes
-are propagated to the secondary nameservers in the normal way.  The secondary
+transfers.  As zones are added to or removed from the catalog zone, these changes
+are distributed to the secondary nameservers in the normal way.  The secondary
 nameservers then add/remove/modify the zones they serve in accordance with the
-changes to the zone.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">The contents and representation of catalog zones are described in <a href="#description" class="xref">Section 3</a>.
-Nameserver behavior is described in <a href="#behavior" class="xref">Section 6</a>.<a href="#section-1-3" class="pilcrow">¶</a></p>
+changes to the catalog zone.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">The contents and representation of catalog zones are described in <a href="#description" class="xref">Section 3</a>.
+Nameserver behavior is described in <a href="#behavior" class="xref">Section 6</a>.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="terminology">
@@ -1399,16 +1421,20 @@ BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href
 capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-2-2">
         <dt id="section-2-2.1">Catalog zone</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.2">A DNS zone containing a DNS catalog, that is, a list of DNS zones.<a href="#section-2-2.2" class="pilcrow">¶</a>
+        <dd style="margin-left: 1.5em" id="section-2-2.2">A DNS zone containing a DNS catalog, that is, a list of DNS zones and associated properties.<a href="#section-2-2.2" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.3">Member zone</dt>
         <dd style="margin-left: 1.5em" id="section-2-2.4">A DNS zone whose configuration is published inside a catalog zone.<a href="#section-2-2.4" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
-<dt id="section-2-2.5">$CATZ</dt>
+<dt id="section-2-2.5"><code>$CATZ</code></dt>
         <dd style="margin-left: 1.5em" id="section-2-2.6">Used in examples as a placeholder to represent the domain name of the
 catalog zone itself (c.f. $ORIGIN).<a href="#section-2-2.6" class="pilcrow">¶</a>
+</dd>
+        <dd class="break"></dd>
+<dt id="section-2-2.7">Member node</dt>
+        <dd style="margin-left: 1.5em" id="section-2-2.8">The DNS name of the DNS subtree representing a given member zone (two levels below <code>$CATZ</code>).<a href="#section-2-2.8" class="pilcrow">¶</a>
 </dd>
       <dd class="break"></dd>
 </dl>
@@ -1419,21 +1445,20 @@ catalog zone itself (c.f. $ORIGIN).<a href="#section-2-2.6" class="pilcrow">¶</
       <h2 id="name-description">
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-description" class="section-name selfRef">Description</a>
       </h2>
-<p id="section-3-1">A catalog zone is a specially crafted DNS zone that contains, as DNS zone data:<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">A catalog zone is a specially crafted DNS zone that contains, as DNS zone content:<a href="#section-3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3-2.1">A list of DNS zones (called "member zones").<a href="#section-3-2.1" class="pilcrow">¶</a>
+<li class="normal" id="section-3-2.1">A list of DNS zones (called "member zones"), plus properties associated with those zones.<a href="#section-3-2.1" class="pilcrow">¶</a>
 </li>
       </ul>
 <p id="section-3-3">Implementations of catalog zones SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
 A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.<a href="#section-3-4" class="pilcrow">¶</a></p>
-<p id="section-3-5">An implementation of catalog zones MAY allow the catalog to contain other catalog zones as member zones.<a href="#section-3-5" class="pilcrow">¶</a></p>
-<p id="section-3-6">Although the contents of a catalog zone are interpreted and acted upon by
+<p id="section-3-5">Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
-standards for such zones.<a href="#section-3-6" class="pilcrow">¶</a></p>
-<p id="section-3-7">A catalog zone is primarily intended for the management of a farm of
+standards for such zones.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">A catalog zone is primarily intended for the management of a farm of
 authoritative nameservers.  It is not expected that the content of catalog
-zones will be accessible from any recursive nameserver.<a href="#section-3-7" class="pilcrow">¶</a></p>
+zones will be accessible from any recursive nameserver.<a href="#section-3-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="catalog-zone-structure">
@@ -1453,14 +1478,10 @@ during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
 update is made to the catalog zone's contents as per serial number arithmetic
 defined in <span>[<a href="#RFC1982" class="xref">RFC1982</a>]</span>.  Otherwise, secondary nameservers might not notice
 updates to the catalog zone's contents.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.1-3">Should the zone be made available for querying, the SOA record's MINIMUM
-field's value is the negative cache time (as defined in <span>[<a href="#RFC2308" class="xref">RFC2308</a>]</span>).  Since
-recursive nameservers are not expected to be able to access (and subsequently
-cache) entries from a catalog zone a value of zero (0) is RECOMMENDED.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">There is no requirement to be able to query the catalog zone via recursive nameservers.
+<p id="section-4.1-3">There is no requirement to be able to query the catalog zone via recursive nameservers.
 Implementations of catalog zones MUST ignore and MUST NOT assume or require NS records at the apex.
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
-A single NS RR with an NSDNAME field containing the absolute name "invalid." is RECOMMENDED <span>[<a href="#RFC2606" class="xref">RFC2606</a>]</span>.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+A single NS RR with an NSDNAME field containing the absolute name "invalid." is RECOMMENDED <span>[<a href="#RFC2606" class="xref">RFC2606</a>]</span>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="catalog-zone-schema-version">
@@ -1468,9 +1489,9 @@ A single NS RR with an NSDNAME field containing the absolute name "invalid." is 
         <h3 id="name-catalog-zone-schema-version">
 <a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-catalog-zone-schema-version" class="section-name selfRef">Catalog Zone Schema Version</a>
         </h3>
-<p id="section-4.2-1">The catalog zone schema version is specified by an integer value embeded in a TXT RR named <code>version.$CATZ</code>.
+<p id="section-4.2-1">The catalog zone schema version is specified by an integer value embedded in a TXT RR named <code>version.$CATZ</code>.
 All catalog zones MUST have a TXT RRset named <code>version.$CATZ</code> with at least one RR.
-Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the <code>version.$CATZ</code> TXT RRset, but they may be transferred as ordinary zones.
+Primary and secondary nameservers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the <code>version.$CATZ</code> TXT RRset, but they may be transferred as ordinary zones.
 For this memo, the value of one of the RRs in the <code>version.CATZ</code> TXT RRset MUST be set to "2", i.e.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <div id="section-4.2-2">
 <pre class="sourcecode lang-dns-zone">version.$CATZ 0 IN TXT "2"
@@ -1485,183 +1506,289 @@ the implementation first found in BIND 9.11.<a href="#section-4.2-3" class="pilc
         <h3 id="name-list-of-member-zones">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-list-of-member-zones" class="section-name selfRef">List of Member Zones</a>
         </h3>
-<p id="section-4.3-1">The list of member zones is specified as a collection of domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
 <p id="section-4.3-2">The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <p id="section-4.3-3">For example, if a catalog zone lists three zones "example.com.",
-"example.net." and "example.org.", the RRs would appear as follows:<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+"example.net." and "example.org.", the member node RRs would appear as follows:<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 <div class="artwork art-text alignLeft" id="section-4.3-4">
-<pre>&lt;m-unique-1&gt;.zones.$CATZ 0 IN PTR example.com.
-&lt;m-unique-2&gt;.zones.$CATZ 0 IN PTR example.net.
-&lt;m-unique-3&gt;.zones.$CATZ 0 IN PTR example.org.
+<pre>&lt;unique-1&gt;.zones.$CATZ 0 IN PTR example.com.
+&lt;unique-2&gt;.zones.$CATZ 0 IN PTR example.net.
+&lt;unique-3&gt;.zones.$CATZ 0 IN PTR example.org.
 </pre><a href="#section-4.3-4" class="pilcrow">¶</a>
 </div>
-<p id="section-4.3-5">where <code>&lt;m-unique-N&gt;</code> is a label that tags each record in the collection.
-Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
-<p id="section-4.3-6">Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
-Having the zones uniquely tagged with the <code>&lt;m-unique-N&gt;</code> label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.<a href="#section-4.3-6" class="pilcrow">¶</a></p>
-<p id="section-4.3-7">The <code>&lt;m-unique-N&gt;</code> label also enables the state for a zone to be reset. (see <a href="#zonereset" class="xref">Section 6.1, Paragraph 9</a>)
-As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone SHOULD remain the same.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
+<p id="section-4.3-5">where <code>&lt;unique-N&gt;</code> is a label that tags each record in the collection.
+<code>&lt;unique-N&gt;</code> has a unique value in the collection.<a href="#section-4.3-5" class="pilcrow">¶</a></p>
+<p id="section-4.3-6">Member node labels carry no informational meaning beyond labeling member zones.
+A changed label may indicate that the state for a zone needs to be reset (see <a href="#zonereset" class="xref">Section 6.1, Paragraph 8</a>).<a href="#section-4.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.3-7">Having the zones uniquely tagged with the <code>&lt;unique-N&gt;</code> label ensures that
+additional RRs can be added at or below the member node, for signifying
+member-zone-specific information (described below). Further, if member zones
+do not share a PTR RRset, the list of member zones can be split over multiple
+DNS messages in a zone transfer.<a href="#section-4.3-7" class="pilcrow">¶</a></p>
 <p id="section-4.3-8">The CLASS field of every RR in a catalog zone MUST be IN (1).<a href="#section-4.3-8" class="pilcrow">¶</a></p>
-<p id="section-4.3-9">The TTL field's value is not specially defined by this memo.  Catalog zones are
+<p id="section-4.3-9">The TTL field's value is not defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
-querying via recursive resolvers and therefore a value of zero (0) is
-RECOMMENDED.<a href="#section-4.3-9" class="pilcrow">¶</a></p>
-<p id="section-4.3-10">Each RRSet of catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
-sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.<a href="#section-4.3-10" class="pilcrow">¶</a></p>
+querying via recursive resolvers.<a href="#section-4.3-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="properties">
+<section id="section-5">
+      <h2 id="name-properties">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-properties" class="section-name selfRef">Properties</a>
+      </h2>
+<p id="section-5-1">Member zones may optionally be assigned additional properties represented by
+RRsets below the corresponding member node. This document suggests a few
+properties which are all optional to implement.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="the-group-property">
+<section id="section-5.1">
+        <h3 id="name-the-group-property">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-the-group-property" class="section-name selfRef">The Group Property</a>
+        </h3>
+<p id="section-5.1-1">The group property allows to add at most one tag per member zone.
+The consumer might handle/configure member zones differently based on the tag.
+The group property is represented by a TXT Resource Record, for example:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.1-2">
+<pre>&lt;unique-1&gt;.zones.$CATZ        0 IN PTR    example.com.
+group.&lt;unique-1&gt;.zones.$CATZ  0 IN TXT    sign-with-nsec3
+&lt;unique-2&gt;.zones.$CATZ        0 IN PTR    example.net.
+group.&lt;unique-2&gt;.zones.$CATZ  0 IN TXT    nodnssec
+</pre><a href="#section-5.1-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="customproperties">
+<section id="section-5.2">
+        <h3 id="name-custom-properties">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-custom-properties" class="section-name selfRef">Custom properties</a>
+        </h3>
+<p id="section-5.2-1">Implementations and operators of catalog zones may choose to provide their own properties
+below the label <code>private-extension.&lt;unique-N&gt;.zones.$CATZ</code>. <code>private-extension</code> is not a
+placeholder, so a custom property would have the domain name <code>&lt;your-label&gt;.private-extension.&lt;unique-N&gt;.zones.$CATZ</code><a href="#section-5.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="epochproperty">
+<section id="section-5.3">
+        <h3 id="name-the-epoch-property">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-the-epoch-property" class="section-name selfRef">The Epoch Property</a>
+        </h3>
+<p id="section-5.3-1">The epoch property is represented by a the <code>TIMESTAMP</code> Resource Record (see <a href="#timestamprr" class="xref">Section 5.3.1</a>).<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.1">
+            <code>epoch.&lt;unique-N&gt;.zones.$CATZ  0  IN  TIMESTAMP  ...</code><a href="#section-5.3-2.1" class="pilcrow">¶</a>
+</li>
+        </ul>
+<p id="section-5.3-3">When a member zone's epoch changes, the secondary server resets the member
+  zone's state. The secondary can detect a member zone epoch change as follows:<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-4.1">
+            <p id="section-5.3-4.1.1">When the epoch changes, the primary will set the TIMESTAMP RR of the member
+zone's epoch property to the current time.<a href="#section-5.3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-4.2">
+            <p id="section-5.3-4.2.1">When the secondary processes a member node with an epoch property that
+is larger than the point in time when the member zone itself was last
+retrieved, then a new epoch has begun.<a href="#section-5.3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-5">The steps entailed in the process of resetting the zone state depend on the
+  operational context of the secondary (e.g. regenerate DNSSEC keys).<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+<div id="timestamprr">
+<section id="section-5.3.1">
+          <h4 id="name-the-timestamp-resource-reco">
+<a href="#section-5.3.1" class="section-number selfRef">5.3.1. </a><a href="#name-the-timestamp-resource-reco" class="section-name selfRef">The TIMESTAMP Resource Record</a>
+          </h4>
+<p id="section-5.3.1-1">Epoch values (both for the catalog zone and for member zones) are provided with
+a TIMESTAMP Resource Record. The Type value for the TIMESTAMP RR is TBD. The
+TIMESTAMP RR is class independent [FIXME: Should it?]. The RDATA of the
+resource record consist of a single field: Timestamp.<a href="#section-5.3.1-1" class="pilcrow">¶</a></p>
+<div id="timestamprrwf">
+<section id="section-5.3.1.1">
+            <h5 id="name-timestamp-rdata-wire-format">
+<a href="#section-5.3.1.1" class="section-number selfRef">5.3.1.1. </a><a href="#name-timestamp-rdata-wire-format" class="section-name selfRef">TIMESTAMP RDATA Wire Format</a>
+            </h5>
+<p id="section-5.3.1.1-1">The TIMESTAMP RDATA wire format is encoded as follows:<a href="#section-5.3.1.1-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.3.1.1-2">
+<pre>                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           Timestamp                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+</pre><a href="#section-5.3.1.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-5.3.1.1-3">The wire format is identical to the wire format of the Signature Expiration and
+Inception Fields of the RRSIG RR (<span>[<a href="#RFC4034" class="xref">RFC4034</a>]</span> section 3.1.5) and follows the
+same rules with respect to wrapping.<a href="#section-5.3.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-5.3.1.1-4">[FIXME: Should it be 64 bit? I did it this way because a) RRSIG implementations already exist, b) for 64-bit, we also need to discuss timestamp precision (float?)]<a href="#section-5.3.1.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="timestamprrpf">
+<section id="section-5.3.1.2">
+            <h5 id="name-timestamp-rdata-presentatio">
+<a href="#section-5.3.1.2" class="section-number selfRef">5.3.1.2. </a><a href="#name-timestamp-rdata-presentatio" class="section-name selfRef">TIMESTAMP RDATA Presentation Format</a>
+            </h5>
+<p id="section-5.3.1.2-1">The presentation format is identical to that of the Signature Expiration and
+Inception Fields of the RRSIG RR (<span>[<a href="#RFC4034" class="xref">RFC4034</a>]</span> section 3.2). Example:<a href="#section-5.3.1.2-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.3.1.2-2">
+<pre>epoch.$CATZ                   0 IN TIMESTAMP    20210304124652
+epoch.&lt;unique-1&gt;.zones.$CATZ  0 IN TIMESTAMP    20201231235959
+</pre><a href="#section-5.3.1.2-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
 </section>
 </div>
 </section>
 </div>
 <div id="the-serial-property">
-<section id="section-5">
-      <h2 id="name-the-serial-property">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-the-serial-property" class="section-name selfRef">The Serial Property</a>
-      </h2>
-<p id="section-5-1">The current default mechanism for prompting notifications of zone changes from
+<section id="section-5.4">
+        <h3 id="name-the-serial-property">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-the-serial-property" class="section-name selfRef">The Serial Property</a>
+        </h3>
+<p id="section-5.4-1">The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY <span>[<a href="#RFC1996" class="xref">RFC1996</a>]</span>, can be
 unreliable due to packet loss, or secondary nameservers temporarily not being
 reachable. In such cases the secondary might pick up the change only after the
-refresh timer runs out, which might be long and out of the control of the
-nameserver operator. Low refresh values in the zones being served can alleviate
-update delays, but burdens the primary nameserver more severely with more
+refresh timer runs out, which might take long time and be out of the control of the
+primary nameserver operator. Low refresh values in the zones being served can alleviate
+update delays, but burden both the primary and secondary nameservers with more
 refresh queries, especially with larger numbers of secondary nameservers
-serving large numbers of zones.  Alternatively updates of zones MAY be
-signalled via catalog zones with the help of a <code>serial</code> property.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">The serial number in the SOA record of the most recent version of a member zone
+serving large numbers of zones.  To mitigate this, updates of zones MAY be
+signalled via catalog zones with the help of a <code>serial</code> property.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-2">The serial number in the SOA record of the most recent version of a member zone
 MAY be provided by a <code>serial</code> property.  When a <code>serial</code> property is present
 for a member zone, implementations of catalog zones MAY assume this number to
 be the current serial number in the SOA record of the most recent version of
-the member zone.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">Nameservers that are secondary for that member zone, MAY compare the <code>serial</code>
+the member zone.<a href="#section-5.4-2" class="pilcrow">¶</a></p>
+<p id="section-5.4-3">Nameservers that are secondary for that member zone, MAY compare the <code>serial</code>
 property with the SOA serial since the last time the zone was fetched. When the
-<code>serial</code> property is larger, the secondary MAY initiate a zone tranfer
-immediately without doing a SOA query first. The transfer MUST be aborted
-immediately when the serial number of the SOA resource record in the transfer
-is not larger than the SOA serial of the zone currently being served. In that
-case the zone transfer should be retried after the time given in the retry
-field of the SOA record of the member zone, or earlier if a new SOA serial
-number is learned via an updated <code>serial</code> property, or via NOTIFY <span>[<a href="#RFC1996" class="xref">RFC1996</a>]</span>.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">When a <code>serial</code> property is present for a member zone and it matches the SOA
+<code>serial</code> property is larger, the secondary MAY initiate a zone transfer
+immediately without doing a SOA query first. The SOA query may be omitted,
+because the SOA serial has been obtained reliably via the catalog zone already.<a href="#section-5.4-3" class="pilcrow">¶</a></p>
+<p id="section-5.4-4">When a <code>serial</code> property is present for a member zone and it matches the SOA
 serial of that member zone, implementations of catalog zones which are
 secondary for that member zone MAY ignore the refresh time in the SOA record of
 the member zone and rely on updates via the <code>serial</code> property of the member
-zone. A refresh timer of a catalog zone MUST not be ignored.<a href="#section-5-4" class="pilcrow">¶</a></p>
-<p id="section-5-5">Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
+zone. A refresh timer of a catalog zone MUST not be ignored.<a href="#section-5.4-4" class="pilcrow">¶</a></p>
+<p id="section-5.4-5">Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
 secondary nameservers which are known to process the <code>serial</code> property of the
 member zones in that catalog. However they MAY also combine signalling of zone
 changes with the <code>serial</code> property of a member zone, as well as sending DNS
 NOTIFY messages, to anticipate slow updates of the catalog zone (due to packet
 loss or other reasons) and to cater for secondaries that do not process the
-<code>serial</code> property.<a href="#section-5-5" class="pilcrow">¶</a></p>
-<p id="section-5-6">All comparisons of serial numbers MUST use "Serial number arithmetic", as
-defined in <span>[<a href="#RFC1982" class="xref">RFC1982</a>]</span><a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7"><strong>Note to the DNSOP Working Group</strong>: In this section we present three ways to provide a <code>serial</code> property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in <a href="#serialrr" class="xref">Section 5.1</a>, <a href="#serialrrwf" class="xref">Section 5.2</a> and <a href="#serialrrpf" class="xref">Section 5.3</a>. The two different ways to provide a <code>serial</code> property with the SERIAL RR are described in <a href="#serialrr1" class="xref">Section 5.4</a> and <a href="#serialrr2" class="xref">Section 5.5</a> respectively. The third way is with a TXT RR and is described in <a href="#serialrr3" class="xref">Section 5.6</a>.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<code>serial</code> property.<a href="#section-5.4-5" class="pilcrow">¶</a></p>
+<p id="section-5.4-6">All comparisons of serial numbers MUST use "Serial number arithmetic", as
+defined in <span>[<a href="#RFC1982" class="xref">RFC1982</a>]</span><a href="#section-5.4-6" class="pilcrow">¶</a></p>
+<p id="section-5.4-7"><strong>Note to the DNSOP Working Group</strong>: In this section we present three ways to provide a <code>serial</code> property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in <a href="#serialrr" class="xref">Section 5.4.1</a>, <a href="#serialrrwf" class="xref">Section 5.4.2</a> and <a href="#serialrrpf" class="xref">Section 5.4.3</a>. The two different ways to provide a <code>serial</code> property with the SERIAL RR are described in <a href="#serialrr1" class="xref">Section 5.4.4</a> and <a href="#serialrr2" class="xref">Section 5.4.5</a> respectively. The third way is with a TXT RR and is described in <a href="#serialrr3" class="xref">Section 5.4.6</a>. Additionally, <a href="https://mailarchive.ietf.org/arch/msg/dnsop/DcdnwolVVpMjQzR4gtlrLyXsYtk/">https://mailarchive.ietf.org/arch/msg/dnsop/DcdnwolVVpMjQzR4gtlrLyXsYtk/</a> suggests reusing CSYNC instead of creating a new SERIAL rrtype. (That message also contains other ideas not yet fully considered by the authors.)<a href="#section-5.4-7" class="pilcrow">¶</a></p>
 <div id="serialrr">
-<section id="section-5.1">
-        <h3 id="name-the-serial-resource-record">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-the-serial-resource-record" class="section-name selfRef">The SERIAL Resource Record</a>
-        </h3>
-<p id="section-5.1-1">The <code>serial</code> property value is provided with a SERIAL Resource Record. The Type
+<section id="section-5.4.1">
+          <h4 id="name-the-serial-resource-record">
+<a href="#section-5.4.1" class="section-number selfRef">5.4.1. </a><a href="#name-the-serial-resource-record" class="section-name selfRef">The SERIAL Resource Record</a>
+          </h4>
+<p id="section-5.4.1-1">The <code>serial</code> property value is provided with a SERIAL Resource Record. The Type
 value for the SERIAL RR is TBD. The SERIAL RR is class independent. The RDATA
-of the resource record consist of a single field: Serial.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+of the resource record consist of a single field: Serial.<a href="#section-5.4.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="serialrrwf">
-<section id="section-5.2">
-        <h3 id="name-serial-rdata-wire-format">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-serial-rdata-wire-format" class="section-name selfRef">SERIAL RDATA Wire Format</a>
-        </h3>
-<p id="section-5.2-1">The SERIAL RDATA wire format is encoded as follows:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-5.2-2">
+<section id="section-5.4.2">
+          <h4 id="name-serial-rdata-wire-format">
+<a href="#section-5.4.2" class="section-number selfRef">5.4.2. </a><a href="#name-serial-rdata-wire-format" class="section-name selfRef">SERIAL RDATA Wire Format</a>
+          </h4>
+<p id="section-5.4.2-1">The SERIAL RDATA wire format is encoded as follows:<a href="#section-5.4.2-1" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.4.2-2">
 <pre>                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                            Serial                             |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-</pre><a href="#section-5.2-2" class="pilcrow">¶</a>
+</pre><a href="#section-5.4.2-2" class="pilcrow">¶</a>
 </div>
 <div id="the-serial-field">
-<section id="section-5.2.1">
-          <h4 id="name-the-serial-field">
-<a href="#section-5.2.1" class="section-number selfRef">5.2.1. </a><a href="#name-the-serial-field" class="section-name selfRef">The Serial Field</a>
-          </h4>
-<p id="section-5.2.1-1">The Serial field is a 32-bit unsigned integer in network byte order.
-It is the serial number of the member zone's SOA record (<span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span> section 3.3.13).<a href="#section-5.2.1-1" class="pilcrow">¶</a></p>
+<section id="section-5.4.2.1">
+            <h5 id="name-the-serial-field">
+<a href="#section-5.4.2.1" class="section-number selfRef">5.4.2.1. </a><a href="#name-the-serial-field" class="section-name selfRef">The Serial Field</a>
+            </h5>
+<p id="section-5.4.2.1-1">The Serial field is a 32-bit unsigned integer in network byte order.
+It is the serial number of the member zone's SOA record (<span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span> section 3.3.13).<a href="#section-5.4.2.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="serialrrpf">
-<section id="section-5.3">
-        <h3 id="name-serial-presentation-format">
-<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-serial-presentation-format" class="section-name selfRef">SERIAL Presentation Format</a>
-        </h3>
-<p id="section-5.3-1">The presentation format of the RDATA portion is as follows:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
-<p id="section-5.3-2">The Serial fields is represented as an unsigned decimal integer.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<section id="section-5.4.3">
+          <h4 id="name-serial-presentation-format">
+<a href="#section-5.4.3" class="section-number selfRef">5.4.3. </a><a href="#name-serial-presentation-format" class="section-name selfRef">SERIAL Presentation Format</a>
+          </h4>
+<p id="section-5.4.3-1">The presentation format of the RDATA portion is as follows:<a href="#section-5.4.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.4.3-2">The Serial fields is represented as an unsigned decimal integer.<a href="#section-5.4.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="serialrr1">
-<section id="section-5.4">
-        <h3 id="name-serial-rr-usage-option-1">
-<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-serial-rr-usage-option-1" class="section-name selfRef">SERIAL RR Usage - option 1</a>
-        </h3>
-<p id="section-5.4-1">The <code>serial</code> property of a member zone is provided by a SERIAL RRset with a
-single SERIAL RR named <code>serial.&lt;m-unique-N&gt;.zones.$CATZ</code>.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
-<p id="section-5.4-2">For example, if a catalog zone lists three zones "example.com.", "example.net."
+<section id="section-5.4.4">
+          <h4 id="name-serial-rr-usage-option-1">
+<a href="#section-5.4.4" class="section-number selfRef">5.4.4. </a><a href="#name-serial-rr-usage-option-1" class="section-name selfRef">SERIAL RR Usage - option 1</a>
+          </h4>
+<p id="section-5.4.4-1">The <code>serial</code> property of a member zone is provided by a SERIAL RRset with a
+single SERIAL RR named <code>serial.&lt;unique-N&gt;.zones.$CATZ</code>.<a href="#section-5.4.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4.4-2">For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a <code>serial</code> property is provided for each of them, the
-RRs would appear as follows:<a href="#section-5.4-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-5.4-3">
-<pre>&lt;m-unique-1&gt;.zones.$CATZ        0 IN PTR    example.com.
-serial.&lt;m-unique-1&gt;.zones.$CATZ 0 IN SERIAL 2020111712
-&lt;m-unique-2&gt;.zones.$CATZ        0 IN PTR    example.net.
-serial.&lt;m-unique-2&gt;.zones.$CATZ 0 IN SERIAL 2020111709
-&lt;m-unique-3&gt;.zones.$CATZ        0 IN PTR    example.org.
-serial.&lt;m-unique-3&gt;.zones.$CATZ 0 IN SERIAL 2020112405
-</pre><a href="#section-5.4-3" class="pilcrow">¶</a>
+RRs would appear as follows:<a href="#section-5.4.4-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.4.4-3">
+<pre>&lt;unique-1&gt;.zones.$CATZ        0 IN PTR    example.com.
+serial.&lt;unique-1&gt;.zones.$CATZ 0 IN SERIAL 2020111712
+&lt;unique-2&gt;.zones.$CATZ        0 IN PTR    example.net.
+serial.&lt;unique-2&gt;.zones.$CATZ 0 IN SERIAL 2020111709
+&lt;unique-3&gt;.zones.$CATZ        0 IN PTR    example.org.
+serial.&lt;unique-3&gt;.zones.$CATZ 0 IN SERIAL 2020112405
+</pre><a href="#section-5.4.4-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="serialrr2">
-<section id="section-5.5">
-        <h3 id="name-serial-rr-usage-option-2">
-<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-serial-rr-usage-option-2" class="section-name selfRef">SERIAL RR Usage - option 2</a>
-        </h3>
-<p id="section-5.5-1">The <code>serial</code> property of a member zone is provided by a SERIAL RRset on the
-same owner name as the PTR RR of the member zone.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
-<p id="section-5.5-2">For example, if a catalog zone lists three zones "example.com.", "example.net."
+<section id="section-5.4.5">
+          <h4 id="name-serial-rr-usage-option-2">
+<a href="#section-5.4.5" class="section-number selfRef">5.4.5. </a><a href="#name-serial-rr-usage-option-2" class="section-name selfRef">SERIAL RR Usage - option 2</a>
+          </h4>
+<p id="section-5.4.5-1">The <code>serial</code> property of a member zone is provided by a SERIAL RRset on the
+same owner name as the PTR RR of the member zone.<a href="#section-5.4.5-1" class="pilcrow">¶</a></p>
+<p id="section-5.4.5-2">For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a <code>serial</code> property is provided for each of them, the
-RRs would appear as follows:<a href="#section-5.5-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-5.5-3">
-<pre>&lt;m-unique-1&gt;.zones.$CATZ 0 IN PTR    example.com.
-&lt;m-unique-1&gt;.zones.$CATZ 0 IN SERIAL 2020111712
-&lt;m-unique-2&gt;.zones.$CATZ 0 IN PTR    example.net.
-&lt;m-unique-2&gt;.zones.$CATZ 0 IN SERIAL 2020111709
-&lt;m-unique-3&gt;.zones.$CATZ 0 IN PTR    example.org.
-&lt;m-unique-3&gt;.zones.$CATZ 0 IN SERIAL 2020112405
-</pre><a href="#section-5.5-3" class="pilcrow">¶</a>
+RRs would appear as follows:<a href="#section-5.4.5-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.4.5-3">
+<pre>&lt;unique-1&gt;.zones.$CATZ 0 IN PTR    example.com.
+&lt;unique-1&gt;.zones.$CATZ 0 IN SERIAL 2020111712
+&lt;unique-2&gt;.zones.$CATZ 0 IN PTR    example.net.
+&lt;unique-2&gt;.zones.$CATZ 0 IN SERIAL 2020111709
+&lt;unique-3&gt;.zones.$CATZ 0 IN PTR    example.org.
+&lt;unique-3&gt;.zones.$CATZ 0 IN SERIAL 2020112405
+</pre><a href="#section-5.4.5-3" class="pilcrow">¶</a>
 </div>
 </section>
 </div>
 <div id="serialrr3">
-<section id="section-5.6">
-        <h3 id="name-serial-property-as-txt-rr-o">
-<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-serial-property-as-txt-rr-o" class="section-name selfRef">Serial property as TXT RR - option 3</a>
-        </h3>
-<p id="section-5.6-1">The <code>serial</code> property of a member zone is provided by a TXT RRset with a
-single TXT RR named <code>serial.&lt;m-unique-N&gt;.zones.$CATZ</code>. The TXT RR contains a
+<section id="section-5.4.6">
+          <h4 id="name-serial-property-as-txt-rr-o">
+<a href="#section-5.4.6" class="section-number selfRef">5.4.6. </a><a href="#name-serial-property-as-txt-rr-o" class="section-name selfRef">Serial property as TXT RR - option 3</a>
+          </h4>
+<p id="section-5.4.6-1">The <code>serial</code> property of a member zone is provided by a TXT RRset with a
+single TXT RR named <code>serial.&lt;unique-N&gt;.zones.$CATZ</code>. The TXT RR contains a
 single RDATA field consisting of the textual representation of the SOA serial
-number.<a href="#section-5.6-1" class="pilcrow">¶</a></p>
-<p id="section-5.6-2">For example, if a catalog zone lists three zones "example.com.", "example.net."
+number.<a href="#section-5.4.6-1" class="pilcrow">¶</a></p>
+<p id="section-5.4.6-2">For example, if a catalog zone lists three zones "example.com.", "example.net."
 and "example.org.", and a <code>serial</code> property is provided for each of them, the
-RRs would appear as follows:<a href="#section-5.6-2" class="pilcrow">¶</a></p>
-<div class="artwork art-text alignLeft" id="section-5.6-3">
-<pre>&lt;m-unique-1&gt;.zones.$CATZ        0 IN PTR example.com.
-serial.&lt;m-unique-1&gt;.zones.$CATZ 0 IN TXT 2020111712
-&lt;m-unique-2&gt;.zones.$CATZ        0 IN PTR example.net.
-serial.&lt;m-unique-2&gt;.zones.$CATZ 0 IN TXT 2020111709
-&lt;m-unique-3&gt;.zones.$CATZ        0 IN PTR example.org.
-serial.&lt;m-unique-3&gt;.zones.$CATZ 0 IN TXT 2020112405
-</pre><a href="#section-5.6-3" class="pilcrow">¶</a>
+RRs would appear as follows:<a href="#section-5.4.6-2" class="pilcrow">¶</a></p>
+<div class="artwork art-text alignLeft" id="section-5.4.6-3">
+<pre>&lt;unique-1&gt;.zones.$CATZ        0 IN PTR example.com.
+serial.&lt;unique-1&gt;.zones.$CATZ 0 IN TXT 2020111712
+&lt;unique-2&gt;.zones.$CATZ        0 IN PTR example.net.
+serial.&lt;unique-2&gt;.zones.$CATZ 0 IN TXT 2020111709
+&lt;unique-3&gt;.zones.$CATZ        0 IN PTR example.org.
+serial.&lt;unique-3&gt;.zones.$CATZ 0 IN TXT 2020112405
+</pre><a href="#section-5.4.6-3" class="pilcrow">¶</a>
+</div>
+</section>
 </div>
 </section>
 </div>
@@ -1685,7 +1812,7 @@ operators may want to limit the systems able to query these zones.  It may be
 inconvenient to serve some contents of catalog zones via DNS queries anyway due
 to the nature of their representation.  A separate method of querying entries
 inside the catalog zone may be made available by nameserver implementations
-(see <a href="#implementationnotes" class="xref">Section 7.1</a>).<a href="#section-6.1-2" class="pilcrow">¶</a></p>
+(see <a href="#implementationnotes" class="xref">Section 8.1</a>).<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <p id="section-6.1-3">Catalog updates should be automatic, i.e., when a nameserver that supports
 catalog zones completes a zone transfer for a catalog zone, it SHOULD apply
 changes to the catalog within the running nameserver automatically without any
@@ -1699,150 +1826,165 @@ or via zone transfers.  Nameservers MAY allow loading and transfer of broken
 zones with incorrect catalog zone syntax (as they are treated as regular
 zones), but nameservers MUST NOT process such broken zones as catalog
 zones.  For the purpose of catalog processing, the broken catalogs MUST be
-ignored.  If a broken catalog zone was transferred, the newly transferred
-catalog zone MUST be ignored (but the older copy of the catalog zone SHOULD
-be left running subject to values in SOA fields).<a href="#section-6.1-5" class="pilcrow">¶</a></p>
-<p id="section-6.1-6">If there is a clash between an existing member zone's name and an incoming
+ignored.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">[FIXME: reword this if we do coo, or the CSYNC immediate flag, or something else]
+If there is a clash between an existing member zone's name and an incoming
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
-<p id="section-6.1-7">When zones are introduced into a catalog zone, a primary SHOULD first make the
-new zones available for transfers before making the updated catalog zone
-available for transfer, or sending NOTIFY for the catalog zone to secondaries.
-Note that secondary nameservers may attempt to transfer the catalog zone upon
-refresh timeout, so care must be taken to make the member zones available
-before any update to the list of member zones is visible in the catalog zone.<a href="#section-6.1-7" class="pilcrow">¶</a></p>
-<p id="section-6.1-8">When zones are deleted from a catalog zone, a primary MAY delete the member
-zone immediately after notifying secondaries.  It is up to the secondary
-nameserver to handle this condition correctly.<a href="#section-6.1-8" class="pilcrow">¶</a></p>
+<p id="section-6.1-7">When zones are deleted from a catalog zone, a primary MAY delete the member
+zone immediately.  It is up to the secondary
+nameserver to handle this condition correctly.<a href="#section-6.1-7" class="pilcrow">¶</a></p>
 <div id="zonereset">
-<p id="section-6.1-9">When the <code>&lt;m-unique-N&gt;</code> label of a member zone changes, all its associated state MUST be reset, including the zone itself.
+<p id="section-6.1-8">[FIXME: we now have two mechanisms to reset zones and we should bring that back to one at some point.]<a href="#section-6.1-8" class="pilcrow">¶</a></p>
+</div>
+<p id="section-6.1-9">When the <code>&lt;unique-N&gt;</code> label of a member zone changes and the zone does not have an
+epoch property (see <a href="#epochproperty" class="xref">Section 5.3</a>), all its associated state MUST be reset,
+including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.<a href="#section-6.1-9" class="pilcrow">¶</a></p>
+This reset is tied to <code>&lt;unique-N</code> because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.<a href="#section-6.1-9" class="pilcrow">¶</a></p>
+<p id="section-6.1-10">If an epoch property is present, the steps in <a href="#epochproperty" class="xref">Section 5.3</a> describe how
+to signal a zone reset.<a href="#section-6.1-10" class="pilcrow">¶</a></p>
+</section>
 </div>
 </section>
 </div>
+<div id="migrating-zones-between-catalogs">
+<section id="section-7">
+      <h2 id="name-migrating-zones-between-cat">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-migrating-zones-between-cat" class="section-name selfRef">Migrating zones between catalogs</a>
+      </h2>
+<p id="section-7-1">[FIXME: clarify 2119 status of this and other properties and features. MUST? SHOULD? MAY? Because this one has security implications, also clearly note how ownership changes work without coo - namely, removing a member zone from catz A will cause catz B or C or D to pick up the zone on their next refresh. ]<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">If there is a clash between an existing member zone's name and an incoming
+member zone's name (via transfer or update), this may be an attempt to do a Change Of Ownership.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently owning the zone.
+The 'coo' property looks like "coo.&lt;unique-N&gt;.old.catalog PTR new.catalog".<a href="#section-7-3" class="pilcrow">¶</a></p>
+<p id="section-7-4">If there is no 'coo' property that resolves the clash, the zone remains owned by its current catalog and an error may be logged.<a href="#section-7-4" class="pilcrow">¶</a></p>
+<p id="section-7-5">If there is a 'coo' property that resolves the clash, member zone ownership is transferred to 'new.catalog'.<a href="#section-7-5" class="pilcrow">¶</a></p>
+<p id="section-7-6">[FIXME: remove this after we agree on what IDs even mean and how zone resets work within and between catalog zones] If <code>&lt;unique-N&gt;</code> for the member zone is different in the new catalog zone, associated state is reset as described earlier, including existing zone data.<a href="#section-7-6" class="pilcrow">¶</a></p>
+<p id="section-7-7">The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
+The old owner then removes the member zone from <code>old.catalog</code>.<a href="#section-7-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="updating-catalog-zones">
-<section id="section-7">
+<section id="section-8">
       <h2 id="name-updating-catalog-zones">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-updating-catalog-zones" class="section-name selfRef">Updating Catalog Zones</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-updating-catalog-zones" class="section-name selfRef">Updating Catalog Zones</a>
       </h2>
-<p id="section-7-1">TBD: Explain updating catalog zones using DNS UPDATE.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-8-1">TBD: Explain updating catalog zones using DNS UPDATE.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <div id="implementationnotes">
-<section id="section-7.1">
+<section id="section-8.1">
         <h3 id="name-implementation-notes">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-implementation-notes" class="section-name selfRef">Implementation Notes</a>
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-implementation-notes" class="section-name selfRef">Implementation Notes</a>
         </h3>
-<p id="section-7.1-1">Catalog zones on secondary nameservers would have to be setup manually, perhaps
+<p id="section-8.1-1">Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
 Members of such catalog zones will be automatically synchronized by the
-secondary after the catalog zone is configured.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">An administrator may want to look at data inside a catalog zone.  Typical
+secondary after the catalog zone is configured.<a href="#section-8.1-1" class="pilcrow">¶</a></p>
+<p id="section-8.1-2">An administrator may want to look at data inside a catalog zone.  Typical
 queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases, at all, using DNS QUERY.
-For example it is not possible to enumerate the contents of a multi-valued
+For example, it is not possible to enumerate the contents of a multi-valued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
-output of AXFR or an out-of-band method to perform queries on catalog zones.<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+output of AXFR or an out-of-band method to perform queries on catalog zones.<a href="#section-8.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="implementation-status">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-implementation-status">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
       </h2>
-<p id="section-8-1"><strong>Note to the RFC Editor</strong>: please remove this entire section before publication.<a href="#section-8-1" class="pilcrow">¶</a></p>
-<p id="section-8-2">In the following implementation status descriptions, "DNS Catalog Zones" refers
-to DNS Catalog Zones as described in this document.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-9-1"><strong>Note to the RFC Editor</strong>: please remove this entire section before publication.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">In the following implementation status descriptions, "DNS Catalog Zones" refers
+to DNS Catalog Zones as described in this document.<a href="#section-9-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-8-3.1">
-          <p id="section-8-3.1.1">Knot DNS has processing of DNS Catalog Zones since Knot DNS Version 3.0.0,
-which was released on September 9, 2020.<a href="#section-8-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-9-3.1">
+          <p id="section-9-3.1.1">Knot DNS has processing of DNS Catalog Zones since Knot DNS Version 3.0.0,
+which was released on September 9, 2020.<a href="#section-9-3.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-8-3.2">
-          <p id="section-8-3.2.1">Knot DNS has generation of DNS Catalog Zones on a
-<a href="https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate">development branch</a>.<a href="#section-8-3.2.1" class="pilcrow">¶</a></p>
+        <li class="normal" id="section-9-3.2">
+          <p id="section-9-3.2.1">Knot DNS has generation of DNS Catalog Zones on a
+<a href="https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate">development branch</a>.<a href="#section-9-3.2.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-8-3.3">
-          <p id="section-8-3.3.1">PowerDNS has a proof of concept external program called
+        <li class="normal" id="section-9-3.3">
+          <p id="section-9-3.3.1">PowerDNS has a proof of concept external program called
 <a href="https://github.com/PowerDNS/powercatz/">PowerCATZ</a>, that can process DNS
-Catalog Zones.<a href="#section-8-3.3.1" class="pilcrow">¶</a></p>
+Catalog Zones.<a href="#section-9-3.3.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-8-3.4">
-          <p id="section-8-3.4.1">Proof of concept <a href="https://github.com/IETF-Hackathon/NSDCatZ">python scripts</a>
+        <li class="normal" id="section-9-3.4">
+          <p id="section-9-3.4.1">Proof of concept <a href="https://github.com/IETF-Hackathon/NSDCatZ">python scripts</a>
 that can be used for both generating and consuming DNS Catalog Zones with NSD
-have been developed during the hackathon at the IETF-109.<a href="#section-8-3.4.1" class="pilcrow">¶</a></p>
+have been developed during the hackathon at the IETF-109.<a href="#section-9-3.4.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-8-4">Interoperability between the above implementations has been tested during the
-hackathon at the IETF-109.<a href="#section-8-4" class="pilcrow">¶</a></p>
+<p id="section-9-4">Interoperability between the above implementations has been tested during the
+hackathon at the IETF-109.<a href="#section-9-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
-<section id="section-9">
+<section id="section-10">
       <h2 id="name-security-considerations">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-9-1">As catalog zones are transmitted using DNS zone transfers, it is key
+<p id="section-10-1">As catalog zones are transmitted using DNS zone transfers, it is key
 for these transfers to be protected from unexpected modifications on
 the route.  So, catalog zone transfers SHOULD be authenticated using TSIG
 <span>[<a href="#RFC8945" class="xref">RFC8945</a>]</span>.  A primary nameserver SHOULD NOT serve a catalog zone for transfer
 without using TSIG and a secondary nameserver SHOULD abandon an update to a
-catalog zone that was received without using TSIG.<a href="#section-9-1" class="pilcrow">¶</a></p>
-<p id="section-9-2">Use of DNS UPDATE <span>[<a href="#RFC2136" class="xref">RFC2136</a>]</span> to modify the content of catalog zones SHOULD
-similarly be authenticated using TSIG.<a href="#section-9-2" class="pilcrow">¶</a></p>
-<p id="section-9-3">Zone transfers of member zones SHOULD similarly be authenticated using TSIG
+catalog zone that was received without using TSIG.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">Use of DNS UPDATE <span>[<a href="#RFC2136" class="xref">RFC2136</a>]</span> to modify the content of catalog zones SHOULD
+similarly be authenticated using TSIG.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-3">Zone transfers of member zones SHOULD similarly be authenticated using TSIG
 <span>[<a href="#RFC8945" class="xref">RFC8945</a>]</span>.  The TSIG shared secrets used for member zones MUST NOT be mentioned
 anywhere in the catalog zone data.  However, key identifiers may be shared
-within catalog zones.<a href="#section-9-3" class="pilcrow">¶</a></p>
-<p id="section-9-4">Catalog zones do not need to be signed using DNSSEC, their zone transfers being
+within catalog zones.<a href="#section-10-3" class="pilcrow">¶</a></p>
+<p id="section-10-4">Catalog zones do not need to be signed using DNSSEC, their zone transfers being
 authenticated by TSIG.  Signed zones MUST be handled normally by nameservers,
-and their contents MUST NOT be DNSSEC- validated.<a href="#section-9-4" class="pilcrow">¶</a></p>
+and their contents MUST NOT be DNSSEC-validated.<a href="#section-10-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
-<section id="section-10">
+<section id="section-11">
       <h2 id="name-iana-considerations">
-<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-10-1">This document has no IANA actions.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">#<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-11-1">This document has no IANA actions.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">#<a href="#section-11-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="acknowledgements">
-<section id="section-11">
+<section id="section-12">
       <h2 id="name-acknowledgements">
-<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
       </h2>
-<p id="section-11-1">Our deepest thanks and appreciation go to Stephen Morris,
+<p id="section-12-1">Our deepest thanks and appreciation go to Stephen Morris,
 Ray Bellis and Witold Krecicki who initiated this draft and did the bulk of
-the work.<a href="#section-11-1" class="pilcrow">¶</a></p>
-<p id="section-11-2">Catalog zones originated as the chosen method among various proposals that were
+the work.<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-2">Catalog zones originated as the chosen method among various proposals that were
 evaluated at ISC for easy zone management.  The chosen method of storing the
-catalog as a regular DNS zone was proposed by Stephen Morris.<a href="#section-11-2" class="pilcrow">¶</a></p>
-<p id="section-11-3">The initial authors discovered that Paul Vixie's earlier <span>[<a href="#Metazones" class="xref">Metazones</a>]</span> proposal
+catalog as a regular DNS zone was proposed by Stephen Morris.<a href="#section-12-2" class="pilcrow">¶</a></p>
+<p id="section-12-3">The initial authors discovered that Paul Vixie's earlier <span>[<a href="#Metazones" class="xref">Metazones</a>]</span> proposal
 implemented a similar approach and reviewed it.  Catalog zones borrows some
 syntax ideas from Metazones, as both share this scheme of representing the
-catalog as a regular DNS zone.<a href="#section-11-3" class="pilcrow">¶</a></p>
-<p id="section-11-4">Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk and
-Carsten Strotmann,  for reviewing draft proposals and offering comments and
-suggestions.<a href="#section-11-4" class="pilcrow">¶</a></p>
-<p id="section-11-5">Thanks to Klaus Darilion who came up with the idea for the <code>serial</code> property
+catalog as a regular DNS zone.<a href="#section-12-3" class="pilcrow">¶</a></p>
+<p id="section-12-4">Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
+Carsten Strotmann, Peter Thomassen and Kees Monshouwer for reviewing draft proposals and offering comments and
+suggestions.<a href="#section-12-4" class="pilcrow">¶</a></p>
+<p id="section-12-5">Thanks to Klaus Darilion who came up with the idea for the <code>serial</code> property
 during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Spacek,
 Brian Dickson for further brainstorming and discussing the <code>serial</code> property
-and how it would work best with catalog zones.<a href="#section-11-5" class="pilcrow">¶</a></p>
+and how it would work best with catalog zones.<a href="#section-12-5" class="pilcrow">¶</a></p>
 </section>
 </div>
-<section id="section-12">
+<section id="section-13">
       <h2 id="name-normative-references">
-<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
       </h2>
 <dl class="references">
 <dt id="RFC1035">[RFC1035]</dt>
@@ -1865,13 +2007,13 @@ and how it would work best with catalog zones.<a href="#section-11-5" class="pil
       <dd>
 <span class="refAuthor">Vixie, P., Ed.</span><span class="refAuthor">, Thomson, S.</span><span class="refAuthor">, Rekhter, Y.</span><span class="refAuthor">, and J. Bound</span>, <span class="refTitle">"Dynamic Updates in the Domain Name System (DNS UPDATE)"</span>, <span class="seriesInfo">RFC 2136</span>, <span class="seriesInfo">DOI 10.17487/RFC2136</span>, <time datetime="1997-04" class="refDate">April 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2136">https://www.rfc-editor.org/info/rfc2136</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC2308">[RFC2308]</dt>
-      <dd>
-<span class="refAuthor">Andrews, M.</span>, <span class="refTitle">"Negative Caching of DNS Queries (DNS NCACHE)"</span>, <span class="seriesInfo">RFC 2308</span>, <span class="seriesInfo">DOI 10.17487/RFC2308</span>, <time datetime="1998-03" class="refDate">March 1998</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2308">https://www.rfc-editor.org/info/rfc2308</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC2606">[RFC2606]</dt>
       <dd>
 <span class="refAuthor">Eastlake 3rd, D.</span><span class="refAuthor"> and A. Panitz</span>, <span class="refTitle">"Reserved Top Level DNS Names"</span>, <span class="seriesInfo">BCP 32</span>, <span class="seriesInfo">RFC 2606</span>, <span class="seriesInfo">DOI 10.17487/RFC2606</span>, <time datetime="1999-06" class="refDate">June 1999</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2606">https://www.rfc-editor.org/info/rfc2606</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4034">[RFC4034]</dt>
+      <dd>
+<span class="refAuthor">Arends, R.</span><span class="refAuthor">, Austein, R.</span><span class="refAuthor">, Larson, M.</span><span class="refAuthor">, Massey, D.</span><span class="refAuthor">, and S. Rose</span>, <span class="refTitle">"Resource Records for the DNS Security Extensions"</span>, <span class="seriesInfo">RFC 4034</span>, <span class="seriesInfo">DOI 10.17487/RFC4034</span>, <time datetime="2005-03" class="refDate">March 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4034">https://www.rfc-editor.org/info/rfc4034</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8174">[RFC8174]</dt>
       <dd>
@@ -1883,9 +2025,9 @@ and how it would work best with catalog zones.<a href="#section-11-5" class="pil
 <dd class="break"></dd>
 </dl>
 </section>
-<section id="section-13">
+<section id="section-14">
       <h2 id="name-informative-references">
-<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
       </h2>
 <dl class="references">
 <dt id="Metazones">[Metazones]</dt>
@@ -1948,15 +2090,23 @@ and how it would work best with catalog zones.<a href="#section-11-5" class="pil
       </ul>
 <blockquote id="section-appendix.a-12">
         <p id="section-appendix.a-12.1">New authors to pickup the editor pen on this draft<a href="#section-appendix.a-12.1" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-12.2">Remove data type definitions for zone properties
+  Removing configuration of member zones through zone properties altogether<a href="#section-appendix.a-12.2" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-12.3">Remove Open issues and discussion Appendix, which was about zone options (including primary/secondary relationships) only.<a href="#section-appendix.a-12.3" class="pilcrow">¶</a></p>
 </blockquote>
 <ul class="normal">
 <li class="normal" id="section-appendix.a-13.1">draft-toorop-dnsop-dns-catalog-zones-01<a href="#section-appendix.a-13.1" class="pilcrow">¶</a>
 </li>
       </ul>
 <blockquote id="section-appendix.a-14">
-        <p id="section-appendix.a-14.1">Remove data type definitions for zone properties
-  Removing configuration of member zones through zone properties altogether<a href="#section-appendix.a-14.1" class="pilcrow">¶</a></p>
-<p id="section-appendix.a-14.2">Remove Open issues and discussion Appendix, which was about zone options (including primary/secondary relationships) only.<a href="#section-appendix.a-14.2" class="pilcrow">¶</a></p>
+        <p id="section-appendix.a-14.1">Added a new section "The Serial Property", introducing a new mechanism
+  which can help with disseminating zones from the primary to the secondary
+  nameservers in a timely fashion more reliably.<a href="#section-appendix.a-14.1" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-14.2">Three different ways to provide a "serial" property with a member zone are
+  offered to or the workgroup for discussion.<a href="#section-appendix.a-14.2" class="pilcrow">¶</a></p>
+<p id="section-appendix.a-14.3">Added a new section "Implementation Status", listing production ready,
+  upcoming and Proof of Concept implementations, and reporting on
+  interoperability of the different implementations.<a href="#section-appendix.a-14.3" class="pilcrow">¶</a></p>
 </blockquote>
 </section>
 </div>
