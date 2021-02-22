@@ -172,6 +172,20 @@ version.$CATZ 0 IN TXT "2"
 NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
 
+## Catalog Zone Epoch {#catalogepoch}
+
+[FIXME: SHOULD, MUST?]
+Each catalog zone SHOULD have a TIMESTAMP RR named `epoch.$CATZ` with exactly
+one RR.  For new catalog zones, the value is set to the unix timestamp of the
+inception of the catalog zone.  (For the definition of the TIMESTAMP resource
+record, see (#timestamprr).)
+
+After a catalog zone update, secondaries may find that the value of the
+TIMESTAMP RR differs, indicating that member node labels have been recomputed
+with a different salt.  Secondaries MUST handle this situation transparently.
+For details, see (#listofmemberzones).
+
+
 ## List of Member Zones {#listofmemberzones}
 
 The list of member zones is specified as a collection of members nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
@@ -187,14 +201,40 @@ For example, if a catalog zone lists three zones "example.com.",
 <m-unique-3>.zones.$CATZ 0 IN PTR example.org.
 ```
 
-where `<m-unique-N>` is a label that tags each record in the collection.
-Nameservers MUST accept catalog zones even with those labels not really unique; they MAY warn the user in such case.
+where for a given member zone, `<m-unique-N>` is computed as follows:
 
-Having a large number of member zones in a single RRset may cause the RRset to be too large to be conveyed via DNS messages which make up a zone transfer.
-Having the zones uniquely tagged with the `<m-unique-N>` label ensures the list of member zones can be split over multiple DNS messages in a zone transfer.
+1. Start with the member zone name in canonical form, that is:
+   * with the name fully expanded (no DNS name compression) and fully
+     qualified, and
+   * with all uppercase US-ASCII letters replaced by the corresponding
+     lowercase US-ASCII letters;
+2. Append the wire format content of the TIMESTAMP RR located at `epoch.$CATZ`,
+   if present;
+3. Compute the SHA-1 hash of the string assembled in the previous steps;
+4. Check whether the hash value is unique (not seen for another member zone),
+5. If this is the case, convert the hash output to "Base 32 Encoding with
+   Extended Hex Alphabet" as specified in [@!RFC4648] and return; otherwise,
+   set the catalog zone epoch ((#catalogepoch)) to the current time, and
+   recompute member node labels for all member zones.
 
-The `<m-unique-N>` label also enables the state for a zone to be reset (see (#zonereset)).
-As long as no zone state needs to be reset at the authoritative nameservers, the unique label associated with a zone SHOULD remain the same.
+[NOTE: The base32 output will produce 32 digits, no padding required.]
+
+The procedure is analogous to the calculation of NSEC3 RR owner names
+([@!RFC5155]) and produces unique and collision-resistant, yet predictable
+member node labels.
+
+Member node labels carry no informational meaning beyond labeling member zones.
+If a secondary finds that the member node for a given member zone has changed,
+this does not indicate anything about the member zone itself; it is merely the
+member node that has been renamed. Secondaries MUST handle this case
+transparently. (It is not necessary to handle the epoch change explicitly in
+any way, as long as changing member node labels are handled transparently.)
+
+Having the zones uniquely tagged with the `<m-unique-N>` label ensures that
+additional RRs can be added at or below the member node, for signifying
+member-zone-specific information (described below). Further, if member zones
+do not share a PTR RRSet, the list of member zones can be split over multiple
+DNS messages in a zone transfer.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -203,6 +243,75 @@ for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers.
 
 [FIXME: this would be a good spot to write an introduction to properties]
+
+
+### The TIMESTAMP Resource Record {#timestamprr}
+
+Epoch values (both for the catalog zone and for member zones) are provided with
+a TIMESTAMP Resource Record. The Type value for the TIMESTAMP RR is TBD. The
+TIMESTAMP RR is class independent [FIXME: Should it?]. The RDATA of the
+resource record consist of a single field: Timestamp.
+
+#### TIMESTAMP RDATA Wire Format {#timestamprrwf}
+
+The TIMESTAMP RDATA wire format is encoded as follows:
+
+```
+                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           Timestamp                           |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+The wire format is identical to the wire format of the Signature Expiration and
+Inception Fields of the RRSIG RR ([@!RFC4034] section 3.1.5) and follows the
+same rules with respect to wrapping.
+
+[FIXME: Should it be 64 bit? I did it this way because a) RRSIG implementations already exist, b) for 64-bit, we also need to discuss timestamp precision (float?)]
+
+#### TIMESTAMP RDATA Presentation Format {#timestamprrpf}
+
+The presentation format is identical to that of the Signature Expiration and
+Inception Fields of the RRSIG RR ([@!RFC4034] section 3.2). Example:
+
+```
+epoch.$CATZ                     0 IN TIMESTAMP    20210304124652
+epoch.<m-unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
+```
+
+
+## Properties {#properties}
+
+Member zones may optionally be assigned additional properties represented by
+RRsets below the corresponding member node. While property semantics and record
+type choice are up to the respective implementor, the following property might
+be of particular interest:
+
+* `epoch.<m-unique-N>.zones.$CATZ  0  IN  TIMESTAMP  ...`
+
+  When a member zone's epoch changes, the secondary server resets the member
+  zone's state. The secondary can detect a member zone epoch change as follows:
+
+  - When the epoch changes, the primary will set the TIMESTAMP RR of the member
+    zone's epoch property to the current time.
+
+  - When the secondary processes a member node with an epoch property that
+    is larger than the point in time when the member zone itself was last
+    retrieved, then a new epoch has begun.
+
+  The steps entailed in the process of resetting the zone state depend on the
+  operational context of the secondary (e.g. regenerate DNSSEC keys).
+  [NOTE: The RR could also live at the member node itself (and not below).]
+
+[NOTE: The rest of the section can go away if groups are not desired.]
+
+Similarly, one may configure a `group.<m-unique-N>.zones.$CATZ` property, such
+that administrators may impose extra configuration on a member zone depending
+on the value of the group property.
+
+Implementors are free to add other properties according to their needs.
+
 
 # The Serial Property
 
