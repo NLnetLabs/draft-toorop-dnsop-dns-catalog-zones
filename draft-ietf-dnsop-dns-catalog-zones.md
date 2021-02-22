@@ -223,13 +223,13 @@ group.<m-unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
 group.<m-unique-2>.zones.$CATZ  0 IN TXT    nodnssec
 ```
 
-## Custom properties (#customproperties)
+## Custom properties {#customproperties}
 
 Implementations and operators of catalog zones may choose to provide their own properties
 below the label `private-extension.<unique-N>.zones.$CATZ`. `private-extension` is not a
 placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
 
-## The Epoch Property (#epochproperty)
+## The Epoch Property {#epochproperty}
 
 The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
 
