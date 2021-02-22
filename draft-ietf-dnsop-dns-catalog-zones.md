@@ -355,15 +355,12 @@ be operated by different administrators.  The secondary nameservers may be
 configured to synchronize catalog zones from the primary, but the primary's
 administrators may not have any administrative access to the secondaries.
 
-[FIXME: what does 'be left running subject to values in SOA fields' mean functionally? Should the secondary remove all member zones when the catalog zone EXPIREs?)]
 A catalog zone can be updated via DNS UPDATE on a reference primary nameserver,
 or via zone transfers.  Nameservers MAY allow loading and transfer of broken
 zones with incorrect catalog zone syntax (as they are treated as regular
 zones), but nameservers MUST NOT process such broken zones as catalog
 zones.  For the purpose of catalog processing, the broken catalogs MUST be
-ignored.  If a broken catalog zone was transferred, the newly transferred
-catalog zone MUST be ignored (but the older copy of the catalog zone SHOULD
-be left running subject to values in SOA fields).
+ignored.
 
 [FIXME: reword this if we do coo, or the CSYNC immediate flag, or something else]
 If there is a clash between an existing member zone's name and an incoming
