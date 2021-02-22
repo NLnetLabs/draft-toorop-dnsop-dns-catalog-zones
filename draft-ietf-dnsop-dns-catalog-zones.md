@@ -199,10 +199,6 @@ The TTL field's value is not defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers.
 
-[FIXME: earlier we said that the version RRset could have multiple entries]
-Each RRSet of a catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
-sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
-
 [FIXME: this would be a good spot to write an introduction to properties]
 
 # The Serial Property
