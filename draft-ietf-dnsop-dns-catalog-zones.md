@@ -129,9 +129,6 @@ Implementations of catalog zones SHOULD ignore any RR in the catalog zone which 
 Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
 A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
 
-[FIXME: what is the point? How would the secondary know that a member zone is another catalog zone?]
-An implementation of catalog zones MAY allow the catalog to contain other catalog zones as member zones.
-
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
 standards for such zones.
