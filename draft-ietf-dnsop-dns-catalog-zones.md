@@ -150,12 +150,6 @@ update is made to the catalog zone's contents as per serial number arithmetic
 defined in [@!RFC1982].  Otherwise, secondary nameservers might not notice
 updates to the catalog zone's contents.
 
-[FIXME: this ignores that the negative TTL is min(SOA TTL, SOA MINIMUM). I also don't think this argument for zero is very strong.]
-Should the zone be made available for querying, the SOA record's MINIMUM
-field's value is the negative cache time (as defined in [@!RFC2308]).  Since
-recursive nameservers are not expected to be able to access (and subsequently
-cache) entries from a catalog zone a value of zero (0) is RECOMMENDED.
-
 There is no requirement to be able to query the catalog zone via recursive nameservers.
 Implementations of catalog zones MUST ignore and MUST NOT assume or require NS records at the apex.
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
@@ -201,11 +195,9 @@ As long as no zone state needs to be reset at the authoritative nameservers, the
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
-[FIXME: how about turning this around? Because they are not for querying, queries to it should be discouraged by using a huge TTL]
-The TTL field's value is not specially defined by this memo.  Catalog zones are
+The TTL field's value is not defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
-querying via recursive resolvers and therefore a value of zero (0) is
-RECOMMENDED.
+querying via recursive resolvers.
 
 [FIXME: earlier we said that the version RRset could have multiple entries]
 Each RRSet of a catalog zone, with the exception of the zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of a
