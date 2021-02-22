@@ -114,9 +114,12 @@ Catalog zone
 Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
 
-$CATZ
+`$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself (c.f. $ORIGIN).
+
+Member node
+: The DNS name of the DNS subtree representing a given member zone (two levels below `$CATZ`).
 
 # Description {#description}
 
@@ -157,9 +160,9 @@ A single NS RR with an NSDNAME field containing the absolute name "invalid." is 
 
 ## Catalog Zone Schema Version
 
-The catalog zone schema version is specified by an integer value embeded in a TXT RR named `version.$CATZ`. 
+The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
 All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR. 
-Primary and secondary nameservers MUST NOT use catalog zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
+Primary and secondary nameservers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
 For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
 
 ``` dns-zone
@@ -171,12 +174,12 @@ the implementation first found in BIND 9.11.
 
 ## List of Member Zones {#listofmemberzones}
 
-The list of member zones is specified as a collection of domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
+The list of member zones is specified as a collection of members nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length [@!RFC1035].
 
 For example, if a catalog zone lists three zones "example.com.",
-"example.net." and "example.org.", the RRs would appear as follows:
+"example.net." and "example.org.", the member node RRs would appear as follows:
 
 ```
 <m-unique-1>.zones.$CATZ 0 IN PTR example.com.
@@ -209,7 +212,7 @@ unreliable due to packet loss, or secondary nameservers temporarily not being
 reachable. In such cases the secondary might pick up the change only after the
 refresh timer runs out, which might take long time and be out of the control of the
 primary nameserver operator. Low refresh values in the zones being served can alleviate
-update delays, but burdens both the primary and secondary nameservers with more
+update delays, but burden both the primary and secondary nameservers with more
 refresh queries, especially with larger numbers of secondary nameservers
 serving large numbers of zones.  To mitigate this, updates of zones MAY be
 signalled via catalog zones with the help of a `serial` property.
@@ -394,7 +397,7 @@ queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases, at all, using DNS QUERY.
-For example it is not possible to enumerate the contents of a multi-valued
+For example, it is not possible to enumerate the contents of a multi-valued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.
@@ -443,7 +446,7 @@ within catalog zones.
 
 Catalog zones do not need to be signed using DNSSEC, their zone transfers being
 authenticated by TSIG.  Signed zones MUST be handled normally by nameservers,
-and their contents MUST NOT be DNSSEC- validated.
+and their contents MUST NOT be DNSSEC-validated.
 
 # IANA Considerations
 
