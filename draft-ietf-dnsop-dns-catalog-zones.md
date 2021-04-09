@@ -213,15 +213,17 @@ querying via recursive resolvers.
 
 # Properties {#properties}
 
-Member zones may optionally be assigned additional properties represented by
-RRsets below the corresponding member node. This document suggests a few
-properties which are all optional to implement.
+Each member zone MAY have one or more additional properties, described in this chapter.
+These properties are completely optional and the catalog zone consumer SHOULD ignore those it does not understand.
+Properties are represented by RRsets below the corresponding member node.
 
 ## The Group Property
 
-The group property allows to add at most one tag per member zone.
-The consumer might handle/configure member zones differently based on the tag.
-The group property is represented by a TXT Resource Record, for example:
+The property is defined by a TXT record in the sub-node labelled `group`.
+The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
+The consumer MUST interpret the value case-sensitively.
+The purpose of the Group property is to distinguish several member zone groups within the catalog zone, so that the consumer could handle the member zones differently based on the group.
+The consumer MAY ignore the group property for some or all member zones.
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
