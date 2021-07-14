@@ -124,6 +124,12 @@ Member zone
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself (c.f. $ORIGIN).
 
+Catalog producer
+: An entity that generates and is responsible for the contents of the catalog zone.
+
+Catalog consumer
+: A DNS server that configures itself according to the contents of the catalog zone.
+
 Member node
 : The DNS name of the DNS subtree representing a given member zone (two levels below `$CATZ`).
 
