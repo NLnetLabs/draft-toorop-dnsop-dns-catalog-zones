@@ -128,7 +128,8 @@ Catalog producer
 : An entity that generates and is responsible for the contents of the catalog zone.
 
 Catalog consumer
-: A DNS server that configures itself according to the contents of the catalog zone.
+: An entity that extracts information from the catalog zone (such as a DNS
+  server that configures itself according to the catalog zone's contents).
 
 Member node
 : The DNS name of the DNS subtree representing a given member zone (two levels below `$CATZ`).
