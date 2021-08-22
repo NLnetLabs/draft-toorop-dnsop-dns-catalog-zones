@@ -227,10 +227,19 @@ Properties are represented by RRsets below the corresponding member node.
 ## The Group Property
 
 The property is defined by a TXT record in the sub-node labelled `group`.
+By using this property, the producer can signal the consumer(s) to treat some member zones within the catalog zone differently.
+The consumer MAY apply different configuration options when configuring the member zones, based on the group property value.
+The exact mapping of configuration on each group is left on the consumer's implementation and configuration.
+
+The producer MAY assign the group property to all, some, or none member zones within a catalog zone.
+The producer MUST NOT assign more than one group to one member zone.
+
+The cosumer MUST ignore either all or none group records in catalog zone.
+
 The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
 The consumer MUST interpret the value case-sensitively.
-The purpose of the Group property is to distinguish several member zone groups within the catalog zone, so that the consumer could handle the member zones differently based on the group.
-The consumer MAY ignore the group property for some or all member zones.
+
+### Group Property Example
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
@@ -238,6 +247,10 @@ group.<unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
 group.<unique-2>.zones.$CATZ  0 IN TXT    nodnssec
 ```
+
+In this case, the consumer might be implemented and configured in the way that the member zones with "nodnssec" group assigned will not be signed with DNSSEC, and the zones with "sign-with-nsec3" group assigned will be signed with DNSSEC with NSEC3 chain.
+
+By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
 
 ## Custom properties {#customproperties}
 
