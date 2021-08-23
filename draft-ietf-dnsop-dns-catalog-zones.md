@@ -539,9 +539,21 @@ and their contents MUST NOT be DNSSEC-validated.
 
 # IANA Considerations
 
-This document has no IANA actions.
+## TIMESTAMP RR type
 
-#
+This document defines a new DNS RR type, TIMESTAMP, in the "Resource Record (RR) TYPEs" subregistry of the "Domain Name System (DNS) Parameters" registry:
+
+TYPE      | Value     | Meaning   | Reference
+----------|-----------|-----------|----------------
+TIMESTAMP | TBD       | Timestamp | [this document]
+
+## SERIAL RR type
+
+This document defines a new DNS RR type, SERIAL, in the "Resource Record (RR) TYPEs" subregistry of the "Domain Name System (DNS) Parameters" registry:
+
+TYPE   | Value     | Meaning                                         | Reference
+-------|-----------|-------------------------------------------------|----------------
+SERIAL | TBD       | Version number of the original copy of the zone | [this document]
 
 # Acknowledgements
 
