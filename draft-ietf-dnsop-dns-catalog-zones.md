@@ -183,7 +183,8 @@ the implementation first found in BIND 9.11.
 
 The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
-The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length [@!RFC1035].
+The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
+This PTR record MUST be the only record in the PTR RRset with the same name.
 
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:
@@ -200,11 +201,10 @@ where `<unique-N>` is a label that tags each record in the collection.
 Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
 
-Having the zones uniquely tagged with the `<unique-N>` label ensures that
-additional RRs can be added at or below the member node, for signifying
-member-zone-specific information (described below). Further, if member zones
-do not share a PTR RRset, the list of member zones can be split over multiple
-DNS messages in a zone transfer.
+Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
+Further, if member zones do not share a PTR RRset, the list of member zones can be split over multiple DNS messages in a zone transfer.
+
+A catalog zone consumer MUST not process and ignore PTR RRsets with more than a single record.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
