@@ -348,8 +348,6 @@ loss or other reasons) and to cater for secondaries that do not process the
 All comparisons of serial numbers MUST use "Serial number arithmetic", as
 defined in [@!RFC1982]
 
-**Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3). Additionally, https://mailarchive.ietf.org/arch/msg/dnsop/DcdnwolVVpMjQzR4gtlrLyXsYtk/ suggests reusing CSYNC instead of creating a new SERIAL rrtype. (That message also contains other ideas not yet fully considered by the authors.)
-
 ### The SERIAL Resource Record {#serialrr}
 
 The `serial` property value is provided with a SERIAL Resource Record. The Type
@@ -379,7 +377,7 @@ The presentation format of the RDATA portion is as follows:
 
 The Serial fields is represented as an unsigned decimal integer.
 
-### SERIAL RR Usage - option 1 {#serialrr1}
+### SERIAL RR Usage {#serialrr1}
 
 The `serial` property of a member zone is provided by a SERIAL RRset with a
 single SERIAL RR named `serial.<unique-N>.zones.$CATZ`.
@@ -395,44 +393,6 @@ serial.<unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
 serial.<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
 <unique-3>.zones.$CATZ        0 IN PTR    example.org.
 serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-```
-
-### SERIAL RR Usage - option 2 {#serialrr2}
-
-The `serial` property of a member zone is provided by a SERIAL RRset on the
-same owner name as the PTR RR of the member zone.
-
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
-
-```
-<unique-1>.zones.$CATZ 0 IN PTR    example.com.
-<unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
-<unique-2>.zones.$CATZ 0 IN PTR    example.net.
-<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
-<unique-3>.zones.$CATZ 0 IN PTR    example.org.
-<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-```
-
-### Serial property as TXT RR - option 3 {#serialrr3}
-
-The `serial` property of a member zone is provided by a TXT RRset with a
-single TXT RR named `serial.<unique-N>.zones.$CATZ`. The TXT RR contains a
-single RDATA field consisting of the textual representation of the SOA serial
-number.
-
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
-
-```
-<unique-1>.zones.$CATZ        0 IN PTR example.com.
-serial.<unique-1>.zones.$CATZ 0 IN TXT 2020111712
-<unique-2>.zones.$CATZ        0 IN PTR example.net.
-serial.<unique-2>.zones.$CATZ 0 IN TXT 2020111709
-<unique-3>.zones.$CATZ        0 IN PTR example.org.
-serial.<unique-3>.zones.$CATZ 0 IN TXT 2020112405
 ```
 
 # Nameserver Behavior {#behavior}
@@ -486,7 +446,7 @@ including the zone itself.
 This can be relevant for example when zone ownership is changed.
 In that case one does not want the new owner to inherit the metadata.
 Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-This reset is tied to `<unique-N` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
+This reset is tied to `<unique-N>` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
 
 If an epoch property is present, the steps in (#epochproperty) describe how
 to signal a zone reset.
