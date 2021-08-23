@@ -80,12 +80,6 @@ zones to be provisioned as one or more regular DNS zones.
 
 # Introduction
 
-**DISCLAIMER:** The authors wish to apologize for the current state of the
-document, which is in a bit of a rough and somewhat inconsistent shape. It
-contains multiple different approaches for similar tasks, some of which are
-described spread out over the document. We will work with the DNSOP working
-group to improve on this.
-
 The content of a DNS zone is synchronized amongst its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in [@!RFC1035]) is not automatically synchronized
