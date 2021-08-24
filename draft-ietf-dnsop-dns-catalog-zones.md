@@ -218,12 +218,40 @@ Each member zone MAY have one or more additional properties, described in this c
 These properties are completely optional and the catalog zone consumer SHOULD ignore those it does not understand.
 Properties are represented by RRsets below the corresponding member node.
 
+## The Change of ownership (Coo) Property
+
+The 'coo' property facilitates controlled migration of a member zone from one catalog to another.
+
+A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently ``owning'' the zone.
+The name of the new catalog is in the value of a PTR record in the old catalog.
+For example if member "example.com." will migrate from catalog zone `$OLDCATZ` to catalog zone `$NEWCATZ`, this appears in the `$OLDCATZ` catalog zone as follows:
+
+```
+<unique-N>.zones.$OLDCATZ 0 IN PTR example.com.
+coo.<unique-N>.zones.$OLDCATZ 0 IN PTR zones.$NEWCATZ
+```
+
+The PTR RRset MUST consist of a single PTR record.
+A catalog zone consumer MUST not process and ignore PTR RRsets with more than a single record.
+
+When a catalog zone consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
+This is because the catalog zone consumer does not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it does not know wether or not the member zone is configured in `$NEWCATZ` at all.
+It has to wait for an update of `$NEWCATZ` adding or changing that member zone.
+
+When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is an `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
+
+[FIXME: reset state with `epoch` or without property perhaps?]
+
+The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
+The old owner then removes the member zone from `old.catalog`.
+
 ## The Group Property
 
-The property is defined by a TXT record in the sub-node labelled `group`.
-By using this property, the producer can signal the consumer(s) to treat some member zones within the catalog zone differently.
+With a `group` property, consumer(s) can be signalled to treat some member zones within the catalog zone differently.
+
 The consumer MAY apply different configuration options when configuring the member zones, based on the group property value.
 The exact mapping of configuration on each group is left on the consumer's implementation and configuration.
+The property is defined by a TXT record in the sub-node labelled `group`.
 
 The producer MAY assign the group property to all, some, or none member zones within a catalog zone.
 The producer MUST NOT assign more than one group to one member zone.
@@ -246,13 +274,9 @@ In this case, the consumer might be implemented and configured in the way that t
 
 By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
 
-## Custom properties {#customproperties}
-
-Implementations and operators of catalog zones may choose to provide their own properties
-below the label `private-extension.<unique-N>.zones.$CATZ`. `private-extension` is not a
-placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
-
 ## The Epoch Property {#epochproperty}
+
+A `epoch` property allows to reset a zone associated state.
 
 The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
 
@@ -307,6 +331,8 @@ epoch.<unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
 ```
 
 ## The Serial Property
+
+The serial property helps in increasing reliability of zone update signaling and may help in reducing NOTIFY and SOA query traffic.
 
 The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
@@ -395,6 +421,14 @@ serial.<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
 serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
+## Custom properties {#customproperties}
+
+Implementations and operators of catalog zones may choose to provide their own properties
+below the label `private-extension.<unique-N>.zones.$CATZ`.
+`private-extension` is not a
+placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
+
+
 # Nameserver Behavior {#behavior}
 
 ## General Requirements
@@ -432,26 +466,15 @@ If there is a clash between an existing member zone's name and an incoming
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
+## Member zone name clash
+
+## Member zone removal
+
 When zones are deleted from a catalog zone, a primary MAY delete the member
-zone immediately.  It is up to the secondary
-nameserver to handle this condition correctly.
+zone immediately.
+It is up to the secondary nameserver to handle this condition correctly.
 
-{#zonereset}
-
-[FIXME: we now have two mechanisms to reset zones and we should bring that back to one at some point.]
-
-When the `<unique-N>` label of a member zone changes and the zone does not have an
-epoch property (see (#epochproperty)), all its associated state MUST be reset,
-including the zone itself.
-This can be relevant for example when zone ownership is changed.
-In that case one does not want the new owner to inherit the metadata.
-Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-This reset is tied to `<unique-N>` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
-
-If an epoch property is present, the steps in (#epochproperty) describe how
-to signal a zone reset.
-
-# Migrating zones between catalogs
+## Migrating zones between catalogs
 
 [FIXME: clarify 2119 status of this and other properties and features. MUST? SHOULD? MAY? Because this one has security implications, also clearly note how ownership changes work without coo - namely, removing a member zone from catz A will cause catz B or C or D to pick up the zone on their next refresh. ]
 
@@ -470,11 +493,23 @@ If there is a 'coo' property that resolves the clash, member zone ownership is t
 The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
 The old owner then removes the member zone from `old.catalog`.
 
-# Updating Catalog Zones
+## Zone associated state reset {#zonereset}
 
-TBD: Explain updating catalog zones using DNS UPDATE.
+[FIXME: we now have two mechanisms to reset zones and we should bring that back to one at some point.]
 
-## Implementation Notes {#implementationnotes}
+When the `<unique-N>` label of a member zone changes and the zone does not have an
+epoch property (see (#epochproperty)), all its associated state MUST be reset,
+including the zone itself.
+This can be relevant for example when zone ownership is changed.
+In that case one does not want the new owner to inherit the metadata.
+Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
+This reset is tied to `<unique-N>` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
+
+If an epoch property is present, the steps in (#epochproperty) describe how
+to signal a zone reset.
+
+
+# Implementation Notes {#implementationnotes}
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
