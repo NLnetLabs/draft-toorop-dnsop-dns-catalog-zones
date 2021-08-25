@@ -556,6 +556,12 @@ Catalog zones do not need to be signed using DNSSEC, their zone transfers being
 authenticated by TSIG.  Signed zones MUST be handled normally by nameservers,
 and their contents MUST NOT be DNSSEC-validated.
 
+Catalog zones reveal the zones served by the consumers of the catalog zone.
+It is RECOMMENDED to limit the systems able to query these zones.
+It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
+
+Consumers of catalog zones hand complete administrative control over what zones are served from the configured name servers by the consumer, to the "owner" (producer) of the catalog zone content.
+
 # IANA Considerations
 
 ## TIMESTAMP RR type
