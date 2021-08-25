@@ -163,7 +163,7 @@ updates to the catalog zone's contents.
 There is no requirement to be able to query the catalog zone via recursive nameservers.
 Implementations of catalog zones MUST ignore and MUST NOT assume or require NS records at the apex.
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
-A single NS RR with an NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
+A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
 
 ## Catalog Zone Schema Version
 
@@ -196,7 +196,7 @@ For example, if a catalog zone lists three zones "example.com.",
 ```
 
 where `<unique-N>` is a label that tags each record in the collection.
-`<unique-N>` has a unique value in the collection.
+`<unique-N>` has an unique value in the collection.
 
 Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
@@ -238,7 +238,7 @@ When a catalog zone consumer of catalog zone `$OLDCATZ` receives an update which
 This is because the catalog zone consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it may not know wether or not the member zone is configured in `$NEWCATZ` at all.
 It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
 
-When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is an `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
+When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
 All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have an `epoch` property with the same value.
 
 The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
@@ -681,3 +681,29 @@ and how it would work best with catalog zones.
 > Added a new section "Implementation Status", listing production ready,
   upcoming and Proof of Concept implementations, and reporting on
   interoperability of the different implementations.
+
+* draft-toorop-dnsop-dns-catalog-zones-02
+
+> Adding the `coo` property for zone migration in a controlled fashion
+
+> Adding the `group` property for reconfigure settings of member zones
+  in an atomic update
+
+> Adding the `epoch` property to reset zone associated state in a controlled fashion
+
+* draft-toorop-dnsop-dns-catalog-zones-03
+
+> Big cleanup!
+
+> Reorganized topics to create a more coherent whole
+
+> Properties all have consistent format now
+
+> Try to assume the least possible from implementations w.r.t.:
+
+> 1) Predictability of the <unique-N> IDs of member zones
+
+> 2) Whether or not fallback catalog zones can be found for a member
+
+> 3) Whether or not a catalog zone consumer can maintain state
+
