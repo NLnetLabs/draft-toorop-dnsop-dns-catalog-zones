@@ -204,7 +204,7 @@ A changed label may indicate that the state for a zone needs to be reset (see (#
 Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
 Further, if member zones do not share a PTR RRset, the list of member zones can be split over multiple DNS messages in a zone transfer.
 
-A catalog zone consumer MUST not process and ignore PTR RRsets with more than a single record.
+A catalog zone consumer MUST ignore PTR RRsets with more than a single record.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -235,11 +235,11 @@ The PTR RRset MUST consist of a single PTR record.
 A catalog zone consumer MUST not process and ignore PTR RRsets with more than a single record.
 
 When a catalog zone consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
-This is because the catalog zone consumer does not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it does not know wether or not the member zone is configured in `$NEWCATZ` at all.
+This is because the catalog zone consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it does not know wether or not the member zone is configured in `$NEWCATZ` at all.
 It has to wait for an update of `$NEWCATZ` adding or changing that member zone.
 
 When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is an `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
-All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have a matching `epoch` property.
+All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have an `epoch` property with the same value.
 
 The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
 The old owner then removes the member zone from `old.catalog`.
@@ -248,14 +248,14 @@ The old owner then removes the member zone from `old.catalog`.
 
 With a `group` property, consumer(s) can be signalled to treat some member zones within the catalog zone differently.
 
-The consumer MAY apply different configuration options when configuring the member zones, based on the group property value.
-The exact mapping of configuration on each group is left on the consumer's implementation and configuration.
+The consumer MAY apply different configuration options when processing member zones, based on the value of the `group` property.
+The exact handling of configuration referred to by the `group` property value is left to the consumer's implementation and configuration.
 The property is defined by a TXT record in the sub-node labelled `group`.
 
-The producer MAY assign the group property to all, some, or none member zones within a catalog zone.
-The producer MUST NOT assign more than one group to one member zone.
+The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
+The producer MUST NOT assign more than one `group` property to one member zone.
 
-The cosumer MUST ignore either all or none group records in catalog zone.
+The consumer MUST ignore either all or none of the `group` properties in a catalog zone.
 
 The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
 The consumer MUST interpret the value case-sensitively.
@@ -474,7 +474,7 @@ A clash between an existing member zone's name and an incoming member zone's nam
 
 ## Migrating member zones between catalogs {#zonemigration}
 
-If all consumers of the catalog zones involed support the `coo` property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in (#cooproperty).
+If all consumers of the catalog zones involved support the `coo` property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in (#cooproperty).
 Otherwise a migration of member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ` after having made sure all catalog zone consumers of `$OLDCATZ` that are also consumer of `$NEWCATZ` had the member zone removed from `$OLDCATZ`.
 
 If in the process of an migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` (because of a lost packet or down time or otherwise) they may consider the update with the addition of the member zone in `$NEWCATZ` to be a name clash (see #nameclash) and as a consequence the member is not migrated to `$NEWCATZ`.
@@ -552,15 +552,11 @@ Zone transfers of member zones SHOULD similarly be authenticated using TSIG
 anywhere in the catalog zone data.  However, key identifiers may be shared
 within catalog zones.
 
-Catalog zones do not need to be signed using DNSSEC, their zone transfers being
-authenticated by TSIG.  Signed zones MUST be handled normally by nameservers,
-and their contents MUST NOT be DNSSEC-validated.
-
 Catalog zones reveal the zones served by the consumers of the catalog zone.
 It is RECOMMENDED to limit the systems able to query these zones.
 It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
 
-Consumers of catalog zones hand complete administrative control over what zones are served from the configured name servers by the consumer, to the "owner" (producer) of the catalog zone content.
+Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
 # IANA Considerations
 
