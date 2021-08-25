@@ -80,12 +80,6 @@ zones to be provisioned as one or more regular DNS zones.
 
 # Introduction
 
-**DISCLAIMER:** The authors wish to apologize for the current state of the
-document, which is in a bit of a rough and somewhat inconsistent shape. It
-contains multiple different approaches for similar tasks, some of which are
-described spread out over the document. We will work with the DNSOP working
-group to improve on this.
-
 The content of a DNS zone is synchronized amongst its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in [@!RFC1035]) is not automatically synchronized
@@ -123,6 +117,13 @@ Member zone
 `$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself (c.f. $ORIGIN).
+
+Catalog producer
+: An entity that generates and is responsible for the contents of the catalog zone.
+
+Catalog consumer
+: An entity that extracts information from the catalog zone (such as a DNS
+  server that configures itself according to the catalog zone's contents).
 
 Member node
 : The DNS name of the DNS subtree representing a given member zone (two levels below `$CATZ`).
@@ -162,7 +163,7 @@ updates to the catalog zone's contents.
 There is no requirement to be able to query the catalog zone via recursive nameservers.
 Implementations of catalog zones MUST ignore and MUST NOT assume or require NS records at the apex.
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
-A single NS RR with an NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
+A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
 
 ## Catalog Zone Schema Version
 
@@ -182,7 +183,8 @@ the implementation first found in BIND 9.11.
 
 The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
-The names of member zones are represented on the RDATA side (instead of as a part of owner names) so that all valid domain names may be represented regardless of their length [@!RFC1035].
+The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
+This PTR record MUST be the only record in the PTR RRset with the same name.
 
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:
@@ -194,16 +196,15 @@ For example, if a catalog zone lists three zones "example.com.",
 ```
 
 where `<unique-N>` is a label that tags each record in the collection.
-`<unique-N>` has a unique value in the collection.
+`<unique-N>` has an unique value in the collection.
 
 Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
 
-Having the zones uniquely tagged with the `<unique-N>` label ensures that
-additional RRs can be added at or below the member node, for signifying
-member-zone-specific information (described below). Further, if member zones
-do not share a PTR RRset, the list of member zones can be split over multiple
-DNS messages in a zone transfer.
+Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
+Further, if member zones do not share a PTR RRset, the list of member zones can be split over multiple DNS messages in a zone transfer.
+
+A catalog zone consumer MUST ignore PTR RRsets with more than a single record.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -217,13 +218,51 @@ Each member zone MAY have one or more additional properties, described in this c
 These properties are completely optional and the catalog zone consumer SHOULD ignore those it does not understand.
 Properties are represented by RRsets below the corresponding member node.
 
+## The Change of ownership (Coo) Property {#cooproperty}
+
+The 'coo' property facilitates controlled migration of a member zone from one catalog to another.
+
+A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently ``owning'' the zone.
+The name of the new catalog is in the value of a PTR record in the old catalog.
+For example if member "example.com." will migrate from catalog zone `$OLDCATZ` to catalog zone `$NEWCATZ`, this appears in the `$OLDCATZ` catalog zone as follows:
+
+```
+<unique-N>.zones.$OLDCATZ 0 IN PTR example.com.
+coo.<unique-N>.zones.$OLDCATZ 0 IN PTR zones.$NEWCATZ
+```
+
+The PTR RRset MUST consist of a single PTR record.
+A catalog zone consumer MUST ignore PTR RRsets with more than a single record.
+
+When a catalog zone consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
+
+This is because the catalog zone consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it may not know wether or not the member zone is configured in `$NEWCATZ` at all.
+It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
+
+When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
+
+All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have an `epoch` property with the same value.
+
+The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
+The old owner then removes the member zone from `old.catalog`.
+
 ## The Group Property
 
+With a `group` property, consumer(s) can be signalled to treat some member zones within the catalog zone differently.
+
+The consumer MAY apply different configuration options when processing member zones, based on the value of the `group` property.
+The exact handling of configuration referred to by the `group` property value is left to the consumer's implementation and configuration.
 The property is defined by a TXT record in the sub-node labelled `group`.
+
+The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
+The producer MUST NOT assign more than one `group` property to one member zone.
+
+The consumer MUST ignore either all or none of the `group` properties in a catalog zone.
+
 The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
 The consumer MUST interpret the value case-sensitively.
-The purpose of the Group property is to distinguish several member zone groups within the catalog zone, so that the consumer could handle the member zones differently based on the group.
-The consumer MAY ignore the group property for some or all member zones.
+
+### Group Property Example
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
@@ -232,13 +271,13 @@ group.<unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
 group.<unique-2>.zones.$CATZ  0 IN TXT    nodnssec
 ```
 
-## Custom properties {#customproperties}
+In this case, the consumer might be implemented and configured in the way that the member zones with "nodnssec" group assigned will not be signed with DNSSEC, and the zones with "sign-with-nsec3" group assigned will be signed with DNSSEC with NSEC3 chain.
 
-Implementations and operators of catalog zones may choose to provide their own properties
-below the label `private-extension.<unique-N>.zones.$CATZ`. `private-extension` is not a
-placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
+By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
 
 ## The Epoch Property {#epochproperty}
+
+A `epoch` property allows a producer to trigger, on the consumer, a reset of all state associated with a zone.
 
 The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
 
@@ -261,8 +300,8 @@ The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#ti
 
 Epoch values (both for the catalog zone and for member zones) are provided with
 a TIMESTAMP Resource Record. The Type value for the TIMESTAMP RR is TBD. The
-TIMESTAMP RR is class independent [FIXME: Should it?]. The RDATA of the
-resource record consist of a single field: Timestamp.
+TIMESTAMP RR is class independent. The RDATA of the
+resource record consists of a single field: Timestamp.
 
 #### TIMESTAMP RDATA Wire Format {#timestamprrwf}
 
@@ -280,8 +319,6 @@ The wire format is identical to the wire format of the Signature Expiration and
 Inception Fields of the RRSIG RR ([@!RFC4034] section 3.1.5) and follows the
 same rules with respect to wrapping.
 
-[FIXME: Should it be 64 bit? I did it this way because a) RRSIG implementations already exist, b) for 64-bit, we also need to discuss timestamp precision (float?)]
-
 #### TIMESTAMP RDATA Presentation Format {#timestamprrpf}
 
 The presentation format is identical to that of the Signature Expiration and
@@ -293,6 +330,8 @@ epoch.<unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
 ```
 
 ## The Serial Property
+
+The serial property helps in increasing reliability of zone update signaling and may help in reducing NOTIFY and SOA query traffic.
 
 The current default mechanism for prompting notifications of zone changes from
 a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
@@ -334,8 +373,6 @@ loss or other reasons) and to cater for secondaries that do not process the
 All comparisons of serial numbers MUST use "Serial number arithmetic", as
 defined in [@!RFC1982]
 
-**Note to the DNSOP Working Group**: In this section we present three ways to provide a `serial` property with a member zone. The first two ways make use of a new Resource Record type: SERIAL as described in (#serialrr), (#serialrrwf) and (#serialrrpf). The two different ways to provide a `serial` property with the SERIAL RR are described in (#serialrr1) and (#serialrr2) respectively. The third way is with a TXT RR and is described in (#serialrr3). Additionally, https://mailarchive.ietf.org/arch/msg/dnsop/DcdnwolVVpMjQzR4gtlrLyXsYtk/ suggests reusing CSYNC instead of creating a new SERIAL rrtype. (That message also contains other ideas not yet fully considered by the authors.)
-
 ### The SERIAL Resource Record {#serialrr}
 
 The `serial` property value is provided with a SERIAL Resource Record. The Type
@@ -365,7 +402,7 @@ The presentation format of the RDATA portion is as follows:
 
 The Serial fields is represented as an unsigned decimal integer.
 
-### SERIAL RR Usage - option 1 {#serialrr1}
+### SERIAL RR Usage {#serialrr1}
 
 The `serial` property of a member zone is provided by a SERIAL RRset with a
 single SERIAL RR named `serial.<unique-N>.zones.$CATZ`.
@@ -383,43 +420,13 @@ serial.<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
 serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
-### SERIAL RR Usage - option 2 {#serialrr2}
+## Custom properties {#customproperties}
 
-The `serial` property of a member zone is provided by a SERIAL RRset on the
-same owner name as the PTR RR of the member zone.
+Implementations and operators of catalog zones may choose to provide their own properties
+below the label `private-extension.<unique-N>.zones.$CATZ`.
+`private-extension` is not a
+placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
 
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
-
-```
-<unique-1>.zones.$CATZ 0 IN PTR    example.com.
-<unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
-<unique-2>.zones.$CATZ 0 IN PTR    example.net.
-<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
-<unique-3>.zones.$CATZ 0 IN PTR    example.org.
-<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-```
-
-### Serial property as TXT RR - option 3 {#serialrr3}
-
-The `serial` property of a member zone is provided by a TXT RRset with a
-single TXT RR named `serial.<unique-N>.zones.$CATZ`. The TXT RR contains a
-single RDATA field consisting of the textual representation of the SOA serial
-number.
-
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
-
-```
-<unique-1>.zones.$CATZ        0 IN PTR example.com.
-serial.<unique-1>.zones.$CATZ 0 IN TXT 2020111712
-<unique-2>.zones.$CATZ        0 IN PTR example.net.
-serial.<unique-2>.zones.$CATZ 0 IN TXT 2020111709
-<unique-3>.zones.$CATZ        0 IN PTR example.org.
-serial.<unique-3>.zones.$CATZ 0 IN TXT 2020112405
-```
 
 # Nameserver Behavior {#behavior}
 
@@ -453,54 +460,42 @@ zones), but nameservers MUST NOT process such broken zones as catalog
 zones.  For the purpose of catalog processing, the broken catalogs MUST be
 ignored.
 
-[FIXME: reword this if we do coo, or the CSYNC immediate flag, or something else]
-If there is a clash between an existing member zone's name and an incoming
+## Member zone removal {#zoneremoval}
+
+When a member zone is removed from a specific catalog zone, an authoritative server MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
+Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MAY be removed.
+
+## Member zone name clash {#nameclash}
+
+If there is a clash between an existing zone's name (either from an existing member zone or otherwise configured zone) and an incoming
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
-When zones are deleted from a catalog zone, a primary MAY delete the member
-zone immediately.  It is up to the secondary
-nameserver to handle this condition correctly.
+A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog.
 
-{#zonereset}
 
-[FIXME: we now have two mechanisms to reset zones and we should bring that back to one at some point.]
+## Migrating member zones between catalogs {#zonemigration}
 
-When the `<unique-N>` label of a member zone changes and the zone does not have an
-epoch property (see (#epochproperty)), all its associated state MUST be reset,
-including the zone itself.
-This can be relevant for example when zone ownership is changed.
-In that case one does not want the new owner to inherit the metadata.
-Other situations might be resetting DNSSEC state, or forcing a new zone transfer.
-This reset is tied to `<unique-N` because A simple removal followed by an addition of the member zone would be insufficient for this purpose because it is infeasible for secondaries to track, due to missed notifies or being offline during the removal/addition.
+If all consumers of the catalog zones involved support the `coo` property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in (#cooproperty).
+Otherwise a migration of member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
 
-If an epoch property is present, the steps in (#epochproperty) describe how
-to signal a zone reset.
+If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` yet (because of a lost packet or down time or otherwise), but did already see the update of `$NEWCATZ`, they may consider the update adding the member zone in `$NEWCATZ` to be a name clash (see #nameclash) and as a consequence the member is not migrated to `$NEWCATZ`.
+This possibility needs to be anticipated with a member zone migration.
+Recovery from such a situation is out of the scope of this document.
+It may for example entail a manually forced retransfer of `$NEWCATZ` to consumers after they have been detected to have received and processed the removal of the member zone from `$OLDCATZ`.
 
-# Migrating zones between catalogs
+## Zone associated state reset {#zonereset}
 
-[FIXME: clarify 2119 status of this and other properties and features. MUST? SHOULD? MAY? Because this one has security implications, also clearly note how ownership changes work without coo - namely, removing a member zone from catz A will cause catz B or C or D to pick up the zone on their next refresh. ]
+It may be desirable to reset state (such as zone data and DNSSEC keys) associated with a member zone.
+If all consumers of the catalog zone support the `epoch` property, it is RECOMMENDED to perform a zone state reset following the procedure described in (#epochproperty).
+Otherwise a zone state reset has to be done by: first removing the member zone from the catalog; add the member zone to the catalog again after having made sure all catalog zone consumers did process the member zone removal.
 
-If there is a clash between an existing member zone's name and an incoming
-member zone's name (via transfer or update), this may be an attempt to do a Change Of Ownership.
+If in the process of a zone state reset some consumers of the involved catalog zone did not catch the removal (because of a lost packet or down time or otherwise) they will not have the zone associated state reset.
+This possibility needs to be anticipated.
+Recovery from it is out of the scope of this document.
+It may for example entail manual removal of the zone associated state from the catalog zone consumers that did not catch the removal and re-addition of the member.
 
-A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently owning the zone.
-The 'coo' property looks like "coo.<unique-N>.old.catalog PTR new.catalog".
-
-If there is no 'coo' property that resolves the clash, the zone remains owned by its current catalog and an error may be logged.
-
-If there is a 'coo' property that resolves the clash, member zone ownership is transferred to 'new.catalog'.
-
-[FIXME: remove this after we agree on what IDs even mean and how zone resets work within and between catalog zones] If `<unique-N>` for the member zone is different in the new catalog zone, associated state is reset as described earlier, including existing zone data.
-
-The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
-The old owner then removes the member zone from `old.catalog`.
-
-# Updating Catalog Zones
-
-TBD: Explain updating catalog zones using DNS UPDATE.
-
-## Implementation Notes {#implementationnotes}
+# Implementation Notes {#implementationnotes}
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
@@ -559,15 +554,29 @@ Zone transfers of member zones SHOULD similarly be authenticated using TSIG
 anywhere in the catalog zone data.  However, key identifiers may be shared
 within catalog zones.
 
-Catalog zones do not need to be signed using DNSSEC, their zone transfers being
-authenticated by TSIG.  Signed zones MUST be handled normally by nameservers,
-and their contents MUST NOT be DNSSEC-validated.
+Catalog zones reveal the zones served by the consumers of the catalog zone.
+It is RECOMMENDED to limit the systems able to query these zones.
+It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
+
+Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
 # IANA Considerations
 
-This document has no IANA actions.
+## TIMESTAMP RR type
 
-#
+This document defines a new DNS RR type, TIMESTAMP, in the "Resource Record (RR) TYPEs" subregistry of the "Domain Name System (DNS) Parameters" registry:
+
+TYPE      | Value     | Meaning   | Reference
+----------|-----------|-----------|----------------
+TIMESTAMP | TBD       | Timestamp | [this document]
+
+## SERIAL RR type
+
+This document defines a new DNS RR type, SERIAL, in the "Resource Record (RR) TYPEs" subregistry of the "Domain Name System (DNS) Parameters" registry:
+
+TYPE   | Value     | Meaning                                         | Reference
+-------|-----------|-------------------------------------------------|----------------
+SERIAL | TBD       | Version number of the original copy of the zone | [this document]
 
 # Acknowledgements
 
@@ -674,3 +683,29 @@ and how it would work best with catalog zones.
 > Added a new section "Implementation Status", listing production ready,
   upcoming and Proof of Concept implementations, and reporting on
   interoperability of the different implementations.
+
+* draft-toorop-dnsop-dns-catalog-zones-02
+
+> Adding the `coo` property for zone migration in a controlled fashion
+
+> Adding the `group` property for reconfigure settings of member zones
+  in an atomic update
+
+> Adding the `epoch` property to reset zone associated state in a controlled fashion
+
+* draft-toorop-dnsop-dns-catalog-zones-03
+
+> Big cleanup!
+
+> Reorganized topics to create a more coherent whole
+
+> Properties all have consistent format now
+
+> Try to assume the least possible from implementations w.r.t.:
+
+> 1) Predictability of the <unique-N> IDs of member zones
+
+> 2) Whether or not fallback catalog zones can be found for a member
+
+> 3) Whether or not a catalog zone consumer can maintain state
+
