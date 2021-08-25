@@ -239,8 +239,7 @@ This is because the catalog zone consumer does not have the `<unique-N>` identif
 It has to wait for an update of `$NEWCATZ` adding or changing that member zone.
 
 When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is an `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
-
-[FIXME: reset state with `epoch` or without property perhaps?]
+All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have a matching `epoch` property.
 
 The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
 The old owner then removes the member zone from `old.catalog`.
