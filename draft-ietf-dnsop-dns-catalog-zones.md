@@ -697,6 +697,8 @@ and how it would work best with catalog zones.
 
 > Big cleanup!
 
+> Introducing the terms catalog zone consumer and catalog zone producer
+
 > Reorganized topics to create a more coherent whole
 
 > Properties all have consistent format now
