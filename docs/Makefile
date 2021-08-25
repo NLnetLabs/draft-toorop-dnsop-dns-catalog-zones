@@ -6,7 +6,7 @@ all: $(PAGES) draft-ietf-dnsop-dns-catalog-zones.html
 clean:
 	rm -f $(PAGES) draft-ietf-dnsop-dns-catalog-zones.html
 
-draft-ietf-dnsop-dns-catalog-zones.html: ../draft-ietf-dnsop-dns-catalog-zones-02.html menu.html
+draft-ietf-dnsop-dns-catalog-zones.html: ../draft-ietf-dnsop-dns-catalog-zones-03.html menu.html
 	awk '{print}/^<body>$$/{system("cat menu.html")}' $< >$@
 
 .md.html:
