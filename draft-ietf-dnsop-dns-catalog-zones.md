@@ -235,10 +235,10 @@ The PTR RRset MUST consist of a single PTR record.
 A catalog zone consumer MUST not process and ignore PTR RRsets with more than a single record.
 
 When a catalog zone consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
-This is because the catalog zone consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it does not know wether or not the member zone is configured in `$NEWCATZ` at all.
+This is because the catalog zone consumer may not know the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it does not know wether or not the member zone is configured in `$NEWCATZ` at all.
 It has to wait for an update of `$NEWCATZ` adding or changing that member zone.
 
-When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is an `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATS`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
+When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is an `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATZ`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
 All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have an `epoch` property with the same value.
 
 The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
@@ -275,7 +275,7 @@ By generating the catalog zone (snippet) above, the producer signals how the con
 
 ## The Epoch Property {#epochproperty}
 
-A `epoch` property allows to reset a zone associated state.
+A `epoch` property allows a producer to trigger, on the consumer, a reset of all state associated with a zone.
 
 The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
 
@@ -299,7 +299,7 @@ The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#ti
 Epoch values (both for the catalog zone and for member zones) are provided with
 a TIMESTAMP Resource Record. The Type value for the TIMESTAMP RR is TBD. The
 TIMESTAMP RR is class independent. The RDATA of the
-resource record consist of a single field: Timestamp.
+resource record consists of a single field: Timestamp.
 
 #### TIMESTAMP RDATA Wire Format {#timestamprrwf}
 
