@@ -360,7 +360,7 @@ When a `serial` property is present for a member zone and it matches the SOA
 serial of that member zone, implementations of catalog zones which are
 secondary for that member zone MAY ignore the refresh time in the SOA record of
 the member zone and rely on updates via the `serial` property of the member
-zone. A refresh timer of a catalog zone MUST not be ignored.
+zone. A refresh timer of a catalog zone MUST NOT be ignored.
 
 Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
 secondary nameservers which are known to process the `serial` property of the
@@ -512,31 +512,6 @@ property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.
 
-# Implementation Status
-
-**Note to the RFC Editor**: please remove this entire section before publication.
-
-In the following implementation status descriptions, "DNS Catalog Zones" refers
-to DNS Catalog Zones as described in this document.
-
-* Knot DNS has processing of DNS Catalog Zones since Knot DNS Version 3.0.0,
-  which was released on September 9, 2020.
-
-* Knot DNS has generation of DNS Catalog Zones on a
-  [development branch](https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate).
-
-* PowerDNS has a proof of concept external program called
-  [PowerCATZ](https://github.com/PowerDNS/powercatz/), that can process DNS
-  Catalog Zones.
-
-* Proof of concept [python scripts](https://github.com/IETF-Hackathon/NSDCatZ)
-  that can be used for both generating and consuming DNS Catalog Zones with NSD
-  have been developed during the hackathon at the IETF-109.
-
-Interoperability between the above implementations has been tested during the
-hackathon at the IETF-109.
-  
-
 # Security Considerations
 
 As catalog zones are transmitted using DNS zone transfers, it is key 
@@ -613,7 +588,7 @@ and how it would work best with catalog zones.
   <seriesInfo name="FIPS" value="PUB 180-4" />
 </reference>
 
-<reference anchor='Metazones' target='http://ss.vix.su/~vixie/mz.pdf'>
+<reference anchor='Metazones' target='http://family.redbarn.org/~vixie/mz.pdf'>
   <front>
     <title>Federated Domain Name Service Using DNS Metazones</title>
     <author fullname="Paul Vixie" initials="P." surname="Vixie" />
@@ -631,6 +606,30 @@ and how it would work best with catalog zones.
 </reference>
 
 {backmatter}
+
+# Implementation Status
+
+**Note to the RFC Editor**: please remove this entire section before publication.
+
+In the following implementation status descriptions, "DNS Catalog Zones" refers
+to DNS Catalog Zones as described in this document.
+
+* Knot DNS has processing of DNS Catalog Zones since Knot DNS Version 3.0.0,
+  which was released on September 9, 2020.
+
+* Knot DNS has generation of DNS Catalog Zones on a
+  [development branch](https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate).
+
+* PowerDNS has a proof of concept external program called
+  [PowerCATZ](https://github.com/PowerDNS/powercatz/), that can process DNS
+  Catalog Zones.
+
+* Proof of concept [python scripts](https://github.com/IETF-Hackathon/NSDCatZ)
+  that can be used for both generating and consuming DNS Catalog Zones with NSD
+  have been developed during the hackathon at the IETF-109.
+
+Interoperability between the above implementations has been tested during the
+hackathon at the IETF-109.
 
 # Change History (to be removed before final publication)
 
