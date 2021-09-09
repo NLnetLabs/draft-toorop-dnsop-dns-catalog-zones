@@ -114,6 +114,9 @@ Catalog zone
 Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
 
+Member node
+: The DNS name in the Catalog zone representing a Member zone.
+
 `$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself (c.f. $ORIGIN).
@@ -124,9 +127,6 @@ Catalog producer
 Catalog consumer
 : An entity that extracts information from the catalog zone (such as a DNS
   server that configures itself according to the catalog zone's contents).
-
-Member node
-: The DNS name of the DNS subtree representing a given member zone (two levels below `$CATZ`).
 
 # Description {#description}
 
