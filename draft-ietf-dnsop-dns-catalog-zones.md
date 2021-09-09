@@ -135,7 +135,6 @@ A catalog zone is a specially crafted DNS zone that contains, as DNS zone conten
 Implementations of catalog zones SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
 Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
-A member zone can as such be reconfigured with a different set of preconfigured settings by removing it as a member of one catalog zone and making it a member of another.
 
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
