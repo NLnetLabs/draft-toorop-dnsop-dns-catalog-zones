@@ -216,9 +216,9 @@ Properties are represented by RRsets below the corresponding member node.
 
 ## The Change of ownership (Coo) Property {#cooproperty}
 
-The 'coo' property facilitates controlled migration of a member zone from one catalog to another.
+The `coo` property facilitates controlled migration of a member zone from one catalog to another.
 
-A Change Of Ownership is signaled by the 'coo' property in the catalog zone currently ``owning'' the zone.
+A Change Of Ownership is signaled by the `coo` property in the catalog zone currently "owning" the zone.
 The name of the new catalog is in the value of a PTR record in the old catalog.
 For example if member "example.com." will migrate from catalog zone `$OLDCATZ` to catalog zone `$NEWCATZ`, this appears in the `$OLDCATZ` catalog zone as follows:
 
