@@ -597,11 +597,7 @@ and how it would work best with catalog zones.
 In the following implementation status descriptions, "DNS Catalog Zones" refers
 to DNS Catalog Zones as described in this document.
 
-* Knot DNS has processing of DNS Catalog Zones since Knot DNS Version 3.0.0,
-  which was released on September 9, 2020.
-
-* Knot DNS has generation of DNS Catalog Zones on a
-  [development branch](https://gitlab.nic.cz/knot/knot-dns/-/tree/catalog_generate).
+* Knot DNS 3.1 (released August 2, 2021) supports full producing and consuming of catalog zones, including the group property.
 
 * PowerDNS has a proof of concept external program called
   [PowerCATZ](https://github.com/PowerDNS/powercatz/), that can process DNS
