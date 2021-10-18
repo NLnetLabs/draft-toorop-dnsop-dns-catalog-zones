@@ -461,6 +461,10 @@ be ignored and an error SHOULD be logged.
 
 A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog.
 
+## Member node name change {#namechange}
+
+When via a single update or transfer, the member node's label value (`<unique-N>`) changes, catalog consumers MUST process this as a member zone removal including all the zone's associated state (as described in (#zoneremoval)), immediately followed by processing the member as a newly to be configured zone.
+<!-- (adhering to all the stipulations that come with processing a member as a newly to be configured zone, such as anticipating name clashes as described in (#nameclash)) -->
 
 ## Migrating member zones between catalogs {#zonemigration}
 
@@ -476,12 +480,8 @@ It may for example entail a manually forced retransfer of `$NEWCATZ` to consumer
 
 It may be desirable to reset state (such as zone data and DNSSEC keys) associated with a member zone.
 If all consumers of the catalog zone support the `epoch` property, it is RECOMMENDED to perform a zone state reset following the procedure described in (#epochproperty).
-Otherwise a zone state reset has to be done by: first removing the member zone from the catalog; add the member zone to the catalog again after having made sure all catalog consumers did process the member zone removal.
 
-If in the process of a zone state reset some consumers of the involved catalog zone did not catch the removal (because of a lost packet or down time or otherwise) they will not have the zone associated state reset.
-This possibility needs to be anticipated.
-Recovery from it is out of the scope of this document.
-It may for example entail manual removal of the zone associated state from the catalog consumers that did not catch the removal and re-addition of the member.
+Otherwise a zone state reset may be performed by a change of the member node's name (see (#namechange)).
 
 # Implementation Notes {#implementationnotes}
 
