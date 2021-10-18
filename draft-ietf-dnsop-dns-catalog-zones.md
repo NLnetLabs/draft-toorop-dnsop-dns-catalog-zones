@@ -502,20 +502,15 @@ output of AXFR or an out-of-band method to perform queries on catalog zones.
 
 # Security Considerations
 
-As catalog zones are transmitted using DNS zone transfers, it is key 
-for these transfers to be protected from unexpected modifications on
-the route.  So, catalog zone transfers SHOULD be authenticated using TSIG
-[@!RFC8945].  A primary nameserver SHOULD NOT serve a catalog zone for transfer
-without using TSIG and a secondary nameserver SHOULD abandon an update to a
-catalog zone that was received without using TSIG.
+As catalog zones are transmitted using DNS zone transfers.
+It is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication.
+For example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS [@!RFC9103].
 
-Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD
-similarly be authenticated using TSIG.
+Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD similarly be authenticated.
 
-Zone transfers of member zones SHOULD similarly be authenticated using TSIG
-[@!RFC8945].  The TSIG shared secrets used for member zones MUST NOT be mentioned
-anywhere in the catalog zone data.  However, key identifiers may be shared
-within catalog zones.
+Zone transfers of member zones SHOULD similarly be authenticated.
+TSIG shared secrets used for member zones SHOULD NOT be mentioned in the catalog zone data.
+However, key identifiers may be shared within catalog zones.
 
 Catalog zones reveal the zones served by the consumers of the catalog zone.
 It is RECOMMENDED to limit the systems able to query these zones.
