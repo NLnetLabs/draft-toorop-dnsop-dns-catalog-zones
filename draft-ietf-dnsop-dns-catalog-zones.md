@@ -66,6 +66,17 @@ fullname="Leo Vandewoestijne"
  email = "leo@dns.company"
 [author.address.postal]
  country = "Netherlands"
+
+[[author]]
+initials = "P."
+surname = "Thomassen"
+fullname = "Peter Thomassen"
+organization = "deSEC, Secure Systems Engineering"
+[author.address]
+ email = "peter@desec.io"
+[author.address.postal]
+ city = "Berlin"
+ country = "Germany"
 %%%
 
 
@@ -709,3 +720,5 @@ hackathon at the IETF-109.
 > Updated implementation status for KnotDNS
 
 > Describe member node name changes and update "Zone associated state reset" to use that as the mechanism for it.
+
+> Add Peter Thomassen as co-author
