@@ -239,8 +239,7 @@ When a catalog zone consumer of catalog zone `$NEWCATZ` receives an update of `$
 
 All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog zone consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have an `epoch` property with the same value.
 
-The new owner is advised to increase the serial of the member zone after the ownership change, so that the old owner can detect that the transition is done.
-The old owner then removes the member zone from `old.catalog`.
+<!-- The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.  -->
 
 ## The Group Property
 
