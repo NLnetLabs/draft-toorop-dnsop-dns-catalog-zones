@@ -119,7 +119,8 @@ Member node
 
 `$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
-  catalog zone itself (c.f. $ORIGIN).
+  catalog zone itself.
+  `$OLDCATZ` and `$NEWCATZ` are used to discuss migration a member zone from one catalog zone `$OLDCATZ` to another catalog zone `$NEWCATZ`.
 
 Catalog producer
 : An entity that generates and is responsible for the contents of the catalog zone.
