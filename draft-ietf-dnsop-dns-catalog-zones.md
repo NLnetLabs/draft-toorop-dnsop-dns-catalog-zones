@@ -688,3 +688,24 @@ hackathon at the IETF-109.
 
 > 3) Whether or not a catalog consumer can maintain state
 
+* draft-toorop-dnsop-dns-catalog-zones-04
+
+> Move Implementation status to appendix
+
+> Miscellaneous textual improvements
+
+> `coo` property points to `$NEWCATZ` (and not `zones.$NEWCATZ`)
+
+> Remove suggestion to increase serial and remove member zone from `$OLDCATZ` after migration
+
+> More consistent usage of the terms catalog consumer and catalog producer throughout the document
+
+> Refresh timers should not be ignored with `serial` property
+
+> Removing a member MUST remove zone associated state
+
+> Make authentication requirements a bit less prescriptive in security considerations
+
+> Updated implementation status for KnotDNS
+
+> Describe member node name changes and update "Zone associated state reset" to use that as the mechanism for it.
