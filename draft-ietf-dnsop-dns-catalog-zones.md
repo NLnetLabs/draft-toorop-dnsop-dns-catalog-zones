@@ -224,7 +224,7 @@ For example if member "example.com." will migrate from catalog zone `$OLDCATZ` t
 
 ```
 <unique-N>.zones.$OLDCATZ 0 IN PTR example.com.
-coo.<unique-N>.zones.$OLDCATZ 0 IN PTR zones.$NEWCATZ
+coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 ```
 
 The PTR RRset MUST consist of a single PTR record.
