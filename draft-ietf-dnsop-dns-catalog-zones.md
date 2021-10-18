@@ -350,12 +350,6 @@ property with the SOA serial since the last time the zone was fetched. When the
 immediately without doing a SOA query first. The SOA query may be omitted,
 because the SOA serial has been obtained reliably via the catalog zone already.
 
-When a `serial` property is present for a member zone and it matches the SOA
-serial of that member zone, catalog zone consumers which are
-secondary for that member zone MAY ignore the refresh time in the SOA record of
-the member zone and rely on updates via the `serial` property of the member
-zone. A refresh timer of a catalog zone MUST NOT be ignored.
-
 Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
 secondary nameservers which are known to process the `serial` property of the
 member zones in that catalog. However they MAY also combine signalling of zone
