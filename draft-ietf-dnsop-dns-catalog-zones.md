@@ -344,14 +344,14 @@ for a member zone, implementations of catalog zones MAY assume this number to
 be the current serial number in the SOA record of the most recent version of
 the member zone.
 
-Nameservers that are secondary for that member zone, MAY compare the `serial`
+Catalog zone consumers which are secondary for that member zone, MAY compare the `serial`
 property with the SOA serial since the last time the zone was fetched. When the
 `serial` property is larger, the secondary MAY initiate a zone transfer
 immediately without doing a SOA query first. The SOA query may be omitted,
 because the SOA serial has been obtained reliably via the catalog zone already.
 
 When a `serial` property is present for a member zone and it matches the SOA
-serial of that member zone, implementations of catalog zones which are
+serial of that member zone, catalog zone consumers which are
 secondary for that member zone MAY ignore the refresh time in the SOA record of
 the member zone and rely on updates via the `serial` property of the member
 zone. A refresh timer of a catalog zone MUST NOT be ignored.
