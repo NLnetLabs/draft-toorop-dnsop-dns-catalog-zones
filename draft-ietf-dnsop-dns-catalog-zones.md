@@ -131,7 +131,7 @@ Catalog consumer
 
 # Description {#description}
 
-A catalog zone is a specially crafted DNS zone that contains, as DNS zone content a list of DNS zones (called "member zones"), plus properties associated with those zones.
+A catalog zone is a DNS zone whose contents are specially crafted. Its records primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
 
 Catalog consumers SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
