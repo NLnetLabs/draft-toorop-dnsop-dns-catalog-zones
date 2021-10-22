@@ -377,8 +377,11 @@ serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 
 ## Custom properties {#customproperties}
 
-Implementations and operators of catalog zones may choose to provide their own properties
-below the label `private-extension.<unique-N>.zones.$CATZ`.
+More properties may be defined in future documents.
+These future properties will be represented by RRsets directly below the name of a member node.
+
+Implementations and operators of catalog zones may choose to provide their own properties.
+To prevent a name clash with future properties, private properties should be represented below the label `private-extension.<unique-N>.zones.$CATZ`.
 `private-extension` is not a
 placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
 
