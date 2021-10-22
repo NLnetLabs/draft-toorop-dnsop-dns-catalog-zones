@@ -380,9 +380,9 @@ More properties may be defined in future documents.
 These future properties will be represented by RRsets directly below the name of a member node.
 
 Implementations and operators of catalog zones may choose to provide their own properties.
-To prevent a name clash with future properties, private properties should be represented below the label `private-extension.<unique-N>.zones.$CATZ`.
-`private-extension` is not a
-placeholder, so a custom property would have the domain name `<your-label>.private-extension.<unique-N>.zones.$CATZ`
+To prevent a name clash with future properties, private properties should be represented below the label `ext.<unique-N>.zones.$CATZ`.
+`ext` is not a
+placeholder, so a custom property would have the domain name `<your-label>.ext.<unique-N>.zones.$CATZ`
 
 
 # Nameserver Behavior {#behavior}
