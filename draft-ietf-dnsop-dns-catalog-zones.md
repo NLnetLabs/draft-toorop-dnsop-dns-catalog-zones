@@ -247,7 +247,7 @@ This is because the catalog consumer may not have the `<unique-N>` identifier as
 It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
 When a consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATZ`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
 
-All associated state for the zone (such as the zone data, or DNSSEC keys) for a just migrated zone SHOULD be reset.
+All associated state for a just migrated zone SHOULD be reset (see (#zonereset)).
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
