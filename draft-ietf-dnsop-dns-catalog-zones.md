@@ -105,10 +105,9 @@ regular DNS zone (called a "catalog zone" here), and transferred using DNS zone
 transfers.  As zones are added to or removed from the catalog zone, these changes
 are distributed to the secondary nameservers in the normal way.  The secondary
 nameservers then add/remove/modify the zones they serve in accordance with the
-changes to the catalog zone.
-
-The contents and representation of catalog zones are described in (#description).
-Nameserver behavior is described in (#behavior).
+changes to the catalog zone. Other use-cases of nameserver remote configuration
+by catalog zones are possible, where the catalog consumer might not be a
+secondary.
 
 # Terminology
 
