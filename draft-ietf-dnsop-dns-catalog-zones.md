@@ -212,7 +212,7 @@ A changed label may indicate that the state for a zone needs to be reset (see (#
 Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
 Further, if member zones do not share a PTR RRset, the list of member zones can be split over multiple DNS messages in a zone transfer.
 
-Catalog consumers MUST ignore PTR RRsets with more than a single record.
+Catalog consumers MUST ignore member node RRsets with more than a single PTR resource record.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
