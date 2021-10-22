@@ -362,6 +362,16 @@ property with the SOA serial since the last time the zone was fetched. When the
 immediately without doing a SOA query first. The SOA query may be omitted,
 because the SOA serial has been obtained reliably via the catalog zone already.
 
+Secondary nameservers MAY be configured to postpone next refresh by the SOA
+refresh value of the member zone (counted since the transfer of the catalog
+zone) when the value of the `serial` property was found to be equal to the
+served zone, the same way as if it had queried the primary SOA directly and
+found it equal.  Note that for this mechanism it is essential that the catalog
+producer is keeping the `serial` property up to date with the SOA serial value
+of the member zone at all times. The catalog may not be lagging behind.
+Increased robustness in having the latest version of a zone may be a reason to
+**not** configure a secondary nameserver with this mechanism.
+
 Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
 secondary nameservers which are known to process the `serial` property of the
 member zones in the associated catalog. However they MAY also combine signalling of zone
