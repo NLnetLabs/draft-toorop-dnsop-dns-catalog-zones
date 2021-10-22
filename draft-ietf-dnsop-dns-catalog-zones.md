@@ -410,12 +410,10 @@ be operated by different administrators.  The secondary nameservers may be
 configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
 administrators may not have any administrative access to the secondaries.
 
-A catalog zone can be updated via DNS UPDATE on a reference primary nameserver,
-or via zone transfers.  Nameservers MAY allow loading and transfer of broken
-zones with incorrect catalog zone syntax (as they are treated as regular
-zones), but catalog consumers MUST NOT process such broken zones as catalog
-zones.  For the purpose of catalog processing, the broken catalogs MUST be
-ignored.
+Nameservers MAY allow loading and transfer of broken zones with incorrect
+catalog zone syntax (as they are treated as regular zones), but catalog
+consumers MUST NOT process such broken zones as catalog zones.  For the purpose
+of catalog processing, the broken catalogs MUST be ignored.
 
 ## Member zone removal {#zoneremoval}
 
