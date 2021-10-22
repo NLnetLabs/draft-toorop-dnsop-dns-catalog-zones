@@ -367,9 +367,9 @@ RRs would appear as follows:
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-serial.<unique-1>.zones.$CATZ 0 IN SERIAL 2020111712
+serial.<unique-1>.zones.$CATZ 0 IN SERIAL 3
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-serial.<unique-2>.zones.$CATZ 0 IN SERIAL 2020111709
+serial.<unique-2>.zones.$CATZ 0 IN SERIAL 1634730530
 <unique-3>.zones.$CATZ        0 IN PTR    example.org.
 serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
