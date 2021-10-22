@@ -248,7 +248,7 @@ This is because the catalog consumer may not have the `<unique-N>` identifier as
 It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
 When a consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATZ`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
 
-All associated state for the zone (such as the zone data, or DNSSEC keys) is in such case reset, unless the `epoch` property (see (#epochproperty)) is supported by the catalog consumer and the member zone in both `$OLDCATZ` and `$NEWCATZ` have an `epoch` property with the same value.
+All associated state for the zone (such as the zone data, or DNSSEC keys) for a just migrated zone SHOULD be reset.
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
@@ -280,60 +280,6 @@ group.<unique-2>.zones.$CATZ  0 IN TXT    nodnssec
 In this case, the consumer might be implemented and configured in the way that the member zones with "nodnssec" group assigned will not be signed with DNSSEC, and the zones with "sign-with-nsec3" group assigned will be signed with DNSSEC with NSEC3 chain.
 
 By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
-
-## The Epoch Property {#epochproperty}
-
-A `epoch` property allows a producer to trigger, on the consumer, a reset of all state associated with a zone.
-
-The epoch property is represented by a the `TIMESTAMP` Resource Record (see (#timestamprr)).
-
-* `epoch.<unique-N>.zones.$CATZ  0  IN  TIMESTAMP  ...`
-
-  When a member zone's epoch changes, the catalog consumer resets the member
-  zone's state. A catalog consumer can detect a member zone epoch change as follows:
-
-  - When the epoch changes, the catalog producer will set the TIMESTAMP RR of the member
-    zone's epoch property to the current time.
-
-  - When the catalog consumer processes a member node with an epoch property that
-    is larger than the point in time when the member zone itself was last
-    retrieved, then a new epoch has begun.
-
-  The steps entailed in the process of resetting the zone state depends on the
-  operational context of the secondary (e.g. regenerate DNSSEC keys).
-
-### The TIMESTAMP Resource Record {#timestamprr}
-
-Epoch values (both for the catalog zone and for member zones) are provided with
-a TIMESTAMP Resource Record. The Type value for the TIMESTAMP RR is TBD. The
-TIMESTAMP RR is class independent. The RDATA of the
-resource record consists of a single field: Timestamp.
-
-#### TIMESTAMP RDATA Wire Format {#timestamprrwf}
-
-The TIMESTAMP RDATA wire format is encoded as follows:
-
-```
-                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                           Timestamp                           |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-```
-
-The wire format is identical to the wire format of the Signature Expiration and
-Inception Fields of the RRSIG RR ([@!RFC4034] section 3.1.5) and follows the
-same rules with respect to wrapping.
-
-#### TIMESTAMP RDATA Presentation Format {#timestamprrpf}
-
-The presentation format is identical to that of the Signature Expiration and
-Inception Fields of the RRSIG RR ([@!RFC4034] section 3.2). Example:
-
-```
-epoch.$CATZ                   0 IN TIMESTAMP    20210304124652
-epoch.<unique-1>.zones.$CATZ  0 IN TIMESTAMP    20201231235959
-```
 
 ## The Serial Property
 
@@ -500,9 +446,8 @@ It may for example entail a manually forced retransfer of `$NEWCATZ` to consumer
 ## Zone associated state reset {#zonereset}
 
 It may be desirable to reset state (such as zone data and DNSSEC keys) associated with a member zone.
-If all consumers of the catalog zone support the `epoch` property, it is RECOMMENDED to perform a zone state reset following the procedure described in (#epochproperty).
 
-Otherwise a zone state reset may be performed by a change of the member node's name (see (#namechange)).
+A zone state reset may be performed by a change of the member node's name (see (#namechange)).
 
 # Implementation Notes {#implementationnotes}
 
@@ -539,14 +484,6 @@ It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
 # IANA Considerations
-
-## TIMESTAMP RR type
-
-This document defines a new DNS RR type, TIMESTAMP, in the "Resource Record (RR) TYPEs" subregistry of the "Domain Name System (DNS) Parameters" registry:
-
-TYPE      | Value     | Meaning   | Reference
-----------|-----------|-----------|----------------
-TIMESTAMP | TBD       | Timestamp | [this document]
 
 ## SERIAL RR type
 
