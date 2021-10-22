@@ -247,7 +247,9 @@ This is because the catalog consumer may not have the `<unique-N>` identifier as
 It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
 When a consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATZ`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
 
-All associated state for a just migrated zone SHOULD be reset (see (#zonereset)).
+Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated state for a just migrated zone MUST be reset (see (#zonereset)).
+Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
+To prevent the takeover, the owner of `$OLDCATZ` has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
@@ -465,7 +467,7 @@ property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.
 
-# Security Considerations
+# Security Considerations {#security}
 
 As catalog zones are transmitted using DNS zone transfers.
 It is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication.
@@ -482,6 +484,9 @@ It is RECOMMENDED to limit the systems able to query these zones.
 It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
+
+With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
+To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneous with adding the `coo` property.
 
 # IANA Considerations
 
