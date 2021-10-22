@@ -415,11 +415,6 @@ catalog zone syntax (as they are treated as regular zones), but catalog
 consumers MUST NOT process such broken zones as catalog zones.  For the purpose
 of catalog processing, the broken catalogs MUST be ignored.
 
-## Member zone removal {#zoneremoval}
-
-When a member zone is removed from a specific catalog zone, an authoritative server MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
-Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed.
-
 ## Member zone name clash {#nameclash}
 
 If there is a clash between an existing zone's name (either from an existing member zone or otherwise configured zone) and an incoming
@@ -427,6 +422,11 @@ member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
 A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog.
+
+## Member zone removal {#zoneremoval}
+
+When a member zone is removed from a specific catalog zone, an authoritative server MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
+Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed.
 
 ## Member node name change {#namechange}
 
