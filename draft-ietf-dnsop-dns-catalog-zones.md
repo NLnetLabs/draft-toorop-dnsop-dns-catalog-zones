@@ -512,7 +512,7 @@ syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
-Carsten Strotmann, Peter Thomassen and Kees Monshouwer for reviewing draft proposals and offering comments and
+Carsten Strotmann, and Kees Monshouwer for reviewing draft proposals and offering comments and
 suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
