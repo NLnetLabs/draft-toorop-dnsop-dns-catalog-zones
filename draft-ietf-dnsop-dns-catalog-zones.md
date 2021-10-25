@@ -430,7 +430,7 @@ Only when the zone was configured from a specific catalog zone, and the zone is 
 
 ## Member node name change {#namechange}
 
-When via a single update or transfer, the member node's label value (`<unique-N>`) changes, catalog consumers MUST process this as a member zone removal including all the zone's associated state (as described in (#zoneremoval)), immediately followed by processing the member as a newly to be configured zone.
+When via a single update or transfer, the member node's label value (`<unique-N>`) changes, catalog consumers MUST process this as a member zone removal including all the zone's associated state (as described in (#zoneremoval)), immediately followed by processing the member as a newly to be configured zone in the same catalog.
 <!-- (adhering to all the stipulations that come with processing a member as a newly to be configured zone, such as anticipating name clashes as described in (#nameclash)) -->
 
 ## Migrating member zones between catalogs {#zonemigration}
