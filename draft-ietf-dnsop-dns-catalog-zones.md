@@ -152,7 +152,7 @@ nameservers, a catalog zone is a regular DNS zone and so must adhere to the
 standards for such zones.
 
 A catalog zone is primarily intended for the management of a farm of authoritative nameservers.
-The content of catalog zones MAY NOT be accessible from any recursive nameserver.
+The content of catalog zones may not be accessible from any recursive nameserver.
 
 # Catalog Zone Structure
 
@@ -192,6 +192,7 @@ The list of member zones is specified as a collection of member nodes, represent
 
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
 This PTR record MUST be the only record in the PTR RRset with the same name.
+More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
 
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:
@@ -209,9 +210,6 @@ Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
 
 Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
-Further, if member zones do not share a PTR RRset, the list of member zones can be split over multiple DNS messages in a zone transfer.
-
-Catalog consumers MUST ignore member node RRsets with more than a single PTR resource record.
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
 
@@ -389,7 +387,7 @@ placeholder, so a custom property would have the domain name `<your-label>.ext.<
 
 # Nameserver Behavior {#behavior}
 
-## General Requirements
+## General Requirements {#generalrequirements}
 
 As it is a regular DNS zone, a catalog zone can be transferred using DNS zone
 transfers among nameservers.
