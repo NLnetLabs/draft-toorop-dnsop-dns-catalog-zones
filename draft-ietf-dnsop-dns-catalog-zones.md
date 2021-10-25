@@ -223,7 +223,7 @@ Each member zone MAY have one or more additional properties, described in this c
 These properties are completely optional and catalog consumers SHOULD ignore those it does not understand.
 Properties are represented by RRsets below the corresponding member node.
 
-## The Change of ownership (Coo) Property {#cooproperty}
+## The Change of Ownership (coo) Property {#cooproperty}
 
 The `coo` property facilitates controlled migration of a member zone from one catalog to another.
 
@@ -237,7 +237,7 @@ coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 ```
 
 The PTR RRset MUST consist of a single PTR record.
-Catalog consumers MUST ignore PTR RRsets with more than a single record.
+More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
 
 When a consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
 
@@ -307,7 +307,7 @@ property with the SOA serial since the last time the zone was fetched. When the
 immediately without doing a SOA query first. The SOA query may be omitted,
 because the SOA serial has been obtained reliably via the catalog zone already.
 
-Secondary nameservers MAY be configured to postpone next refresh by the SOA
+Secondary nameservers MAY be configured to postpone the next refresh by the SOA
 refresh value of the member zone (counted since the transfer of the catalog
 zone) when the value of the `serial` property was found to be equal to the
 served zone, the same way as if it had queried the primary SOA directly and
@@ -421,7 +421,7 @@ If there is a clash between an existing zone's name (either from an existing mem
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
-A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog.
+A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog, but should not be treated as one except as described in {#cooproperty}.
 
 ## Member zone removal {#zoneremoval}
 
@@ -430,7 +430,7 @@ Only when the zone was configured from a specific catalog zone, and the zone is 
 
 ## Member node name change {#namechange}
 
-When via a single update or transfer, the member node's label value (`<unique-N>`) changes, catalog consumers MUST process this as a member zone removal including all the zone's associated state (as described in (#zoneremoval)), immediately followed by processing the member as a newly to be configured zone.
+When via a single update or transfer, the member node's label value (`<unique-N>`) changes, catalog consumers MUST process this as a member zone removal including all the zone's associated state (as described in (#zoneremoval)), immediately followed by processing the member as a newly to be configured zone in the same catalog.
 <!-- (adhering to all the stipulations that come with processing a member as a newly to be configured zone, such as anticipating name clashes as described in (#nameclash)) -->
 
 ## Migrating member zones between catalogs {#zonemigration}
@@ -467,9 +467,9 @@ output of AXFR or an out-of-band method to perform queries on catalog zones.
 
 # Security Considerations {#security}
 
-As catalog zones are transmitted using DNS zone transfers.
-It is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication.
-For example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS [@!RFC9103].
+As catalog zones are transmitted using DNS zone transfers,
+it is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication,
+for example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS [@!RFC9103].
 
 Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD similarly be authenticated.
 
@@ -484,7 +484,7 @@ It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
 With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
-To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneous with adding the `coo` property.
+To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
 
 # IANA Considerations
 
@@ -512,7 +512,7 @@ syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
-Carsten Strotmann, Peter Thomassen and Kees Monshouwer for reviewing draft proposals and offering comments and
+Carsten Strotmann, and Kees Monshouwer for reviewing draft proposals and offering comments and
 suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
