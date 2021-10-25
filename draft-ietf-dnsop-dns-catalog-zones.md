@@ -223,7 +223,7 @@ Each member zone MAY have one or more additional properties, described in this c
 These properties are completely optional and catalog consumers SHOULD ignore those it does not understand.
 Properties are represented by RRsets below the corresponding member node.
 
-## The Change of ownership (Coo) Property {#cooproperty}
+## The Change of Ownership (coo) Property {#cooproperty}
 
 The `coo` property facilitates controlled migration of a member zone from one catalog to another.
 
