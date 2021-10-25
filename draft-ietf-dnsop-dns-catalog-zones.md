@@ -661,7 +661,7 @@ hackathon at the IETF-109.
 
 > More consistent usage of the terms catalog consumer and catalog producer throughout the document
 
-> Refresh timers should not be ignored with `serial` property
+> Better (safer) description of resetting refresh timers of member zones with the `serial` property
 
 > Removing a member MUST remove zone associated state
 
@@ -672,3 +672,7 @@ hackathon at the IETF-109.
 > Describe member node name changes and update "Zone associated state reset" to use that as the mechanism for it.
 
 > Add Peter Thomassen as co-author
+
+> Complete removal of the `epoch` property.  We consider consumer optimizations with predictable member node labels (for example based on a hash) out of the scope of this document.
+
+> Miscellaneous editorial improvements
