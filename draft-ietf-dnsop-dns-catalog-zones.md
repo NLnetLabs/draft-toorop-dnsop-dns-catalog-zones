@@ -237,7 +237,7 @@ coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 ```
 
 The PTR RRset MUST consist of a single PTR record.
-Catalog consumers MUST ignore PTR RRsets with more than a single record.
+More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
 
 When a consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
 
