@@ -467,9 +467,9 @@ output of AXFR or an out-of-band method to perform queries on catalog zones.
 
 # Security Considerations {#security}
 
-As catalog zones are transmitted using DNS zone transfers.
-It is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication.
-For example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS [@!RFC9103].
+As catalog zones are transmitted using DNS zone transfers,
+it is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication,
+for example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS [@!RFC9103].
 
 Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD similarly be authenticated.
 
