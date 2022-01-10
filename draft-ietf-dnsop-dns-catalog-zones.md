@@ -59,11 +59,11 @@ organization = "NLnet Labs"
  country = "Netherlands"
 
 [[author]]
-initials="L."
-surname="Vandewoestijne"
-fullname="Leo Vandewoestijne"
+initials="K."
+surname ="Monshouwer"
+fullname="Kees Monshouwer"
 [author.address]
- email = "leo@dns.company"
+ email = "kees@monshouwer.eu"
 [author.address.postal]
  country = "Netherlands"
 
@@ -511,9 +511,13 @@ implemented a similar approach and reviewed it.  Catalog zones borrows some
 syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
+Thanks to Leo Vandewoestijne. Leo's presentation in the DNS devroom at the
+FOSDEM'20 [@FOSDEM20] was one of the motivations to take up and continue the
+effort of standardizing catalog zones.
+
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
-Carsten Strotmann, and Kees Monshouwer for reviewing draft proposals and offering comments and
-suggestions.
+Carsten Strotmann, and Kees Monshouwer for reviewing draft proposals and
+offering comments and suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
 during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Spacek,
@@ -545,6 +549,14 @@ and how it would work best with catalog zones.
     <author fullname="Paul Vixie" initials="P." surname="Vixie" />
     <author fullname="Vernon Schryver" initials="V." surname="Schryver" />
     <date year="2010" />
+  </front>
+</reference>
+
+<reference anchor='FOSDEM20' target='https://archive.fosdem.org/2020/schedule/event/dns_catz/'>
+  <front>
+    <title>Extending Catalog zones - another approach in automating maintenance</title>
+    <author fullname="Leo Vandewoestijne" initials="L." surname="Vandewoestijne" />
+    <date year="2020" />
   </front>
 </reference>
 
