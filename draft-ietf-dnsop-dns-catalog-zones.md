@@ -280,100 +280,6 @@ In this case, the consumer might be implemented and configured in the way that t
 
 By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
 
-## The Serial Property
-
-The serial property helps in increasing reliability of zone update signaling and may help in reducing NOTIFY and SOA query traffic.
-
-The current default mechanism for prompting notifications of zone changes from
-a primary nameserver to the secondaries via DNS NOTIFY [@!RFC1996], can be
-unreliable due to packet loss, or secondary nameservers temporarily not being
-reachable. In such cases the secondary might pick up the change only after the
-refresh timer runs out, which might take long and be out of the control of the
-primary nameserver operator. Low refresh values in the zones being served can alleviate
-update delays, but burden both the primary and secondary nameservers with more
-refresh queries, especially with larger numbers of secondary nameservers
-serving large numbers of zones.  To mitigate this, updates of zones MAY be
-signalled via catalog zones with the help of a `serial` property.
-
-The serial number in the SOA record of the most recent version of a member zone
-MAY be provided by a `serial` property.  When a `serial` property is present
-for a member zone, catalog consumers MAY assume this number to
-be the current serial number in the SOA record of the most recent version of
-the member zone.
-
-Catalog consumers which are secondary for that member zone, MAY compare the `serial`
-property with the SOA serial since the last time the zone was fetched. When the
-`serial` property is larger, the secondary MAY initiate a zone transfer
-immediately without doing a SOA query first. The SOA query may be omitted,
-because the SOA serial has been obtained reliably via the catalog zone already.
-
-Secondary nameservers MAY be configured to postpone the next refresh by the SOA
-refresh value of the member zone (counted since the transfer of the catalog
-zone) when the value of the `serial` property was found to be equal to the
-served zone, the same way as if it had queried the primary SOA directly and
-found it equal.  Note that for this mechanism it is essential that the catalog
-producer is keeping the `serial` property up to date with the SOA serial value
-of the member zone at all times. The catalog may not be lagging behind.
-Increased robustness in having the latest version of a zone may be a reason to
-**not** configure a secondary nameserver with this mechanism.
-
-Primary nameservers MAY be configured to omit sending DNS NOTIFY messages to
-secondary nameservers which are known to process the `serial` property of the
-member zones in the associated catalog. However they MAY also combine signalling of zone
-changes with the `serial` property of a member zone, as well as sending DNS
-NOTIFY messages, to anticipate slow updates of the catalog zone (due to packet
-loss or other reasons) and to cater for secondaries that are not a catalog consumer processing the `serial` property.
-
-All comparisons of serial numbers MUST use "Serial number arithmetic", as
-defined in [@!RFC1982]
-
-### The SERIAL Resource Record {#serialrr}
-
-The `serial` property value is provided with a SERIAL Resource Record. The Type
-value for the SERIAL RR is TBD. The SERIAL RR is class independent. The RDATA
-of the resource record consist of a single field: Serial.
-
-### SERIAL RDATA Wire Format {#serialrrwf}
-
-The SERIAL RDATA wire format is encoded as follows:
-
-```
-                     1 1 1 1 1 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 3 3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                            Serial                             |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-```
-
-#### The Serial Field
-
-The Serial field is a 32-bit unsigned integer in network byte order.
-It is the serial number of the member zone's SOA record ([@!RFC1035] section 3.3.13).
-
-### SERIAL Presentation Format {#serialrrpf}
-
-The presentation format of the RDATA portion is as follows:
-
-The Serial fields is represented as an unsigned decimal integer.
-
-### SERIAL RR Usage {#serialrr1}
-
-The `serial` property of a member zone is provided by a SERIAL RRset with a
-single SERIAL RR named `serial.<unique-N>.zones.$CATZ`.
-
-For example, if a catalog zone lists three zones "example.com.", "example.net."
-and "example.org.", and a `serial` property is provided for each of them, the
-RRs would appear as follows:
-
-```
-<unique-1>.zones.$CATZ        0 IN PTR    example.com.
-serial.<unique-1>.zones.$CATZ 0 IN SERIAL 3
-<unique-2>.zones.$CATZ        0 IN PTR    example.net.
-serial.<unique-2>.zones.$CATZ 0 IN SERIAL 1634730530
-<unique-3>.zones.$CATZ        0 IN PTR    example.org.
-serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
-```
-
 ## Custom properties {#customproperties}
 
 More properties may be defined in future documents.
@@ -486,16 +392,6 @@ Administrative control over what zones are served from the configured name serve
 With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
 
-# IANA Considerations
-
-## SERIAL RR type
-
-This document defines a new DNS RR type, SERIAL, in the "Resource Record (RR) TYPEs" subregistry of the "Domain Name System (DNS) Parameters" registry:
-
-TYPE   | Value     | Meaning                                         | Reference
--------|-----------|-------------------------------------------------|----------------
-SERIAL | TBD       | Version number of the original copy of the zone | [this document]
-
 # Acknowledgements
 
 Our deepest thanks and appreciation go to Stephen Morris,
@@ -515,14 +411,7 @@ Thanks to Leo Vandewoestijne. Leo's presentation in the DNS devroom at the
 FOSDEM'20 [@FOSDEM20] was one of the motivations to take up and continue the
 effort of standardizing catalog zones.
 
-Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
-and Carsten Strotmann for reviewing draft proposals and
-offering comments and suggestions.
-
-Thanks to Klaus Darilion who came up with the idea for the `serial` property
-during the hackathon at the IETF-109. Thanks also to Shane Kerr, Petr Spacek,
-Brian Dickson for further brainstorming and discussing the `serial` property
-and how it would work best with catalog zones.
+Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Patrik Lundin, Victoria Risk, Petr Spacek and Carsten Strotmann for reviewing draft proposals and offering comments and suggestions.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
   <front>
@@ -692,3 +581,5 @@ hackathon at the IETF-109.
 * draft-toorop-dnsop-dns-catalog-zones-05
 
 > Add Kees Monshouwer as co-author
+
+> Removed the "serial" property
