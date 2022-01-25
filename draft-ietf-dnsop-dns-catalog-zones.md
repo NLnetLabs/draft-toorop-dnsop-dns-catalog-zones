@@ -63,7 +63,7 @@ initials="K."
 surname ="Monshouwer"
 fullname="Kees Monshouwer"
 [author.address]
- email = "kees@monshouwer.eu"
+ email = "mind@monshouwer.eu"
 [author.address.postal]
  country = "Netherlands"
 
@@ -516,7 +516,7 @@ FOSDEM'20 [@FOSDEM20] was one of the motivations to take up and continue the
 effort of standardizing catalog zones.
 
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk,
-Carsten Strotmann, and Kees Monshouwer for reviewing draft proposals and
+and Carsten Strotmann for reviewing draft proposals and
 offering comments and suggestions.
 
 Thanks to Klaus Darilion who came up with the idea for the `serial` property
@@ -688,3 +688,7 @@ hackathon at the IETF-109.
 > Complete removal of the `epoch` property.  We consider consumer optimizations with predictable member node labels (for example based on a hash) out of the scope of this document.
 
 > Miscellaneous editorial improvements
+
+* draft-toorop-dnsop-dns-catalog-zones-05
+
+> Add Kees Monshouwer as co-author
