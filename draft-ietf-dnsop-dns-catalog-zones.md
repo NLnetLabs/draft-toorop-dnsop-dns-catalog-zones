@@ -390,12 +390,32 @@ serial.<unique-2>.zones.$CATZ 0 IN SERIAL 1634730530
 serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
-### Custom Properties (`*.ext` properties) {#customproperties}
+## Custom Properties (`*.ext` properties) {#customproperties}
 
 Implementations and operators of catalog zones may choose to provide their own properties.
-To prevent a name clash with future properties, private properties should be represented below the label `ext.<unique-N>.zones.$CATZ`.
-`ext` is not a
-placeholder, so a custom property would have the domain name `<your-label>.ext.<unique-N>.zones.$CATZ`
+Custom properties can occur both globally, or for a specific member zone.
+To prevent a name clash with future properties, such properties should be represented below the label `ext`.
+
+`ext` is not a placeholder, so a custom property would have domains names as follows:
+
+```
+<your-property>.ext.$CATZ                   # for a global custom property
+<your-property>.ext.<unique-N>.zones.$CATZ  # for a member zone custom property
+```
+
+`<your-property>` may consist of one or more labels.
+
+Implementations MAY use such properties on the member zone level to store additional information about member zones,
+for example to flag them for specific treatment (such as ...).
+
+Further, implementations MAY use custom properties on the global level to store additional information about the catalog zone itself.
+While there may be many use cases for this, a plausible one is to store default values for custom properties on the global level,
+then overriding them using a property of the same name on the member level (= under the `ext` label of the member node) if so desired.
+
+[NOTE by PTH: This provides no way of *removing* a global default setting via an override at the member zone level.
+While this is not this specification's ceorn, I was wondering if this has been considered?]
+
+The meaning of the custom properties described in this section is determined by the implementation alone, without expectation of interoperability.
 
 
 # Nameserver Behavior {#behavior}
