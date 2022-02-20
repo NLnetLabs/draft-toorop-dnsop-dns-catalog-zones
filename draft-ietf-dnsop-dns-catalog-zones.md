@@ -71,7 +71,7 @@ fullname="Kees Monshouwer"
 initials = "P."
 surname = "Thomassen"
 fullname = "Peter Thomassen"
-organization = "deSEC, Secure Systems Engineering"
+organization = "deSEC, SSE - Secure Systems Engineering"
 [author.address]
  email = "peter@desec.io"
 [author.address.postal]
