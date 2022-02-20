@@ -172,7 +172,20 @@ Catalog consumers MUST ignore and MUST NOT assume or require NS records at the a
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
 
-## Catalog Zone Schema Version
+## Global Properties
+
+Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
+
+This specification defines a number of so-called properties that implementations MUST support,
+as well as a mechanism to allow implementors to store additional information in the catalog zone (= extension properties, (#customproperties)).
+The meaning of such extension properties is determined by the implementation in question.
+
+Properties can occur both on the global level, or be scoped to apply only to a specific member zone.
+This section deals with global properties; member-specific properties are described in (#properties).
+
+More properties may be defined in future documents.
+
+### Schema Version (`version` property)
 
 The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
 All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR. 
@@ -186,9 +199,9 @@ version.$CATZ 0 IN TXT "2"
 NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
 
-## List of Member Zones {#listofmemberzones}
+### Member Zones (`zones` property) {#listofmemberzones}
 
-The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
+The list of member zones is specified as a collection of member nodes, represented by domain names under the "zones" property where "zones" is a direct child domain of the catalog zone.
 
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
 This PTR record MUST be the only record in the PTR RRset with the same name.
@@ -217,13 +230,14 @@ The TTL field's value is not defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers.
 
-# Properties {#properties}
+
+## Member Zone Properties {#properties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
 These properties are completely optional and catalog consumers SHOULD ignore those it does not understand.
 Properties are represented by RRsets below the corresponding member node.
 
-## The Change of Ownership (coo) Property {#cooproperty}
+### Change of Ownership (`coo` property) {#cooproperty}
 
 The `coo` property facilitates controlled migration of a member zone from one catalog to another.
 
@@ -251,7 +265,8 @@ To prevent the takeover, the owner of `$OLDCATZ` has to enforce a zone state res
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
-## The Group Property
+
+### Groups (`group` property)
 
 With a `group` property, consumer(s) can be signalled to treat some member zones within the catalog zone differently.
 
@@ -267,7 +282,7 @@ The consumer MUST ignore either all or none of the `group` properties in a catal
 The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
 The consumer MUST interpret the value case-sensitively.
 
-### Group Property Example
+#### Example
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
@@ -280,7 +295,8 @@ In this case, the consumer might be implemented and configured in the way that t
 
 By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
 
-## The Serial Property
+
+### Serial (`serial` property)
 
 The serial property helps in increasing reliability of zone update signaling and may help in reducing NOTIFY and SOA query traffic.
 
@@ -327,13 +343,13 @@ loss or other reasons) and to cater for secondaries that are not a catalog consu
 All comparisons of serial numbers MUST use "Serial number arithmetic", as
 defined in [@!RFC1982]
 
-### The SERIAL Resource Record {#serialrr}
+#### The SERIAL Resource Record {#serialrr}
 
 The `serial` property value is provided with a SERIAL Resource Record. The Type
 value for the SERIAL RR is TBD. The SERIAL RR is class independent. The RDATA
 of the resource record consist of a single field: Serial.
 
-### SERIAL RDATA Wire Format {#serialrrwf}
+##### SERIAL RDATA Wire Format {#serialrrwf}
 
 The SERIAL RDATA wire format is encoded as follows:
 
@@ -345,18 +361,18 @@ The SERIAL RDATA wire format is encoded as follows:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ```
 
-#### The Serial Field
+##### The Serial Field
 
 The Serial field is a 32-bit unsigned integer in network byte order.
 It is the serial number of the member zone's SOA record ([@!RFC1035] section 3.3.13).
 
-### SERIAL Presentation Format {#serialrrpf}
+##### SERIAL Presentation Format {#serialrrpf}
 
 The presentation format of the RDATA portion is as follows:
 
 The Serial fields is represented as an unsigned decimal integer.
 
-### SERIAL RR Usage {#serialrr1}
+##### SERIAL RR Usage {#serialrr1}
 
 The `serial` property of a member zone is provided by a SERIAL RRset with a
 single SERIAL RR named `serial.<unique-N>.zones.$CATZ`.
@@ -374,10 +390,7 @@ serial.<unique-2>.zones.$CATZ 0 IN SERIAL 1634730530
 serial.<unique-3>.zones.$CATZ 0 IN SERIAL 2020112405
 ```
 
-## Custom properties {#customproperties}
-
-More properties may be defined in future documents.
-These future properties will be represented by RRsets directly below the name of a member node.
+### Custom Properties (`*.ext` properties) {#customproperties}
 
 Implementations and operators of catalog zones may choose to provide their own properties.
 To prevent a name clash with future properties, private properties should be represented below the label `ext.<unique-N>.zones.$CATZ`.
