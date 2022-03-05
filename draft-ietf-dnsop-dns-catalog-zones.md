@@ -411,6 +411,7 @@ for example to flag them for specific treatment (such as ...).
 Further, implementations MAY use custom properties on the global level to store additional information about the catalog zone itself.
 While there may be many use cases for this, a plausible one is to store default values for custom properties on the global level,
 then overriding them using a property of the same name on the member level (= under the `ext` label of the member node) if so desired.
+A property description should clearly say what semantics apply, and whether a property is global, member, or both.
 
 [NOTE by PTH: This provides no way of *removing* a global default setting via an override at the member zone level.
 While this is not this specification's ceorn, I was wondering if this has been considered?]
