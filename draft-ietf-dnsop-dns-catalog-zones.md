@@ -172,36 +172,9 @@ Catalog consumers MUST ignore and MUST NOT assume or require NS records at the a
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
 
-## Global Properties
+## Member Zones {#listofmemberzones}
 
-Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
-
-This specification defines a number of so-called properties that implementations MUST support,
-as well as a mechanism to allow implementors to store additional information in the catalog zone (= extension properties, (#customproperties)).
-The meaning of such extension properties is determined by the implementation in question.
-
-Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
-This section deals with global properties; member-specific properties are described in (#properties).
-
-More properties may be defined in future documents.
-
-### Schema Version (`version` property)
-
-The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
-All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR. 
-Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
-For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
-
-``` dns-zone
-version.$CATZ 0 IN TXT "2"
-```
-
-NB: Version 1 was used in a draft version of this memo and reflected
-the implementation first found in BIND 9.11.
-
-### Member Zones (`zones` property) {#listofmemberzones}
-
-The list of member zones is specified as a collection of member nodes, represented by domain names under the "zones" property where "zones" is a direct child domain of the catalog zone.
+The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.
 
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
 This PTR record MUST be the only record in the PTR RRset with the same name.
@@ -229,6 +202,34 @@ The CLASS field of every RR in a catalog zone MUST be IN (1).
 The TTL field's value is not defined by this memo.  Catalog zones are
 for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers.
+
+
+## Global Properties
+
+Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
+
+This specification defines a number of so-called properties that implementations MUST support,
+as well as a mechanism to allow implementors to store additional information in the catalog zone (= extension properties, (#customproperties)).
+The meaning of such extension properties is determined by the implementation in question.
+
+Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
+This section deals with global properties; member-specific properties are described in (#properties).
+
+More properties may be defined in future documents.
+
+### Schema Version (`version` property)
+
+The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
+All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR.
+Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
+For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
+
+``` dns-zone
+version.$CATZ 0 IN TXT "2"
+```
+
+NB: Version 1 was used in a draft version of this memo and reflected
+the implementation first found in BIND 9.11.
 
 
 ## Member Zone Properties {#properties}
