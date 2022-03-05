@@ -180,7 +180,7 @@ This specification defines a number of so-called properties that implementations
 as well as a mechanism to allow implementors to store additional information in the catalog zone (= extension properties, (#customproperties)).
 The meaning of such extension properties is determined by the implementation in question.
 
-Properties can occur both on the global level, or be scoped to apply only to a specific member zone.
+Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
 This section deals with global properties; member-specific properties are described in (#properties).
 
 More properties may be defined in future documents.
