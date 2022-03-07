@@ -210,8 +210,8 @@ Apart from catalog zone metadata stored at the apex (NS, SOA and the like), cata
 Catalog consumers SHOULD ignore properties they do not understand.
 
 This specification defines a number of so-called properties,
-as well as a mechanism to allow implementors to store additional information in the catalog zone (= extension properties, (#customproperties)).
-The meaning of such extension properties is determined by the implementation in question.
+as well as a mechanism to allow implementors to store additional information in the catalog zone with Custom properties, see (#customproperties).
+The meaning of such custom properties is determined by the implementation in question.
 
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
 This document defines a single mandatory global property in (#version). Member-specific properties are described in (#properties).
