@@ -220,7 +220,7 @@ More properties may be defined in future documents.
 ### Schema Version (`version` property)
 
 The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
-All catalog zones MUST have a TXT RRset named `version.$CATZ` with at least one RR.
+All catalog zones MUST have a TXT RRset named `version.$CATZ` with exactly one RR.
 Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
 For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
 
