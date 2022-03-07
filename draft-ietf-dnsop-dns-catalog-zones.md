@@ -616,3 +616,5 @@ hackathon at the IETF-109.
 > Add Kees Monshouwer as co-author
 
 > Removed the "serial" property
+
+> Allow custom properties on the global level
