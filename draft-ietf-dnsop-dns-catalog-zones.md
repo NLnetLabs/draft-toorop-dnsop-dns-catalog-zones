@@ -207,22 +207,23 @@ querying via recursive resolvers.
 ## Global Properties
 
 Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
+Catalog consumers SHOULD ignore properties they do not understand.
 
-This specification defines a number of so-called properties that implementations MUST support,
+This specification defines a number of so-called properties,
 as well as a mechanism to allow implementors to store additional information in the catalog zone (= extension properties, (#customproperties)).
 The meaning of such extension properties is determined by the implementation in question.
 
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
-This section deals with global properties; member-specific properties are described in (#properties).
+This document defines a single mandatory global property in (#version). Member-specific properties are described in (#properties).
 
 More properties may be defined in future documents.
 
-### Schema Version (`version` property)
+### Schema Version (`version` property) {#version}
 
 The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
 All catalog zones MUST have a TXT RRset named `version.$CATZ` with exactly one RR.
-Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in one of the RRs in the `version.$CATZ` TXT RRset, but they may be transferred as ordinary zones.
-For this memo, the value of one of the RRs in the `version.CATZ` TXT RRset MUST be set to "2", i.e.
+Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in the `version.$CATZ` TXT RR, but they may be transferred as ordinary zones.
+For this memo, the value of the `version.CATZ` TXT RR MUST be set to "2", i.e.:
 
 ``` dns-zone
 version.$CATZ 0 IN TXT "2"
@@ -236,7 +237,7 @@ the implementation first found in BIND 9.11.
 
 Each member zone MAY have one or more additional properties, described in this chapter.
 These properties are completely optional and catalog consumers SHOULD ignore those it does not understand.
-Properties are represented by RRsets below the corresponding member node.
+Member zone properties are represented by RRsets below the corresponding member node.
 
 ### Change of Ownership (`coo` property) {#cooproperty}
 
@@ -319,10 +320,8 @@ While there may be many use cases for this, a plausible one is to store default 
 then overriding them using a property of the same name on the member level (= under the `ext` label of the member node) if so desired.
 A property description should clearly say what semantics apply, and whether a property is global, member, or both.
 
-[NOTE by PTH: This provides no way of *removing* a global default setting via an override at the member zone level.
-While this is not this specification's ceorn, I was wondering if this has been considered?]
-
 The meaning of the custom properties described in this section is determined by the implementation alone, without expectation of interoperability.
+A catalog consumer SHOULD ignore custom properties it does not understand.
 
 
 # Nameserver Behavior {#behavior}
