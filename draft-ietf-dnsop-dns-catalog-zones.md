@@ -210,7 +210,7 @@ Apart from catalog zone metadata stored at the apex (NS, SOA and the like), cata
 Catalog consumers SHOULD ignore properties they do not understand.
 
 This specification defines a number of so-called properties,
-as well as a mechanism to allow implementors to store additional information in the catalog zone with Custom properties, see (#customproperties).
+as well as a mechanism to allow implementers to store additional information in the catalog zone with Custom properties, see (#customproperties).
 The meaning of such custom properties is determined by the implementation in question.
 
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
@@ -257,7 +257,7 @@ More than one record in the RRset denotes a broken catalog zone which MUST NOT b
 
 When a consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
 
-This is because the catalog consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it may not know wether or not the member zone is configured in `$NEWCATZ` at all.
+This is because the catalog consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it may not know whether or not the member zone is configured in `$NEWCATZ` at all.
 It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
 When a consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATZ`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
 
