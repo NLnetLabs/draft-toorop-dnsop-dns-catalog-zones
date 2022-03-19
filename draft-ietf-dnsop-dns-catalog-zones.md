@@ -331,14 +331,6 @@ A catalog consumer SHOULD ignore custom properties it does not understand.
 As it is a regular DNS zone, a catalog zone can be transferred using DNS zone
 transfers among nameservers.
 
-Although they are regular DNS zones, catalog zones contain only information for
-the management of a set of authoritative nameservers.  For this reason,
-operators may want to limit the systems able to query these zones.  It may be
-inconvenient to serve some contents of catalog zones via DNS queries anyway due
-to the nature of their representation.  A separate method of querying entries
-inside the catalog zone may be made available by nameserver implementations
-(see (#implementationnotes)).
-
 Catalog updates should be automatic, i.e., when a nameserver that supports
 catalog zones completes a zone transfer for a catalog zone, it SHOULD apply
 changes to the catalog within the running nameserver automatically without any
@@ -389,7 +381,14 @@ Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronized of the member zones for secondary service.
 
-An administrator may want to look at data inside a catalog zone.  Typical
+Although they are regular DNS zones, catalog zones contain only information for
+the management of a set of authoritative nameservers.  For this reason,
+operators may want to limit the systems able to query these zones.
+
+Querying/serving catalog zone contents may be inconvenient via DNS
+due to the nature of their representation.
+An administrator may therefore want to use a different method for
+looking at data inside the catalog zone.  Typical
 queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
