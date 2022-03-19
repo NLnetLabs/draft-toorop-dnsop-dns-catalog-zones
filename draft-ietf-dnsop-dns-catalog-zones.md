@@ -344,11 +344,6 @@ catalog zones completes a zone transfer for a catalog zone, it SHOULD apply
 changes to the catalog within the running nameserver automatically without any
 manual intervention.
 
-As with regular zones, primary and secondary nameservers for a catalog zone may
-be operated by different administrators.  The secondary nameservers may be
-configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
-administrators may not have any administrative access to the secondaries.
-
 Nameservers MAY allow loading and transfer of broken zones with incorrect
 catalog zone syntax (as they are treated as regular zones), but catalog
 consumers MUST NOT process such broken zones as catalog zones.  For the purpose
@@ -419,6 +414,11 @@ However, key identifiers may be shared within catalog zones.
 Catalog zones reveal the zones served by the consumers of the catalog zone.
 It is RECOMMENDED to limit the systems able to query these zones.
 It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
+
+As with regular zones, primary and secondary nameservers for a catalog zone may
+be operated by different administrators.  The secondary nameservers may be
+configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
+administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
