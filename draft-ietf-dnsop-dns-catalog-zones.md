@@ -337,9 +337,14 @@ changes to the catalog within the running nameserver automatically without any
 manual intervention.
 
 Nameservers MAY allow loading and transfer of broken zones with incorrect
-catalog zone syntax (as they are treated as regular zones), but catalog
-consumers MUST NOT process such broken zones as catalog zones.  For the purpose
-of catalog processing, the broken catalogs MUST be ignored.
+catalog zone syntax (as they are treated as regular zones).
+However, for the purpose of catalog processing, consumers MUST ignore
+such broken catalog zones, and instead treat them as a regular DNS zone.
+
+Similary, when a catalog zone expires, it loses its catalog meaning and
+MUST be treated as a regular DNS zone.
+No special processing occurs; in particular, member zones MUST NOT be
+deconfigured.
 
 ## Member zone name clash {#nameclash}
 
