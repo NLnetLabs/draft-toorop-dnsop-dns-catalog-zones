@@ -382,7 +382,7 @@ This possibility needs to be anticipated with a member zone migration.
 Recovery from such a situation is out of the scope of this document.
 It may for example entail a manually forced retransfer of `$NEWCATZ` to consumers after they have been detected to have received and processed the removal of the member zone from `$OLDCATZ`.
 
-## Zone associated state reset {#zonereset}
+## Zone-associated state reset {#zonereset}
 
 It may be desirable to reset state (such as zone data and DNSSEC keys) associated with a member zone.
 
