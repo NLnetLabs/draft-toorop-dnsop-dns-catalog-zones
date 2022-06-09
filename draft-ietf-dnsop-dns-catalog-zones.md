@@ -306,8 +306,11 @@ To prevent a name clash with future properties, such properties should be repres
 `ext` is not a placeholder, so a custom property would have domains names as follows:
 
 ```
-<your-property>.ext.$CATZ                   # for a global custom property
-<your-property>.ext.<unique-N>.zones.$CATZ  # for a member zone custom property
+; a global custom property:
+<your-property>.ext.$CATZ
+
+; a member zone custom property:
+<your-property>.ext.<unique-N>.zones.$CATZ
 ```
 
 `<your-property>` may consist of one or more labels.
