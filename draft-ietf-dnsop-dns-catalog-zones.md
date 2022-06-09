@@ -316,7 +316,7 @@ To prevent a name clash with future properties, such properties should be repres
 `<your-property>` may consist of one or more labels.
 
 Implementations MAY use such properties on the member zone level to store additional information about member zones,
-for example to flag them for specific treatment (such as ...).
+for example to flag them for specific treatment.
 
 Further, implementations MAY use custom properties on the global level to store additional information about the catalog zone itself.
 While there may be many use cases for this, a plausible one is to store default values for custom properties on the global level,
