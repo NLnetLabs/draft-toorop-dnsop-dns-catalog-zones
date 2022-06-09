@@ -334,28 +334,20 @@ A catalog consumer SHOULD ignore custom properties it does not understand.
 As it is a regular DNS zone, a catalog zone can be transferred using DNS zone
 transfers among nameservers.
 
-Although they are regular DNS zones, catalog zones contain only information for
-the management of a set of authoritative nameservers.  For this reason,
-operators may want to limit the systems able to query these zones.  It may be
-inconvenient to serve some contents of catalog zones via DNS queries anyway due
-to the nature of their representation.  A separate method of querying entries
-inside the catalog zone may be made available by nameserver implementations
-(see (#implementationnotes)).
-
 Catalog updates should be automatic, i.e., when a nameserver that supports
 catalog zones completes a zone transfer for a catalog zone, it SHOULD apply
 changes to the catalog within the running nameserver automatically without any
 manual intervention.
 
-As with regular zones, primary and secondary nameservers for a catalog zone may
-be operated by different administrators.  The secondary nameservers may be
-configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
-administrators may not have any administrative access to the secondaries.
-
 Nameservers MAY allow loading and transfer of broken zones with incorrect
-catalog zone syntax (as they are treated as regular zones), but catalog
-consumers MUST NOT process such broken zones as catalog zones.  For the purpose
-of catalog processing, the broken catalogs MUST be ignored.
+catalog zone syntax (as they are treated as regular zones).
+However, for the purpose of catalog processing, consumers MUST ignore
+such broken catalog zones, and instead treat them as a regular DNS zone.
+
+Similary, when a catalog zone expires, it loses its catalog meaning and
+MUST be treated as a regular DNS zone.
+No special processing occurs; in particular, member zones MUST NOT be
+deconfigured.
 
 ## Member zone name clash {#nameclash}
 
@@ -385,7 +377,7 @@ This possibility needs to be anticipated with a member zone migration.
 Recovery from such a situation is out of the scope of this document.
 It may for example entail a manually forced retransfer of `$NEWCATZ` to consumers after they have been detected to have received and processed the removal of the member zone from `$OLDCATZ`.
 
-## Zone associated state reset {#zonereset}
+## Zone-associated state reset {#zonereset}
 
 It may be desirable to reset state (such as zone data and DNSSEC keys) associated with a member zone.
 
@@ -397,7 +389,14 @@ Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
 
-An administrator may want to look at data inside a catalog zone.  Typical
+Although they are regular DNS zones, catalog zones contain only information for
+the management of a set of authoritative nameservers.  For this reason,
+operators may want to limit the systems able to query these zones.
+
+Querying/serving catalog zone contents may be inconvenient via DNS
+due to the nature of their representation.
+An administrator may therefore want to use a different method for
+looking at data inside the catalog zone.  Typical
 queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
@@ -422,6 +421,11 @@ However, key identifiers may be shared within catalog zones.
 Catalog zones reveal the zones served by the consumers of the catalog zone.
 It is RECOMMENDED to limit the systems able to query these zones.
 It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
+
+As with regular zones, primary and secondary nameservers for a catalog zone may
+be operated by different administrators.  The secondary nameservers may be
+configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
+administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
