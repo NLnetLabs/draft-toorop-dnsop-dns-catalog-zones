@@ -489,7 +489,7 @@ Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Sha
 
 # Implementation Status
 
-**Note to the RFC Editor**: please remove this entire section before publication.
+**Note to the RFC Editor**: please remove this entire appendix before publication.
 
 In the following implementation status descriptions, "DNS Catalog Zones" refers
 to DNS Catalog Zones as described in this document.
@@ -507,7 +507,9 @@ to DNS Catalog Zones as described in this document.
 Interoperability between the above implementations has been tested during the
 hackathon at the IETF-109.
 
-# Change History (to be removed before final publication)
+# Change History
+
+**Note to the RFC Editor**: please remove this entire appendix before publication.
 
 * draft-muks-dnsop-dns-catalog-zones-00
 
