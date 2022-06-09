@@ -115,7 +115,7 @@ The key words "**MUST**", "**MUST NOT**", "**REQUIRED**",
 "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**",
 "**RECOMMENDED**", "**NOT RECOMMENDED**", "**MAY**", and
 "**OPTIONAL**" in this document are to be interpreted as described in
-BCP 14 [@!RFC2119] [@!RFC8174] when, and only when, they appear in all
+BCP 14 [@!RFC2119;@!RFC8174] when, and only when, they appear in all
 capitals, as shown here.
 
 Catalog zone
@@ -170,7 +170,7 @@ updates to the catalog zone's contents.
 There is no requirement to be able to query the catalog zone via recursive nameservers.
 Catalog consumers MUST ignore and MUST NOT assume or require NS records at the apex.
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
-A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606].
+A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
 ## Member Zones {#listofmemberzones}
 
