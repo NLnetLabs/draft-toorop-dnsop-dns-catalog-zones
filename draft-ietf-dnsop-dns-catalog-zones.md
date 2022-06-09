@@ -223,7 +223,7 @@ More properties may be defined in future documents.
 The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
 All catalog zones MUST have a TXT RRset named `version.$CATZ` with exactly one RR.
 Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in the `version.$CATZ` TXT RR, but they may be transferred as ordinary zones.
-For this memo, the value of the `version.CATZ` TXT RR MUST be set to "2", i.e.:
+For this memo, the value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
 
 ``` dns-zone
 version.$CATZ 0 IN TXT "2"
@@ -363,7 +363,7 @@ If there is a clash between an existing zone's name (either from an existing mem
 member zone's name (via transfer or update), the new instance of the zone MUST
 be ignored and an error SHOULD be logged.
 
-A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog, but should not be treated as one except as described in {#cooproperty}.
+A clash between an existing member zone's name and an incoming member zone's name (via transfer or update), may be an attempt to migrate a zone to a different catalog, but should not be treated as one except as described in (#cooproperty).
 
 ## Member zone removal {#zoneremoval}
 
@@ -395,7 +395,7 @@ A zone state reset may be performed by a change of the member node's name (see (
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
-The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronized of the member zones for secondary service.
+The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
 
 An administrator may want to look at data inside a catalog zone.  Typical
 queries might include dumping the list of member zones, dumping a member zone's
