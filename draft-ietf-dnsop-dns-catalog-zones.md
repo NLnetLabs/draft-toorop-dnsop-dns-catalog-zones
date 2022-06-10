@@ -284,6 +284,9 @@ The consumer MUST ignore either all or none of the `group` properties in a catal
 The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
 The consumer MUST interpret the value case-sensitively.
 
+A catalog consumer that encounters a `group` property with an invalid value or a `group` property that has more than a single RR in the RRset, MUST refrain from any action based on the `group` property.
+No change in configuration options should be applied to the member zone and any previously assigned configuration should remain.
+
 #### Example
 
 ```
@@ -344,10 +347,18 @@ catalog zone syntax (as they are treated as regular zones).
 However, for the purpose of catalog processing, consumers MUST ignore
 such broken catalog zones, and instead treat them as a regular DNS zone.
 
-Similary, when a catalog zone expires, it loses its catalog meaning and
+When a previously correct catalog zone becomes a broken catalog zone, because
+of an update through an incremental transfer or otherwise, it loses its catalog
+meaning and MUST be treated as a regular DNS zone.
+No special processing occurs, no previously by this catalog configured member
+are removed or reconfigured in any way.
+Processing of the catalog resumes again when the catalog turns into a correct
+catalog zone again, for example by an additional update (through IXFR or
+otherwise) fixing the catalog zone.
+
+Similarly, when a catalog zone expires, it loses its catalog meaning and
 MUST be treated as a regular DNS zone.
-No special processing occurs; in particular, member zones MUST NOT be
-deconfigured.
+No special processing occurs until the zone becomes fresh again.
 
 ## Member zone name clash {#nameclash}
 
