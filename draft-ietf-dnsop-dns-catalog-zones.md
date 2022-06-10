@@ -255,11 +255,15 @@ coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 The PTR RRset MUST consist of a single PTR record.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
 
-When a consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ` signalling a new owner `$NEWCATZ`, it does *not* migrate the member zone immediately.
+The `coo` property can be implemented in a stateless fashion when a certain order in the steps is adhered to:
 
-This is because the catalog consumer may not have the `<unique-N>` identifier associated with the member zone in `$NEWCATZ` and because name servers do not index Resource Records by RDATA, it may not know whether or not the member zone is configured in `$NEWCATZ` at all.
-It may have to wait for an update of `$NEWCATZ` adding or changing that member zone.
-When a consumer of catalog zone `$NEWCATZ` receives an update of `$NEWCATZ` which adds or changes a member zone, *and* that consumer had the member zone associated with `$OLDCATZ`, *and* there is a `coo` property of the member zone in `$OLDCATZ` pointing to `$NEWCATZ`, *only then* it will reconfigure the member zone with the for `$NEWCATZ` preconfigured settings.
+   1. First the `coo` property is added to a member zone of `$OLDCATZ`. 
+      Or, instead of adding the `coo` property, an existing property can also be updated with the new value: `$NEWCATZ`.
+   2. Only then the new member zone is added to `$NEWCATZ`.
+      If a member zone already existed in `$NEWCATZ` before the `coo` property was added to `$OLDCATZ`, then the new member may need to be deleted and then added again to trigger the migration.
+
+This is because a "stateless" consumer may not "know" the `<unique-N>` label of a member zone in `$NEWCATZ`, but it does have the `<unique-N>` associated with configured zone as member of `$OLDCATZ`.
+Doing the migration in the order described above is RECOMMENDED to facilitate stateless implementations.
 
 Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated state for a just migrated zone MUST be reset (see (#zonereset)).
 Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
