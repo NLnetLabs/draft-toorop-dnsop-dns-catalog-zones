@@ -349,11 +349,11 @@ manual intervention.
 Nameservers MAY allow loading and transfer of broken zones with incorrect
 catalog zone syntax (as they are treated as regular zones).
 However, for the purpose of catalog processing, consumers MUST ignore
-such broken catalog zones, and instead treat them as a regular DNS zone.
+such broken catalog zones.
 
 When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
-meaning and MUST be treated as a regular DNS zone.
+meaning.
 No special processing occurs, no previously by this catalog configured member
 are removed or reconfigured in any way.
 Processing of the catalog resumes again when the catalog turns into a correct
@@ -361,7 +361,7 @@ catalog zone again, for example by an additional update (through IXFR or
 otherwise) fixing the catalog zone.
 
 Similarly, when a catalog zone expires, it loses its catalog meaning and
-MUST be treated as a regular DNS zone.
+MUST no longer be processed as such.
 No special processing occurs until the zone becomes fresh again.
 
 ## Member zone name clash {#nameclash}
