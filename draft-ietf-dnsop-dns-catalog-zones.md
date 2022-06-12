@@ -405,7 +405,11 @@ It may be desirable to reset state (such as zone data and DNSSEC keys) associate
 
 A zone state reset may be performed by a change of the member node's name (see (#namechange)).
 
-# Implementation Notes {#implementationnotes}
+# Implementation and operational Notes {#implementationnotes}
+
+Although any valid domain name can be used for the catalog name $CATZ, it is
+RECOMMENDED to use either a domain name owned by the catalog producer, or to
+use a name under a suitable Special-Use Domain Name [!@RFC6761].
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
