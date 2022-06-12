@@ -550,6 +550,8 @@ to DNS Catalog Zones as described in this document.
   that can be used for both generating and consuming DNS Catalog Zones with NSD
   have been developed during the hackathon at the IETF-109.
 
+* BIND 9.18.3+ supports version 2 catalog zones as described in this document
+
 Interoperability between the above implementations has been tested during the
 hackathon at the IETF-109.
 
