@@ -204,7 +204,7 @@ for authoritative nameserver management only and are not intended for general
 querying via recursive resolvers.
 
 
-## Global Properties
+## Properties
 
 Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
 Catalog consumers SHOULD ignore properties they do not understand.
@@ -215,6 +215,9 @@ The meaning of such custom properties is determined by the implementation in que
 
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
 This document defines a single mandatory global property in (#version). Member-specific properties are described in (#properties).
+
+Properties have a name combined with an associated RR type.
+Properties that have a name known to a catalog consumer, but the wrong RR type, SHOULD be ignored.
 
 More properties may be defined in future documents.
 
