@@ -363,9 +363,12 @@ of an update through an incremental transfer or otherwise, it loses its catalog
 meaning.
 No special processing occurs, no previously by this catalog configured member
 are removed or reconfigured in any way.
+If a name server restarts with a broken catalog zone, the broken catalog should
+not prevent the name server from starting up and serving the member zones in
+the last valid version of the catalog zone.
 Processing of the catalog resumes again when the catalog turns into a correct
-catalog zone again, for example by an additional update (through IXFR or
-otherwise) fixing the catalog zone.
+catalog zone again, for example by an additional update (through zone transfer
+or updates) fixing the catalog zone.
 
 Similarly, when a catalog zone expires, it loses its catalog meaning and
 MUST no longer be processed as such.
