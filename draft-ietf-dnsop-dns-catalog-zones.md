@@ -322,6 +322,9 @@ To prevent a name clash with future properties, such properties should be repres
 
 `<your-property>` may consist of one or more labels.
 
+Implementations SHOULD namespace their custom properties to limit risk of clashes with other implementations of catalog zones.
+For example by including the name of the implementation in the property, e.g. like: `<property-name>.<implementation-name>.ext.$CATZ`.
+
 Implementations MAY use such properties on the member zone level to store additional information about member zones,
 for example to flag them for specific treatment.
 
