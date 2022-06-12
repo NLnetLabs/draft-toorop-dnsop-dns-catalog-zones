@@ -356,7 +356,7 @@ manual intervention.
 Nameservers MAY allow loading and transfer of broken zones with incorrect
 catalog zone syntax (as they are treated as regular zones).
 However, for the purpose of catalog processing, consumers MUST ignore
-such broken catalog zones.
+broken catalog zones.
 
 When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
@@ -409,11 +409,16 @@ A zone state reset may be performed by a change of the member node's name (see (
 
 Although any valid domain name can be used for the catalog name $CATZ, it is
 RECOMMENDED to use either a domain name owned by the catalog producer, or to
-use a name under a suitable Special-Use Domain Name [!@RFC6761].
+use a name under a suitable Special-Use Domain Name [@!RFC6761].
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
+
+Operators of catalog consumers should note that secondary name servers may
+receive DNS NOTIFY messages [@!RFC1996] for a zones before they are seen as a
+newly added member zones to the catalog from which that secondary is
+provisioned.
 
 Although they are regular DNS zones, catalog zones contain only information for
 the management of a set of authoritative nameservers.  For this reason,
