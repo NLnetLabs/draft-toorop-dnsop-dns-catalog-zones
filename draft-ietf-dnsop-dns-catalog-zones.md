@@ -191,6 +191,7 @@ For example, if a catalog zone lists three zones "example.com.",
 
 where `<unique-N>` is a label that tags each record in the collection.
 `<unique-N>` has an unique value in the collection.
+When different `<unique-N>` labels have the same value, the catalog zone is broken and MUST NOT be processed (see (#generalrequirements)).
 
 Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
