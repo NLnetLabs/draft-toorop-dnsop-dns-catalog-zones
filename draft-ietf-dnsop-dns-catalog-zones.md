@@ -698,3 +698,34 @@ hackathon at the IETF-109.
 > Removed the "serial" property
 
 > Allow custom properties on the global level
+
+* draft-toorop-dnsop-dns-catalog-zones-06
+
+> Move administrative control explanation to Security Considerations
+
+> Move comment on query methods to Implementation Notes
+
+> Clarify what happens on expiry
+
+> Clarify catalog consumer behavior when MUST condition is violated
+
+> Better text on ordering of operations for Change of Ownership
+
+> Suggest to namespace custom properties
+
+> Clarify how to handle property record with wrong type
+
+> Cover the case of multiple different <unique-N>'s having the same value
+
+> Recommendations for naming catalog zones
+
+> Add and operational note about notifies for not yet existing zones
+
+> Add text about name server restarts with broken zones
+
+> Great power comes with great responsibility (Thanks Klaus!)
+
+> Mention the new BIND implementation
+
+> All invalid properties cause a broken catalog zone, including invalid `group` and `version` properties.
+
