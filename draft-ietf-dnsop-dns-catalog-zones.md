@@ -179,6 +179,8 @@ The list of member zones is specified as a collection of member nodes, represent
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
 This PTR record MUST be the only record in the PTR RRset with the same name.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
+A clear error message stating that more than one PTR in the RRset caused the
+broken catalog, with the owner name of that RRset, MUST be logged.
 
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:
@@ -210,6 +212,17 @@ querying via recursive resolvers.
 Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
 Catalog consumers SHOULD ignore properties they do not understand.
 
+Properties have a name combined with an associated RR type.
+Properties that have a name known to a catalog consumer, but the wrong RR type,
+SHOULD be ignored.
+
+Known properties with the correct RR type, but which are for some reason
+invalid (for example because of an impossible value or because of an illegal
+number of RRs in the RRset), denotes a broken catalog zone which MUST NOT be
+processed (see (#generalrequirements)).
+A clear error message stating which invalid property caused the broken catalog,
+with the reason why it was considered invalid, MUST be logged.
+
 This specification defines a number of so-called properties,
 as well as a mechanism to allow implementers to store additional information in the catalog zone with Custom properties, see (#customproperties).
 The meaning of such custom properties is determined by the implementation in question.
@@ -217,16 +230,25 @@ The meaning of such custom properties is determined by the implementation in que
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
 This document defines a single mandatory global property in (#version). Member-specific properties are described in (#properties).
 
-Properties have a name combined with an associated RR type.
-Properties that have a name known to a catalog consumer, but the wrong RR type, SHOULD be ignored.
-
 More properties may be defined in future documents.
 
 ### Schema Version (`version` property) {#version}
 
 The catalog zone schema version is specified by an integer value embedded in a TXT RR named `version.$CATZ`.
 All catalog zones MUST have a TXT RRset named `version.$CATZ` with exactly one RR.
-Catalog consumers MUST NOT apply catalog zone processing to zones without the expected value in the `version.$CATZ` TXT RR, but they may be transferred as ordinary zones.
+
+Catalog consumers MUST NOT apply catalog zone processing to 
+
+  - zones without the `version` property
+  - zones with a `version` property with more than one RR in the RRset
+  - zones with a `version` property without an expected value in the
+    `version.$CATZ` TXT RR
+
+These conditions signify a broken catalog zone which MUST NOT be processed (see
+(#generalrequirements)).
+A clear error message about the precise condition which cause the catalog zone
+to be broken MUST be logged.
+
 For this memo, the value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
 
 ``` dns-zone
@@ -258,6 +280,8 @@ coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 
 The PTR RRset MUST consist of a single PTR record.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
+A clear error message stating which invalid `coo` property caused the broken
+catalog, with the reason why it was considered invalid, MUST be logged.
 
 The `coo` property can be implemented in a stateless fashion when a certain order in the steps is adhered to:
 
@@ -292,8 +316,9 @@ The consumer MUST ignore either all or none of the `group` properties in a catal
 The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
 The consumer MUST interpret the value case-sensitively.
 
-A catalog consumer that encounters a `group` property with an invalid value or a `group` property that has more than a single RR in the RRset, MUST refrain from any action based on the `group` property.
-No change in configuration options should be applied to the member zone and any previously assigned configuration should remain.
+A `group` property with an invalid value or a `group` property with more than one record in the RRset, denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
+A clear error message stating which invalid `group` property caused the broken
+catalog, with the reason why it was considered invalid, MUST be logged.
 
 #### Example
 
@@ -355,20 +380,22 @@ manual intervention.
 
 Nameservers MAY allow loading and transfer of broken zones with incorrect
 catalog zone syntax (as they are treated as regular zones).
-However, for the purpose of catalog processing, consumers MUST ignore
-broken catalog zones.
+Catalog consumers MUST ignore broken catalog zones, however a clear error
+message stating the reason why the catalog zone is broken MUST be logged.
 
 When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
 meaning.
 No special processing occurs, no previously by this catalog configured member
 are removed or reconfigured in any way.
+
 If a name server restarts with a broken catalog zone, the broken catalog should
 not prevent the name server from starting up and serving the member zones in
 the last valid version of the catalog zone.
-Processing of the catalog resumes again when the catalog turns into a correct
-catalog zone again, for example by an additional update (through zone transfer
-or updates) fixing the catalog zone.
+
+Processing of a broken catalog will start (or resume) when the catalog turns
+into a correct catalog zone, for example by an additional update (through zone
+transfer or updates) fixing the catalog zone.
 
 Similarly, when a catalog zone expires, it loses its catalog meaning and
 MUST no longer be processed as such.
