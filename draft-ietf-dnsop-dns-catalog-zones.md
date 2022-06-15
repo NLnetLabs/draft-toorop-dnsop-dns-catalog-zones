@@ -77,6 +77,14 @@ organization = "deSEC, SSE - Secure Systems Engineering"
 [author.address.postal]
  city = "Berlin"
  country = "Germany"
+
+[[author]]
+initials = "A."
+surname = "Sargsyan"
+fullname = "Aram Sargsyan"
+organization = "Internet Systems Consortium"
+[author.address]
+ email = "aram@isc.org"
 %%%
 
 
@@ -722,3 +730,4 @@ hackathon at the IETF-109.
 
 > All invalid properties cause a broken catalog zone, including invalid `group` and `version` properties.
 
+> Add Aram Sargsyan as author (he did the BIND9 implementation)
