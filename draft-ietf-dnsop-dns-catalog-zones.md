@@ -218,7 +218,7 @@ SHOULD be ignored.
 
 Known properties with the correct RR type, but which are for some reason
 invalid (for example because of an impossible value or because of an illegal
-number of RRs in the RRset), denotes a broken catalog zone which MUST NOT be
+number of RRs in the RRset), denote a broken catalog zone which MUST NOT be
 processed (see (#generalrequirements)).
 A clear error message stating which invalid property caused the broken catalog,
 with the reason why it was considered invalid, MUST be logged.
@@ -454,7 +454,7 @@ as static configuration, similar to how ordinary DNS zones are configured.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
 
 Operators of catalog consumers should note that secondary name servers may
-receive DNS NOTIFY messages [@!RFC1996] for a zones before they are seen as a
+receive DNS NOTIFY messages [@!RFC1996] for zones before they are seen as a
 newly added member zones to the catalog from which that secondary is
 provisioned.
 
