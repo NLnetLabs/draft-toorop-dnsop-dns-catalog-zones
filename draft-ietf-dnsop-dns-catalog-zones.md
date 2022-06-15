@@ -379,14 +379,14 @@ The reason a catalog zone is considered broken SHOULD always be communicated cle
 When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
 meaning.
-No special processing occurs, no previously by this catalog configured member
-are removed or reconfigured in any way.
+No special processing occurs. Member zones previously configured by this catalog
+SHOULD NOT be removed or reconfigured in any way.
 
-If a name server restarts with a broken catalog zone, the broken catalog should
-not prevent the name server from starting up and serving the member zones in
+If a name server restarts with a broken catalog zone, the broken catalog SHOULD
+NOT prevent the name server from starting up and serving the member zones in
 the last valid version of the catalog zone.
 
-Processing of a broken catalog will start (or resume) when the catalog turns
+Processing of a broken catalog SHALL start (or resume) when the catalog turns
 into a correct catalog zone, for example by an additional update (through zone
 transfer or updates) fixing the catalog zone.
 
