@@ -179,8 +179,7 @@ The list of member zones is specified as a collection of member nodes, represent
 The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length [@!RFC1035].
 This PTR record MUST be the only record in the PTR RRset with the same name.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
-A clear error message stating that more than one PTR in the RRset caused the
-broken catalog, with the owner name of that RRset, MUST be logged.
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:
@@ -220,8 +219,7 @@ Known properties with the correct RR type, but which are for some reason
 invalid (for example because of an impossible value or because of an illegal
 number of RRs in the RRset), denote a broken catalog zone which MUST NOT be
 processed (see (#generalrequirements)).
-A clear error message stating which invalid property caused the broken catalog,
-with the reason why it was considered invalid, MUST be logged.
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 This specification defines a number of so-called properties,
 as well as a mechanism to allow implementers to store additional information in the catalog zone with Custom properties, see (#customproperties).
@@ -246,8 +244,7 @@ Catalog consumers MUST NOT apply catalog zone processing to
 
 These conditions signify a broken catalog zone which MUST NOT be processed (see
 (#generalrequirements)).
-A clear error message about the precise condition which cause the catalog zone
-to be broken MUST be logged.
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 For this memo, the value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
 
@@ -280,8 +277,7 @@ coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 
 The PTR RRset MUST consist of a single PTR record.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
-A clear error message stating which invalid `coo` property caused the broken
-catalog, with the reason why it was considered invalid, MUST be logged.
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 The `coo` property can be implemented in a stateless fashion when a certain order in the steps is adhered to:
 
@@ -317,8 +313,7 @@ The value of the TXT record MUST be at most 255 octets long and MUST NOT contain
 The consumer MUST interpret the value case-sensitively.
 
 A `group` property with an invalid value or a `group` property with more than one record in the RRset, denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
-A clear error message stating which invalid `group` property caused the broken
-catalog, with the reason why it was considered invalid, MUST be logged.
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 #### Example
 
@@ -380,8 +375,7 @@ manual intervention.
 
 Nameservers MAY allow loading and transfer of broken zones with incorrect
 catalog zone syntax (as they are treated as regular zones).
-Catalog consumers MUST ignore broken catalog zones, however a clear error
-message stating the reason why the catalog zone is broken MUST be logged.
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
