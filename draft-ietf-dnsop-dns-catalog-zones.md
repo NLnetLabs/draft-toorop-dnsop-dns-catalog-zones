@@ -280,8 +280,8 @@ The reason a catalog zone is considered broken SHOULD always be communicated cle
 
 The `coo` property can be implemented in a stateless fashion when a certain order in the steps is adhered to:
 
-   1. First the `coo` property is added to a member zone of `$OLDCATZ`. 
-      Or, instead of adding the `coo` property, an existing property can also be updated with the new value: `$NEWCATZ`.
+   1. First the `coo` property for a member zone of `$OLDCATZ` is set to the value `$NEWCATZ`.
+      This is achieved by either creating (or replacing) the corresponding PTR record.
    2. Only then the new member zone is added to `$NEWCATZ`.
       If a member zone already existed in `$NEWCATZ` before the `coo` property was added to `$OLDCATZ`, then the new member may need to be deleted and then added again to trigger the migration.
 
