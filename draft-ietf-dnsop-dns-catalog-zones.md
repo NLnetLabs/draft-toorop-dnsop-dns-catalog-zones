@@ -176,7 +176,7 @@ defined in [@!RFC1982].  Otherwise, catalog consumers might not notice
 updates to the catalog zone's contents.
 
 There is no requirement to be able to query the catalog zone via recursive nameservers.
-Catalog consumers MUST ignore and MUST NOT assume or require NS records at the apex.
+Catalog consumers SHOULD ignore NS record at apex.
 However, at least one is still required so that catalog zones are syntactically correct DNS zones.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
