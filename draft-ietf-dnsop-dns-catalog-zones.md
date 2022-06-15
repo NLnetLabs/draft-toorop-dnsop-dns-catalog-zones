@@ -274,7 +274,7 @@ Member zone properties are represented by RRsets below the corresponding member 
 The `coo` property facilitates controlled migration of a member zone from one catalog to another.
 
 A Change Of Ownership is signaled by the `coo` property in the catalog zone currently "owning" the zone.
-The name of the new catalog is in the value of a PTR record in the old catalog.
+The name of the new catalog is the value of a PTR record in the relevant coo property in the old catalog.
 For example if member "example.com." will migrate from catalog zone `$OLDCATZ` to catalog zone `$NEWCATZ`, this appears in the `$OLDCATZ` catalog zone as follows:
 
 ```
@@ -286,19 +286,12 @@ The PTR RRset MUST consist of a single PTR record.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
 The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
-The `coo` property can be implemented in a stateless fashion when a certain order in the steps is adhered to:
-
-   1. First the `coo` property for a member zone of `$OLDCATZ` is set to the value `$NEWCATZ`.
-      This is achieved by either creating (or replacing) the corresponding PTR record.
-   2. Only then the new member zone is added to `$NEWCATZ`.
-      If a member zone already existed in `$NEWCATZ` before the `coo` property was added to `$OLDCATZ`, then the new member may need to be deleted and then added again to trigger the migration.
-
-This is because a "stateless" consumer may not "know" the `<unique-N>` label of a member zone in `$NEWCATZ`, but it does have the `<unique-N>` associated with configured zone as member of `$OLDCATZ`.
-Doing the migration in the order described above is RECOMMENDED to facilitate stateless implementations.
+When a consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ`, it does *not* migrate the member zone immediately.
+The migration has to wait for an update of `$NEWCATZ`. in which the member zone is present. The consumer MUST verify, before the actual migration, that `coo` property pointing to `$NEWCATZ` is still present in `$OLDCATZ`.
 
 Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated state for a just migrated zone MUST be reset (see (#zonereset)).
 Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
-To prevent the takeover, the owner of `$OLDCATZ` has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
+To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the assosiated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
