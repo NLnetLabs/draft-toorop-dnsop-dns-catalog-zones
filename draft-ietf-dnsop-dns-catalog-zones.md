@@ -216,8 +216,8 @@ querying via recursive resolvers.
 
 ## Properties
 
-Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
-Catalog consumers SHOULD ignore properties they do not understand.
+Catalog zone information is stored in the form of "properties".
+Catalog consumers SHOULD ignore records they do not understand.
 
 Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node, with type(s) as appropriate for the respective property.
 Record sets that appear at a property owner name known to the catalog consumer but with an unknown RR type, SHOULD be ignored by the consumer.
