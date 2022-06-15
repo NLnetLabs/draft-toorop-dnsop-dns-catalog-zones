@@ -521,7 +521,7 @@ Thanks to Leo Vandewoestijne. Leo's presentation in the DNS devroom at the
 FOSDEM'20 [@FOSDEM20] was one of the motivations to take up and continue the
 effort of standardizing catalog zones.
 
-Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Patrik Lundin, Victoria Risk, Petr Spacek and Carsten Strotmann for reviewing draft proposals and offering comments and suggestions.
+Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Patrik Lundin, Matthijs Mekking, Victoria Risk, Petr Spacek and Carsten Strotmann for reviewing draft proposals and offering comments and suggestions.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
   <front>
