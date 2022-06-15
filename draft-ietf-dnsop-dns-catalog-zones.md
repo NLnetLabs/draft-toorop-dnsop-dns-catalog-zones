@@ -305,28 +305,27 @@ The exact handling of configuration referred to by the `group` property value is
 The property is defined by a TXT record in the sub-node labelled `group`.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
-The producer MUST NOT assign more than one `group` property to one member zone.
+The producer MAY assign morte than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Consumer operators SHOULD namespace their group properties to limit risk of clashes.
 
-The consumer MUST ignore either all or none of the `group` properties in a catalog zone.
-
-The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
-The consumer MUST interpret the value case-sensitively.
-
-A `group` property with an invalid value or a `group` property with more than one record in the RRset, denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
-The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
+The consumer MUST ignore `group` properties it does not understand.
 
 #### Example
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
+group.<unique-1>.zones.$CATZ  0 IN TXT    nodnssec
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    nodnssec
+group.<unique-2>.zones.$CATZ  0 IN TXT    operator-x-sign-with-nsec3
+group.<unique-2>.zones.$CATZ  0 IN TXT    operator-y-nsec3
+
 ```
 
-In this case, the consumer might be implemented and configured in the way that the member zones with "nodnssec" group assigned will not be signed with DNSSEC, and the zones with "sign-with-nsec3" group assigned will be signed with DNSSEC with NSEC3 chain.
+The catalog zone (snippet) above is an example where the producer signals how the consumer(s) shall treat DNSSEC for the zones example.net. and example.com.
 
-By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
+For example.com., the consumer might be implemented and configured in the way that the member zone will not be signed with DNSSEC.
+For example.net., the consumers, at two different operators, might be implemented and configured in the way that the member zone will be signed with a NSEC3 chain.
+
 
 ## Custom Properties (`*.ext` properties) {#customproperties}
 
