@@ -435,7 +435,7 @@ RECOMMENDED to use either a domain name owned by the catalog producer, or to
 use a name under a suitable Special-Use Domain Name [@!RFC6761].
 
 Catalog zones on secondary nameservers would have to be setup manually, perhaps
-as static configuration, similar to how ordinary DNS zones are configured.
+as static configuration, similar to how ordinary DNS zones are configured when catalog zones or another automatic configuration mechanism is not in place.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
 
 Operators of catalog consumers should note that secondary name servers may
