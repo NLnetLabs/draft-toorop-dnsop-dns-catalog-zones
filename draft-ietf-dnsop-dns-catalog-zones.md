@@ -211,9 +211,8 @@ querying via recursive resolvers.
 Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
 Catalog consumers SHOULD ignore properties they do not understand.
 
-Properties have a name combined with an associated RR type.
-Properties that have a name known to a catalog consumer, but the wrong RR type,
-SHOULD be ignored.
+Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node, with type(s) as appropriate for the respective property.
+Record sets that appear at a property owner name known to the catalog consumer but with an unknown RR type, SHOULD be ignored by the consumer.
 
 Known properties with the correct RR type, but which are for some reason
 invalid (for example because of an impossible value or because of an illegal
