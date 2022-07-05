@@ -218,8 +218,8 @@ querying via recursive resolvers.
 
 Catalog zone information is stored in the form of "properties".
 As catalog consumers SHOULD ignore any RR in the catalog zone which is
-meaningless or useless to the implementation, they also SHOULD ignore
-properties they do not understand.
+meaningless or useless to the implementation (see (#description)), they SHOULD
+ignore properties they do not understand.
 
 Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node, with type(s) as appropriate for the respective property.
 Record sets that appear at a property owner name known to the catalog consumer but with an unknown RR type, SHOULD be ignored by the consumer.
@@ -307,28 +307,32 @@ The exact handling of configuration referred to by the `group` property value is
 The property is defined by a TXT record in the sub-node labelled `group`.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
-The producer MUST NOT assign more than one `group` property to one member zone.
+The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Consumer operators SHOULD namespace their group properties to limit risk of clashes.
 
-The consumer MUST ignore either all or none of the `group` properties in a catalog zone.
+The consumer MUST ignore `group` property values it does not understand.
 
-The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
-The consumer MUST interpret the value case-sensitively.
-
-A `group` property with an invalid value or a `group` property with more than one record in the RRset, denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
-The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
+When a consumer sees multiple values in a `group` property of a single member
+zone that it *does* understand, it MAY choose to process multiple, any one or
+none of them.
+This is left to the implementation.
 
 #### Example
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    sign-with-nsec3
+group.<unique-1>.zones.$CATZ  0 IN TXT    nodnssec
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    nodnssec
+group.<unique-2>.zones.$CATZ  0 IN TXT    operator-x-sign-with-nsec3
+group.<unique-2>.zones.$CATZ  0 IN TXT    operator-y-nsec3
+
 ```
 
-In this case, the consumer might be implemented and configured in the way that the member zones with "nodnssec" group assigned will not be signed with DNSSEC, and the zones with "sign-with-nsec3" group assigned will be signed with DNSSEC with NSEC3 chain.
+The catalog zone (snippet) above is an example where the producer signals how the consumer(s) shall treat DNSSEC for the zones "example.net." and "example.com."
 
-By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.
+For "example.com.", the consumer might be implemented and configured in the way that the member zone will not be signed with DNSSEC.
+For "example.net.", the consumers, at two different operators, might be implemented and configured in the way that the member zone will be signed with a NSEC3 chain.
+
 
 ## Custom Properties (`*.ext` properties) {#customproperties}
 
@@ -726,3 +730,5 @@ hackathon at the IETF-109.
 > All invalid properties cause a broken catalog zone, including invalid `group` and `version` properties.
 
 > Add Aram Sargsyan as author (he did the BIND9 implementation)
+
+> `group` properties can have more than one value
