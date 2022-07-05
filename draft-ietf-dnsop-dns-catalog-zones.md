@@ -723,3 +723,5 @@ hackathon at the IETF-109.
 > All invalid properties cause a broken catalog zone, including invalid `group` and `version` properties.
 
 > Add Aram Sargsyan as author (he did the BIND9 implementation)
+
+> `group` properties can have more than one value
