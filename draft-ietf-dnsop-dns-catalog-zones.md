@@ -308,7 +308,12 @@ The producer MAY assign a `group` property to all, some, or none of the member z
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
 Consumer operators SHOULD namespace their group properties to limit risk of clashes.
 
-The consumer MUST ignore `group` properties it does not understand.
+The consumer MUST ignore `group` propertie values it does not understand.
+
+When a consumer sees multiple values in a `group` property of a single member
+zone that it *does* understand, it MAY choose to process multiple, any one or
+none of them.
+This is left to the implementation.
 
 #### Example
 
