@@ -305,7 +305,7 @@ The exact handling of configuration referred to by the `group` property value is
 The property is defined by a TXT record in the sub-node labelled `group`.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
-The producer MAY assign morte than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
 Consumer operators SHOULD namespace their group properties to limit risk of clashes.
 
 The consumer MUST ignore `group` properties it does not understand.
@@ -321,10 +321,10 @@ group.<unique-2>.zones.$CATZ  0 IN TXT    operator-y-nsec3
 
 ```
 
-The catalog zone (snippet) above is an example where the producer signals how the consumer(s) shall treat DNSSEC for the zones example.net. and example.com.
+The catalog zone (snippet) above is an example where the producer signals how the consumer(s) shall treat DNSSEC for the zones "example.net." and "example.com."
 
-For example.com., the consumer might be implemented and configured in the way that the member zone will not be signed with DNSSEC.
-For example.net., the consumers, at two different operators, might be implemented and configured in the way that the member zone will be signed with a NSEC3 chain.
+For "example.com.", the consumer might be implemented and configured in the way that the member zone will not be signed with DNSSEC.
+For "example.net.", the consumers, at two different operators, might be implemented and configured in the way that the member zone will be signed with a NSEC3 chain.
 
 
 ## Custom Properties (`*.ext` properties) {#customproperties}
