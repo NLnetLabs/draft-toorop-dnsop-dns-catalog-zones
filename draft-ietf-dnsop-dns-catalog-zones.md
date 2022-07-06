@@ -376,8 +376,8 @@ changes to the catalog within the running nameserver automatically without any
 manual intervention.
 
 Nameservers MAY allow loading and transfer of broken zones with incorrect
-catalog zone syntax as they are treated as regular zones (see
-(#generalrequirements)).
+catalog zone syntax (as they are treated as regular zones).
+The reason a catalog zone is considered broken SHOULD always be communicated clearly to the operator (e.g. through a log message).
 
 When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
