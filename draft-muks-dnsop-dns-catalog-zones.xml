@@ -403,7 +403,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           <section title="Zone Properties Specific to a Member Zone">
 
             <t>Default zone properties can be overridden on a per-zone basis by
-            specifying the property under the the sub-domain associated with the
+            specifying the property under the sub-domain associated with the
             member zone in the list of zones, e.g.:</t>
 
             <figure>
