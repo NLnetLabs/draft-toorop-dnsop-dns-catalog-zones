@@ -208,7 +208,7 @@ querying via recursive resolvers and therefore a value of zero (0) is
 RECOMMENDED.
 
 Each RRSet of catalog zone, with the exception of zone apex, SHOULD consist of just one RR. It's acceptable to generate owner names with the help of
-sufficiently strong hash function, with small probablity that unrelated records fall within the same RRSet.
+sufficiently strong hash function, with small probability that unrelated records fall within the same RRSet.
 
 # Nameserver Behavior {#behavior}
 
