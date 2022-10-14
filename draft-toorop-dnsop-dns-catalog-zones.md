@@ -328,7 +328,7 @@ syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
 Thanks to Brian Conry, Tony Finch, Evan Hunt, Patrik Lundin, Victoria Risk and
-Carsten Strettman for reviewing draft proposals and offering comments and
+Carsten Strotmann for reviewing draft proposals and offering comments and
 suggestions.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
