@@ -214,7 +214,7 @@ please see http://xml.resource.org/authoring/README.html. -->
           from a catalog zone a value of zero (0) is RECOMMENDED.</t>
 
           <t>Since there is no requirement to be able to query the catalog zone
-          via recursive namservers the NS records at the apex will not be used
+          via recursive nameservers the NS records at the apex will not be used
           and no parent delegation is required.  However, they are still
           required so that catalog zones are syntactically correct DNS zones.
           Any valid DNS name can be used in the NSDNAME field of such NS records
