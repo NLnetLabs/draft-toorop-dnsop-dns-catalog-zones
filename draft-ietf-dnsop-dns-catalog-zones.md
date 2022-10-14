@@ -133,12 +133,12 @@ Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
 
 Member node
-: The DNS name in the Catalog zone representing a Member zone.
+: The DNS name in the Catalog zone represents a Member zone.
 
 `$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself.
-  `$OLDCATZ` and `$NEWCATZ` are used to discuss migration a member zone from one catalog zone `$OLDCATZ` to another catalog zone `$NEWCATZ`.
+  `$OLDCATZ` and `$NEWCATZ` are used to discuss migration of a member zone from one catalog zone `$OLDCATZ` to another catalog zone `$NEWCATZ`.
 
 Catalog producer
 : An entity that generates and is responsible for the contents of the catalog zone.
@@ -153,7 +153,7 @@ A catalog zone is a DNS zone whose contents are specially crafted. Its records p
 
 Catalog consumers SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
-Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.
+Authoritative servers may be pre configured with multiple catalog zones, each associated with a different set of configurations.
 
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
@@ -167,7 +167,7 @@ The content of catalog zones may not be accessible from any recursive nameserver
 ## SOA and NS Records
 
 As with any other DNS zone, a catalog zone MUST have a syntactically correct
-SOA record and at least one NS record at its apex.
+SOA record and at least one NS records at its apex.
 
 The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields [@!RFC1035] are used
 during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
@@ -284,23 +284,23 @@ coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 The PTR RRset MUST consist of a single PTR record.
 More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see (#generalrequirements)).
 
-When a consumer of catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ`, it does *not* migrate the member zone immediately.
+When a consumer of a catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ`, it does *not* migrate the member zone immediately.
 The migration has to wait for an update of `$NEWCATZ`. in which the member zone is present. The consumer MUST verify, before the actual migration, that `coo` property pointing to `$NEWCATZ` is still present in `$OLDCATZ`.
 
-Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated state for a just migrated zone MUST be reset (see (#zonereset)).
+Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated states for a just migrated zone MUST be reset (see (#zonereset)).
 Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
-To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the assosiated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
+To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the associated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
 
 ### Groups (`group` property)
 
-With a `group` property, consumer(s) can be signalled to treat some member zones within the catalog zone differently.
+With a `group` property, consumer(s) can be signaled to treat some member zones within the catalog zone differently.
 
 The consumer MAY apply different configuration options when processing member zones, based on the value of the `group` property.
 The exact handling of configuration referred to by the `group` property value is left to the consumer's implementation and configuration.
-The property is defined by a TXT record in the sub-node labelled `group`.
+The property is defined by a TXT record in the sub-node labeled `group`.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
@@ -418,7 +418,7 @@ When via a single update or transfer, the member node's label value (`<unique-N>
 ## Migrating member zones between catalogs {#zonemigration}
 
 If all consumers of the catalog zones involved support the `coo` property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in (#cooproperty).
-Otherwise a migration of member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
+Otherwise a migration of a member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
 
 If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` yet (because of a lost packet or down time or otherwise), but did already see the update of `$NEWCATZ`, they may consider the update adding the member zone in `$NEWCATZ` to be a name clash (see (#nameclash)) and as a consequence the member is not migrated to `$NEWCATZ`.
 This possibility needs to be anticipated with a member zone migration.
@@ -489,12 +489,12 @@ It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
 
 As with regular zones, primary and secondary nameservers for a catalog zone may
 be operated by different administrators.  The secondary nameservers may be
-configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
+configured as a catalog consumer to synchronize catalog zones from the primary, but the primary's
 administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
-With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
+With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all associated states with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
 
 # Acknowledgements
@@ -508,7 +508,7 @@ evaluated at ISC for easy zone management.  The chosen method of storing the
 catalog as a regular DNS zone was proposed by Stephen Morris.
 
 The initial authors discovered that Paul Vixie's earlier [@Metazones] proposal
-implemented a similar approach and reviewed it.  Catalog zones borrows some
+implemented a similar approach and reviewed it.  Catalog zones borrow some
 syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.
 
@@ -563,7 +563,7 @@ Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Sha
 In the following implementation status descriptions, "DNS Catalog Zones" refers
 to DNS Catalog Zones as described in this document.
 
-* Knot DNS 3.1 (released August 2, 2021) supports full producing and consuming of catalog zones, including the group property.
+* Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.
 
 * PowerDNS has a proof of concept external program called
   [PowerCATZ](https://github.com/PowerDNS/powercatz/), that can process DNS
