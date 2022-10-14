@@ -289,7 +289,7 @@ The migration has to wait for an update of `$NEWCATZ`. in which the member zone 
 
 Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated state for a just migrated zone MUST be reset (see (#zonereset)).
 Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
-To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the assosiated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
+To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the associated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
 
 The old owner may remove the member zone containing the `coo` property from `$OLDCATZ` once it has been established that all its consumers have processed the Change of Ownership.
 
