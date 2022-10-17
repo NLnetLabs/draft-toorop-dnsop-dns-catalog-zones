@@ -153,7 +153,7 @@ A catalog zone is a DNS zone whose contents are specially crafted. Its records p
 
 Catalog consumers SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
-Authoritative servers may be pre configured with multiple catalog zones, each associated with a different set of configurations.
+Authoritative servers may be pre-configured with multiple catalog zones, each associated with a different set of configurations.
 
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
@@ -167,7 +167,7 @@ The content of catalog zones may not be accessible from any recursive nameserver
 ## SOA and NS Records
 
 As with any other DNS zone, a catalog zone MUST have a syntactically correct
-SOA record and at least one NS records at its apex.
+SOA record and at least one NS record at its apex.
 
 The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields [@!RFC1035] are used
 during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
@@ -287,7 +287,7 @@ More than one record in the RRset denotes a broken catalog zone which MUST NOT b
 When a consumer of a catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ`, it does *not* migrate the member zone immediately.
 The migration has to wait for an update of `$NEWCATZ`. in which the member zone is present. The consumer MUST verify, before the actual migration, that `coo` property pointing to `$NEWCATZ` is still present in `$OLDCATZ`.
 
-Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all associated states for a just migrated zone MUST be reset (see (#zonereset)).
+Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all its associated state for a just migrated zone MUST be reset (see (#zonereset)).
 Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
 To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the associated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
 
@@ -494,7 +494,7 @@ administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
 
-With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all associated states with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
+With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all its associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
 
 # Acknowledgements
