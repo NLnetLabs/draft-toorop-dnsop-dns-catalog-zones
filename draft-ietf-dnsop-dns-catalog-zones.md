@@ -133,7 +133,7 @@ Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
 
 Member node
-: The DNS name in the Catalog zone represents a Member zone.
+: A DNS name in the Catalog zone representing a Member zone.
 
 `$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
