@@ -330,7 +330,7 @@ Implementations and operators of catalog zones may choose to provide their own p
 Custom properties can occur both globally, or for a specific member zone.
 To prevent a name clash with future properties, such properties MUST be represented below the label `ext`.
 
-`ext` is not a placeholder, so a custom property would have domain names as follows:
+`ext` is not a placeholder. A custom property is named as follows:
 
 ```
 ; a global custom property:
