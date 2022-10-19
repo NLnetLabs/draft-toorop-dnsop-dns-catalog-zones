@@ -166,8 +166,7 @@ The content of catalog zones may not be accessible from any recursive nameserver
 
 ## SOA and NS Records
 
-As with any other DNS zone, a catalog zone MUST have a syntactically correct
-SOA record and at least one NS record at its apex.
+As with any other DNS zone, a catalog zone MUST have a SOA record and at least one NS record at its apex.
 
 The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields [@!RFC1035] are used
 during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
@@ -176,8 +175,7 @@ defined in [@!RFC1982].  Otherwise, catalog consumers might not notice
 updates to the catalog zone's contents.
 
 There is no requirement to be able to query the catalog zone via recursive nameservers.
-Catalog consumers MUST ignore NS record at apex.
-However, at least one is still required so that catalog zones are syntactically correct DNS zones.
+However, at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
 ## Member Zones {#listofmemberzones}
@@ -216,12 +214,8 @@ querying via recursive resolvers.
 ## Properties
 
 Catalog zone information is stored in the form of "properties".
-As catalog consumers MUST ignore any RR in the catalog zone which is
-meaningless or useless to the implementation (see (#description)), they MUST
-ignore properties they do not understand.
 
 Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node, with type(s) as appropriate for the respective property.
-Record sets that appear at a property owner name known to the catalog consumer but with an unknown RR type, MUST be ignored by the consumer.
 
 Known properties with the correct RR type, but which are for some reason
 invalid (for example because of an impossible value or because of an illegal
@@ -265,7 +259,7 @@ the implementation first found in BIND 9.11.
 ## Member Zone Properties {#properties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
-These properties are completely optional and catalog consumers MUST ignore those it does not understand.
+The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
 Member zone properties are represented by RRsets below the corresponding member node.
 
 ### Change of Ownership (`coo` property) {#cooproperty}
@@ -334,7 +328,7 @@ For "example.net.", the consumers, at two different operators, might be implemen
 
 Implementations and operators of catalog zones may choose to provide their own properties.
 Custom properties can occur both globally, or for a specific member zone.
-To prevent a name clash with future properties, such properties should be represented below the label `ext`.
+To prevent a name clash with future properties, such properties MUST be represented below the label `ext`.
 
 `ext` is not a placeholder, so a custom property would have domain names as follows:
 
@@ -360,7 +354,6 @@ then overriding them using a property of the same name on the member level (= un
 A property description should clearly say what semantics apply, and whether a property is global, member, or both.
 
 The meaning of the custom properties described in this section is determined by the implementation alone, without expectation of interoperability.
-A catalog consumer MUST ignore custom properties it does not understand.
 
 
 # Nameserver Behavior {#behavior}
