@@ -133,7 +133,7 @@ Member zone
 : A DNS zone whose configuration is published inside a catalog zone.
 
 Member node
-: The DNS name in the Catalog zone represents a Member zone.
+: A DNS name in the Catalog zone representing a Member zone.
 
 `$CATZ`
 : Used in examples as a placeholder to represent the domain name of the
@@ -151,7 +151,7 @@ Catalog consumer
 
 A catalog zone is a DNS zone whose contents are specially crafted. Its records primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
 
-Catalog consumers SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.
+Catalog consumers MUST ignore any RR in the catalog zone which is meaningless or useless to the implementation.
 
 Authoritative servers may be pre-configured with multiple catalog zones, each associated with a different set of configurations.
 
@@ -166,8 +166,7 @@ The content of catalog zones may not be accessible from any recursive nameserver
 
 ## SOA and NS Records
 
-As with any other DNS zone, a catalog zone MUST have a syntactically correct
-SOA record and at least one NS record at its apex.
+As with any other DNS zone, a catalog zone MUST have a SOA record and at least one NS record at its apex.
 
 The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields [@!RFC1035] are used
 during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
@@ -176,8 +175,7 @@ defined in [@!RFC1982].  Otherwise, catalog consumers might not notice
 updates to the catalog zone's contents.
 
 There is no requirement to be able to query the catalog zone via recursive nameservers.
-Catalog consumers SHOULD ignore NS record at apex.
-However, at least one is still required so that catalog zones are syntactically correct DNS zones.
+However, at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
 ## Member Zones {#listofmemberzones}
@@ -216,12 +214,8 @@ querying via recursive resolvers.
 ## Properties
 
 Catalog zone information is stored in the form of "properties".
-As catalog consumers SHOULD ignore any RR in the catalog zone which is
-meaningless or useless to the implementation (see (#description)), they SHOULD
-ignore properties they do not understand.
 
 Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node, with type(s) as appropriate for the respective property.
-Record sets that appear at a property owner name known to the catalog consumer but with an unknown RR type, SHOULD be ignored by the consumer.
 
 Known properties with the correct RR type, but which are for some reason
 invalid (for example because of an impossible value or because of an illegal
@@ -265,7 +259,7 @@ the implementation first found in BIND 9.11.
 ## Member Zone Properties {#properties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
-These properties are completely optional and catalog consumers SHOULD ignore those it does not understand.
+The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
 Member zone properties are represented by RRsets below the corresponding member node.
 
 ### Change of Ownership (`coo` property) {#cooproperty}
@@ -334,9 +328,9 @@ For "example.net.", the consumers, at two different operators, might be implemen
 
 Implementations and operators of catalog zones may choose to provide their own properties.
 Custom properties can occur both globally, or for a specific member zone.
-To prevent a name clash with future properties, such properties should be represented below the label `ext`.
+To prevent a name clash with future properties, such properties MUST be represented below the label `ext`.
 
-`ext` is not a placeholder, so a custom property would have domains names as follows:
+`ext` is not a placeholder. A custom property is named as follows:
 
 ```
 ; a global custom property:
@@ -360,7 +354,6 @@ then overriding them using a property of the same name on the member level (= un
 A property description should clearly say what semantics apply, and whether a property is global, member, or both.
 
 The meaning of the custom properties described in this section is determined by the implementation alone, without expectation of interoperability.
-A catalog consumer SHOULD ignore custom properties it does not understand.
 
 
 # Nameserver Behavior {#behavior}
@@ -437,12 +430,12 @@ Although any valid domain name can be used for the catalog name $CATZ, it is
 RECOMMENDED to use either a domain name owned by the catalog producer, or to
 use a name under a suitable Special-Use Domain Name [@!RFC6761].
 
-Catalog zones on secondary nameservers would have to be setup manually, perhaps
+Catalog zones on secondary nameservers would have to be set up manually, perhaps
 as static configuration, similar to how ordinary DNS zones are configured when catalog zones or another automatic configuration mechanism is not in place.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
 
 Operators of catalog consumers should note that secondary name servers may
-receive DNS NOTIFY messages [@!RFC1996] for zones before they are seen as a
+receive DNS NOTIFY messages [@!RFC1996] for zones before they are seen as
 newly added member zones to the catalog from which that secondary is
 provisioned.
 
@@ -516,7 +509,7 @@ Thanks to Leo Vandewoestijne. Leo's presentation in the DNS devroom at the
 FOSDEM'20 [@FOSDEM20] was one of the motivations to take up and continue the
 effort of standardizing catalog zones.
 
-Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Patrik Lundin, Matthijs Mekking, Victoria Risk, Petr Spacek and Carsten Strotmann for reviewing draft proposals and offering comments and suggestions.
+Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Patrik Lundin, Matthijs Mekking, Victoria Risk, Josh Soref, Petr Spacek, Michael StJohns, Carsten Strotmann and Tim Wicinski for reviewing draft proposals and offering comments and suggestions.
 
 <reference anchor="FIPS.180-4.2015" target="http://csrc.nist.gov/publications/fips/fips180-4/fips-180-4.pdf">
   <front>
@@ -565,9 +558,7 @@ to DNS Catalog Zones as described in this document.
 
 * Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.
 
-* PowerDNS has a proof of concept external program called
-  [PowerCATZ](https://github.com/PowerDNS/powercatz/), that can process DNS
-  Catalog Zones.
+* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones.
 
 * Proof of concept [python scripts](https://github.com/IETF-Hackathon/NSDCatZ)
   that can be used for both generating and consuming DNS Catalog Zones with NSD
@@ -728,3 +719,13 @@ hackathon at the IETF-109.
 > Add Aram Sargsyan as author (he did the BIND9 implementation)
 
 > `group` properties can have more than one value
+
+* draft-toorop-dnsop-dns-catalog-zones-07
+
+> Some spelling fixes from Tim Wicinski and Josh Soref 
+
+> Replace SHOULDs with MUSTs for ignoring things that are meaningless to a catalog consumer (Thanks Michael StJohns)
+
+> Update the list of people to thank in the Acknowledgements section
+
+> Mention PowerDNS support of catalog zones from version 4.7.0 onwards
