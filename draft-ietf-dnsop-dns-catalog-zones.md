@@ -484,7 +484,7 @@ and all the affected domains may be offline in a blink.
 
 As catalog zones are transmitted using DNS zone transfers,
 it is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication,
-for example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS [@!RFC9103].
+for example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS or QUIC [@!RFC9103,@!RFC9250].
 
 Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD similarly be authenticated.
 
@@ -494,7 +494,7 @@ However, key identifiers may be shared within catalog zones.
 
 Catalog zones reveal the zones served by the consumers of the catalog zone.
 It is RECOMMENDED to limit the systems able to query these zones.
-It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103].
+It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103,@!RFC9250].
 
 As with regular zones, primary and secondary nameservers for a catalog zone may
 be operated by different administrators.  The secondary nameservers may be
@@ -753,3 +753,5 @@ hackathon at the IETF-109.
 * draft-toorop-dnsop-dns-catalog-zones-08
 
 > Address AD Review comments (editorial only)
+
+> When DoT is mentioned, also mention now-standardized DoQ
