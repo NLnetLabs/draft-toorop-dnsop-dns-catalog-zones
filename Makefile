@@ -1,4 +1,4 @@
-VERSION = 07
+VERSION = 08
 DOCNAME = draft-ietf-dnsop-dns-catalog-zones
 today := $(shell TZ=UTC date +%Y-%m-%dT00:00:00Z)
 
