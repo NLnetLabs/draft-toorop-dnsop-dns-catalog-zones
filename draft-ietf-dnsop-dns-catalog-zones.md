@@ -334,8 +334,8 @@ group.<unique-2>.zones.$CATZ  0 IN TXT    operator-y-nsec3
 In this scenario, consumer(s) shall not sign the member zone "example.com." with
 DNSSEC.
 For "example.net.", the consumers, at two different operators, shall configure
-the member zone to be signed with a NSEC3 chain.  The group value that indicates
-that depends on what's agreed with each operator ("operator-x-sign-with-nsec3"
+the member zone to be signed with an NSEC3 chain.  The group value that indicates
+that depends on what has been agreed with each operator ("operator-x-sign-with-nsec3"
 vs. "operator-y-nsec").
 
 
