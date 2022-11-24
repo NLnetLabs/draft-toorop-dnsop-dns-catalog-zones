@@ -442,8 +442,8 @@ A zone state reset may be performed by a change of the member node's name (see (
 
 # Implementation and operational Notes {#implementationnotes}
 
-Although any valid domain name can be used for the catalog name $CATZ, it is
-RECOMMENDED to use either a domain name controlled by the catalog producer, or
+Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer. It is
+RECOMMENDED to use either a domain name owned by the catalog producer, or
 to use a name under a suitable name such as "invalid." [@!RFC6761].
 
 Catalog zones on secondary nameservers would have to be set up manually, perhaps
