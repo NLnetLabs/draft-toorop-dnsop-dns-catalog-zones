@@ -11,16 +11,17 @@
 <meta content="Willem Toorop" name="author">
 <meta content="Kees Monshouwer" name="author">
 <meta content="Peter Thomassen" name="author">
+<meta content="Aram Sargsyan" name="author">
 <meta content="
        This document describes a method for automatic DNS zone provisioning among DNS
 primary and secondary nameservers by storing and transferring the catalog of
 zones to be provisioned as one or more regular DNS zones. 
     " name="description">
 <meta content="xml2rfc 3.12.2" name="generator">
-<meta content="draft-ietf-dnsop-dns-catalog-zones-06" name="ietf.draft">
+<meta content="draft-ietf-dnsop-dns-catalog-zones-08" name="ietf.draft">
 <!-- Generator version information:
   xml2rfc 3.12.2
-    Python 3.10.4
+    Python 3.10.6
     weasyprint 54.1
 -->
 <link href="draft-ietf-dnsop-dns-catalog-zones.xml" rel="alternate" type="application/rfc+xml">
@@ -1183,11 +1184,11 @@ li > p:last-of-type {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">dns-catalog-zones</td>
-<td class="right">June 2022</td>
+<td class="right">November 2022</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">van Dijk, et al.</td>
-<td class="center">Expires 15 December 2022</td>
+<td class="center">Expires 28 May 2023</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1197,15 +1198,15 @@ li > p:last-of-type {
 <dt class="label-workgroup">Workgroup:</dt>
 <dd class="workgroup">DNSOP Working Group</dd>
 <dt class="label-internet-draft">Internet-Draft:</dt>
-<dd class="internet-draft">draft-ietf-dnsop-dns-catalog-zones-06</dd>
+<dd class="internet-draft">draft-ietf-dnsop-dns-catalog-zones-08</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-06-13" class="published">13 June 2022</time>
+<time datetime="2022-11-24" class="published">24 November 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-12-15">15 December 2022</time></dd>
+<dd class="expires"><time datetime="2023-05-28">28 May 2023</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1230,6 +1231,10 @@ li > p:last-of-type {
 <div class="author">
       <div class="author-name">P. Thomassen</div>
 <div class="org">deSEC, SSE - Secure Systems Engineering</div>
+</div>
+<div class="author">
+      <div class="author-name">A. Sargsyan</div>
+<div class="org">Internet Systems Consortium</div>
 </div>
 </dd>
 </dl>
@@ -1260,7 +1265,7 @@ zones to be provisioned as one or more regular DNS zones.<a href="#section-abstr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 15 December 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 May 2023.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1392,14 +1397,14 @@ nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>) is not automatically synchronized
 with the secondaries.  To add or remove a zone, the administrator of a DNS
 nameserver farm not only has to add or remove the zone from the primary, they
-must also add/remove the zone from all secondaries, either manually or via an
-external application.  This can be both inconvenient and error-prone; it is
-also dependent on the nameserver implementation.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">This document describes a method in which the catalog is represented as a
+must also add/remove configuration for the zone from all secondaries.  This
+can be both inconvenient and error-prone; in addition, the steps required are
+dependent on the nameserver implementation.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document describes a method in which the list of zones is represented as a
 regular DNS zone (called a "catalog zone" here), and transferred using DNS zone
-transfers.  As zones are added to or removed from the catalog zone, these changes
-are distributed to the secondary nameservers in the normal way.  The secondary
-nameservers then add/remove/modify the zones they serve in accordance with the
+transfers.  When entries are added to or removed from the catalog zone, it is
+distributed to the secondary nameservers just like any other zone.  Secondary
+nameservers can then add/remove/modify the zones they serve in accordance with the
 changes to the catalog zone. Other use-cases of nameserver remote configuration
 by catalog zones are possible, where the catalog consumer might not be a
 secondary.<a href="#section-1-2" class="pilcrow">¶</a></p>
@@ -1426,13 +1431,13 @@ capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.5">Member node</dt>
-        <dd style="margin-left: 1.5em" id="section-2-2.6">The DNS name in the Catalog zone representing a Member zone.<a href="#section-2-2.6" class="pilcrow">¶</a>
+        <dd style="margin-left: 1.5em" id="section-2-2.6">A DNS name in the Catalog zone representing a Member zone.<a href="#section-2-2.6" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.7"><code>$CATZ</code></dt>
         <dd style="margin-left: 1.5em" id="section-2-2.8">Used in examples as a placeholder to represent the domain name of the
 catalog zone itself.
-<code>$OLDCATZ</code> and <code>$NEWCATZ</code> are used to discuss migration a member zone from one catalog zone <code>$OLDCATZ</code> to another catalog zone <code>$NEWCATZ</code>.<a href="#section-2-2.8" class="pilcrow">¶</a>
+<code>$OLDCATZ</code> and <code>$NEWCATZ</code> are used to discuss migration of a member zone from one catalog zone <code>$OLDCATZ</code> to another catalog zone <code>$NEWCATZ</code>.<a href="#section-2-2.8" class="pilcrow">¶</a>
 </dd>
         <dd class="break"></dd>
 <dt id="section-2-2.9">Catalog producer</dt>
@@ -1453,8 +1458,8 @@ server that configures itself according to the catalog zone's contents).<a href=
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-description" class="section-name selfRef">Description</a>
       </h2>
 <p id="section-3-1">A catalog zone is a DNS zone whose contents are specially crafted. Its records primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<p id="section-3-2">Catalog consumers SHOULD ignore any RR in the catalog zone which is meaningless or useless to the implementation.<a href="#section-3-2" class="pilcrow">¶</a></p>
-<p id="section-3-3">Authoritative servers may be preconfigured with multiple catalog zones, each associated with a different set of configurations.<a href="#section-3-3" class="pilcrow">¶</a></p>
+<p id="section-3-2">Catalog consumers MUST ignore any RR in the catalog zone which is meaningless to or otherwise not supported by the implementation.<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">Authoritative servers may be pre-configured with multiple catalog zones, each associated with a different set of configurations.<a href="#section-3-3" class="pilcrow">¶</a></p>
 <p id="section-3-4">Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
 standards for such zones.<a href="#section-3-4" class="pilcrow">¶</a></p>
@@ -1472,16 +1477,13 @@ The content of catalog zones may not be accessible from any recursive nameserver
         <h3 id="name-soa-and-ns-records">
 <a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-soa-and-ns-records" class="section-name selfRef">SOA and NS Records</a>
         </h3>
-<p id="section-4.1-1">As with any other DNS zone, a catalog zone MUST have a syntactically correct
-SOA record and at least one NS record at its apex.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">The SOA record's SERIAL, REFRESH, RETRY and EXPIRE fields <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span> are used
-during zone transfer.  A catalog zone's SOA SERIAL field MUST increase when an
+<p id="section-4.1-1">As with any other DNS zone, a catalog zone MUST have a SOA record and at least one NS record at its apex.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">A catalog zone's SOA SERIAL field MUST increase when an
 update is made to the catalog zone's contents as per serial number arithmetic
 defined in <span>[<a href="#RFC1982" class="xref">RFC1982</a>]</span>.  Otherwise, catalog consumers might not notice
 updates to the catalog zone's contents.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">There is no requirement to be able to query the catalog zone via recursive nameservers.
-Catalog consumers MUST ignore and MUST NOT assume or require NS records at the apex.
-However, at least one is still required so that catalog zones are syntactically correct DNS zones.
+However, at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED <span>[<a href="#RFC2606" class="xref">RFC2606</a>]</span><span>[<a href="#RFC6761" class="xref">RFC6761</a>]</span>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1493,9 +1495,7 @@ A single NS RR with a NSDNAME field containing the absolute name "invalid." is R
 <p id="section-4.2-1">The list of member zones is specified as a collection of member nodes, represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.2-2">The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length <span>[<a href="#RFC1035" class="xref">RFC1035</a>]</span>.
 This PTR record MUST be the only record in the PTR RRset with the same name.
-More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).
-A clear error message stating that more than one PTR in the RRset caused the
-broken catalog, with the owner name of that RRset, MUST be logged.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+The presence of more than one record in the RRset indicates a broken catalog zone which MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).<a href="#section-4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.2-3">For example, if a catalog zone lists three zones "example.com.",
 "example.net." and "example.org.", the member node RRs would appear as follows:<a href="#section-4.2-3" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.2-4">
@@ -1506,14 +1506,14 @@ broken catalog, with the owner name of that RRset, MUST be logged.<a href="#sect
 </div>
 <p id="section-4.2-5">where <code>&lt;unique-N&gt;</code> is a label that tags each record in the collection.
 <code>&lt;unique-N&gt;</code> has an unique value in the collection.
-When different <code>&lt;unique-N&gt;</code> labels have the same value, the catalog zone is broken and MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+When different <code>&lt;unique-N&gt;</code> labels hold the same PTR value (i.e. point to the same member zone), the catalog zone is broken and MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).<a href="#section-4.2-5" class="pilcrow">¶</a></p>
 <p id="section-4.2-6">Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see <a href="#zonereset" class="xref">Section 5.6</a>).<a href="#section-4.2-6" class="pilcrow">¶</a></p>
 <p id="section-4.2-7">Having the zones uniquely tagged with the <code>&lt;unique-N&gt;</code> label ensures that additional RRs can be added below the member node (see <a href="#properties" class="xref">Section 4.3</a>).<a href="#section-4.2-7" class="pilcrow">¶</a></p>
 <p id="section-4.2-8">The CLASS field of every RR in a catalog zone MUST be IN (1).<a href="#section-4.2-8" class="pilcrow">¶</a></p>
-<p id="section-4.2-9">The TTL field's value is not defined by this memo.  Catalog zones are
-for authoritative nameserver management only and are not intended for general
-querying via recursive resolvers.<a href="#section-4.2-9" class="pilcrow">¶</a></p>
+<p id="section-4.2-9">As catalog zones are for authoritative nameserver management only and are not
+intended for general querying via recursive resolvers, the TTL field's value
+has no meaning in this context and SHOULD be ignored.<a href="#section-4.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="properties">
@@ -1521,17 +1521,12 @@ querying via recursive resolvers.<a href="#section-4.2-9" class="pilcrow">¶</a>
         <h3 id="name-properties">
 <a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-properties" class="section-name selfRef">Properties</a>
         </h3>
-<p id="section-4.3-1">Apart from catalog zone metadata stored at the apex (NS, SOA and the like), catalog zone information is stored in the form of "properties".
-Catalog consumers SHOULD ignore properties they do not understand.<a href="#section-4.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.3-2">Properties have a name combined with an associated RR type.
-Properties that have a name known to a catalog consumer, but the wrong RR type,
-SHOULD be ignored.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.3-1">Catalog zone information is stored in the form of "properties".<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3-2">Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node, with type(s) as appropriate for the respective property.<a href="#section-4.3-2" class="pilcrow">¶</a></p>
 <p id="section-4.3-3">Known properties with the correct RR type, but which are for some reason
 invalid (for example because of an impossible value or because of an illegal
-number of RRs in the RRset), denotes a broken catalog zone which MUST NOT be
-processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).
-A clear error message stating which invalid property caused the broken catalog,
-with the reason why it was considered invalid, MUST be logged.<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+number of RRs in the RRset), denote a broken catalog zone which MUST NOT be
+processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).<a href="#section-4.3-3" class="pilcrow">¶</a></p>
 <p id="section-4.3-4">This specification defines a number of so-called properties,
 as well as a mechanism to allow implementers to store additional information in the catalog zone with Custom properties, see <a href="#customproperties" class="xref">Section 4.5</a>.
 The meaning of such custom properties is determined by the implementation in question.<a href="#section-4.3-4" class="pilcrow">¶</a></p>
@@ -1556,9 +1551,7 @@ All catalog zones MUST have a TXT RRset named <code>version.$CATZ</code> with ex
 </li>
           </ul>
 <p id="section-4.3.1-4">These conditions signify a broken catalog zone which MUST NOT be processed (see
-<a href="#generalrequirements" class="xref">Section 5.1</a>).
-A clear error message about the precise condition which cause the catalog zone
-to be broken MUST be logged.<a href="#section-4.3.1-4" class="pilcrow">¶</a></p>
+<a href="#generalrequirements" class="xref">Section 5.1</a>).<a href="#section-4.3.1-4" class="pilcrow">¶</a></p>
 <p id="section-4.3.1-5">For this memo, the value of the <code>version.$CATZ</code> TXT RR MUST be set to "2", i.e.:<a href="#section-4.3.1-5" class="pilcrow">¶</a></p>
 <div id="section-4.3.1-6">
 <pre class="lang-dns-zone sourcecode">version.$CATZ 0 IN TXT "2"
@@ -1576,7 +1569,7 @@ the implementation first found in BIND 9.11.<a href="#section-4.3.1-7" class="pi
 <a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-member-zone-properties" class="section-name selfRef">Member Zone Properties</a>
         </h3>
 <p id="section-4.4-1">Each member zone MAY have one or more additional properties, described in this chapter.
-These properties are completely optional and catalog consumers SHOULD ignore those it does not understand.
+The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them.
 Member zone properties are represented by RRsets below the corresponding member node.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
 <div id="cooproperty">
 <section id="section-4.4.1">
@@ -1585,7 +1578,7 @@ Member zone properties are represented by RRsets below the corresponding member 
           </h4>
 <p id="section-4.4.1-1">The <code>coo</code> property facilitates controlled migration of a member zone from one catalog to another.<a href="#section-4.4.1-1" class="pilcrow">¶</a></p>
 <p id="section-4.4.1-2">A Change Of Ownership is signaled by the <code>coo</code> property in the catalog zone currently "owning" the zone.
-The name of the new catalog is in the value of a PTR record in the old catalog.
+The name of the new catalog is the value of a PTR record in the relevant coo property in the old catalog.
 For example if member "example.com." will migrate from catalog zone <code>$OLDCATZ</code> to catalog zone <code>$NEWCATZ</code>, this appears in the <code>$OLDCATZ</code> catalog zone as follows:<a href="#section-4.4.1-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.4.1-3">
 <pre>&lt;unique-N&gt;.zones.$OLDCATZ 0 IN PTR example.com.
@@ -1593,24 +1586,13 @@ coo.&lt;unique-N&gt;.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 </pre><a href="#section-4.4.1-3" class="pilcrow">¶</a>
 </div>
 <p id="section-4.4.1-4">The PTR RRset MUST consist of a single PTR record.
-More than one record in the RRset denotes a broken catalog zone which MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).
-A clear error message stating which invalid <code>coo</code> property caused the broken
-catalog, with the reason why it was considered invalid, MUST be logged.<a href="#section-4.4.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-5">The <code>coo</code> property can be implemented in a stateless fashion when a certain order in the steps is adhered to:<a href="#section-4.4.1-5" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-4.4.1-6">
-<li id="section-4.4.1-6.1">First the <code>coo</code> property is added to a member zone of <code>$OLDCATZ</code>.
-  Or, instead of adding the <code>coo</code> property, an existing property can also be updated with the new value: <code>$NEWCATZ</code>.<a href="#section-4.4.1-6.1" class="pilcrow">¶</a>
-</li>
-            <li id="section-4.4.1-6.2">Only then the new member zone is added to <code>$NEWCATZ</code>.
-  If a member zone already existed in <code>$NEWCATZ</code> before the <code>coo</code> property was added to <code>$OLDCATZ</code>, then the new member may need to be deleted and then added again to trigger the migration.<a href="#section-4.4.1-6.2" class="pilcrow">¶</a>
-</li>
-          </ol>
-<p id="section-4.4.1-7">This is because a "stateless" consumer may not "know" the <code>&lt;unique-N&gt;</code> label of a member zone in <code>$NEWCATZ</code>, but it does have the <code>&lt;unique-N&gt;</code> associated with configured zone as member of <code>$OLDCATZ</code>.
-Doing the migration in the order described above is RECOMMENDED to facilitate stateless implementations.<a href="#section-4.4.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-8">Unless the member node label (i.e. <code>&lt;unique-N&gt;</code>) for the member is the same in <code>$NEWCATZ</code>, all associated state for a just migrated zone MUST be reset (see <a href="#zonereset" class="xref">Section 5.6</a>).
+The presence of more than one record in the RRset indicates a broken catalog zone which MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).<a href="#section-4.4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-5">When a consumer of a catalog zone <code>$OLDCATZ</code> receives an update which adds or changes a <code>coo</code> property for a member zone in <code>$OLDCATZ</code>, it does <em>not</em> migrate the member zone immediately.
+The migration has to wait for an update of <code>$NEWCATZ</code>. in which the member zone is present. The consumer MUST verify, before the actual migration, that <code>coo</code> property pointing to <code>$NEWCATZ</code> is still present in <code>$OLDCATZ</code>.<a href="#section-4.4.1-5" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-6">Unless the member node label (i.e. <code>&lt;unique-N&gt;</code>) for the member is the same in <code>$NEWCATZ</code>, all its associated state for a just migrated zone MUST be reset (see <a href="#zonereset" class="xref">Section 5.6</a>).
 Note that the owner of <code>$OLDCATZ</code> allows for the zone associated state to be taken over by the owner of <code>$NEWCATZ</code> by default.
-To prevent the takeover, the owner of <code>$OLDCATZ</code> has to enforce a zone state reset by changing the member node label (see <a href="#zonereset" class="xref">Section 5.6</a>) before or simultaneous with adding the <code>coo</code> property. (see also <a href="#security" class="xref">Section 7</a>)<a href="#section-4.4.1-8" class="pilcrow">¶</a></p>
-<p id="section-4.4.1-9">The old owner may remove the member zone containing the <code>coo</code> property from <code>$OLDCATZ</code> once it has been established that all its consumers have processed the Change of Ownership.<a href="#section-4.4.1-9" class="pilcrow">¶</a></p>
+To prevent the takeover of state, the owner of <code>$OLDCATZ</code> must remove this state by updating the associated properties or by performing a zone state reset (see <a href="#zonereset" class="xref">Section 5.6</a>) before or simultaneous with adding the <code>coo</code> property. (see also <a href="#security" class="xref">Section 7</a>)<a href="#section-4.4.1-6" class="pilcrow">¶</a></p>
+<p id="section-4.4.1-7">The old owner may remove the member zone containing the <code>coo</code> property from <code>$OLDCATZ</code> once it has been established that all its consumers have processed the Change of Ownership.<a href="#section-4.4.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="groups-group-property">
@@ -1618,32 +1600,49 @@ To prevent the takeover, the owner of <code>$OLDCATZ</code> has to enforce a zon
           <h4 id="name-groups-group-property">
 <a href="#section-4.4.2" class="section-number selfRef">4.4.2. </a><a href="#name-groups-group-property" class="section-name selfRef">Groups (<code>group</code> property)</a>
           </h4>
-<p id="section-4.4.2-1">With a <code>group</code> property, consumer(s) can be signalled to treat some member zones within the catalog zone differently.<a href="#section-4.4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-1">With a <code>group</code> property, consumer(s) can be signaled to treat some member zones within the catalog zone differently.<a href="#section-4.4.2-1" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-2">The consumer MAY apply different configuration options when processing member zones, based on the value of the <code>group</code> property.
 The exact handling of configuration referred to by the <code>group</code> property value is left to the consumer's implementation and configuration.
-The property is defined by a TXT record in the sub-node labelled <code>group</code>.<a href="#section-4.4.2-2" class="pilcrow">¶</a></p>
+The property is defined by a TXT record in the sub-node labeled <code>group</code>.<a href="#section-4.4.2-2" class="pilcrow">¶</a></p>
 <p id="section-4.4.2-3">The producer MAY assign a <code>group</code> property to all, some, or none of the member zones within a catalog zone.
-The producer MUST NOT assign more than one <code>group</code> property to one member zone.<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-4">The consumer MUST ignore either all or none of the <code>group</code> properties in a catalog zone.<a href="#section-4.4.2-4" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-5">The value of the TXT record MUST be at most 255 octets long and MUST NOT contain whitespace characters.
-The consumer MUST interpret the value case-sensitively.<a href="#section-4.4.2-5" class="pilcrow">¶</a></p>
-<p id="section-4.4.2-6">A <code>group</code> property with an invalid value or a <code>group</code> property with more than one record in the RRset, denotes a broken catalog zone which MUST NOT be processed (see <a href="#generalrequirements" class="xref">Section 5.1</a>).
-A clear error message stating which invalid <code>group</code> property caused the broken
-catalog, with the reason why it was considered invalid, MUST be logged.<a href="#section-4.4.2-6" class="pilcrow">¶</a></p>
+The producer MAY assign more than one <code>group</code> property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Consumer operators SHOULD namespace their group properties to limit risk of clashes.<a href="#section-4.4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-4">The consumer MUST ignore <code>group</code> property values it does not understand.<a href="#section-4.4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.4.2-5">When a consumer sees multiple values in a <code>group</code> property of a single member
+zone that it <em>does</em> understand, it MAY choose to process multiple, any one or
+none of them.
+This is left to the implementation.<a href="#section-4.4.2-5" class="pilcrow">¶</a></p>
 <div id="example">
 <section id="section-4.4.2.1">
             <h5 id="name-example">
 <a href="#section-4.4.2.1" class="section-number selfRef">4.4.2.1. </a><a href="#name-example" class="section-name selfRef">Example</a>
             </h5>
-<div class="alignLeft art-text artwork" id="section-4.4.2.1-1">
+<p id="section-4.4.2.1-1">Group properties are represented by TXT resource records.  The record contents
+(group names) carry no pre-defined meaning, and a registry for them does not
+exist.  Their interpretation is purely a matter of agreement between the
+producer and the consumer of the catalog.<a href="#section-4.4.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.4.2.1-2">For example, the "nodnssec" group could be defined to indicate that a zone not
+be signed with DNSSEC.  Conversely, an agreement could define that group names
+starting with "operator-" indicate in which way a given DNS operator should set
+up certain aspects of the member zone's DNSSEC configuration.<a href="#section-4.4.2.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.4.2.1-3">Assuming that the catalog producer and consumer(s) have established such
+agreements, consider the following catalog zone (snippet) which signals to
+consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":<a href="#section-4.4.2.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.4.2.1-4">
 <pre>&lt;unique-1&gt;.zones.$CATZ        0 IN PTR    example.com.
-group.&lt;unique-1&gt;.zones.$CATZ  0 IN TXT    sign-with-nsec3
+group.&lt;unique-1&gt;.zones.$CATZ  0 IN TXT    nodnssec
 &lt;unique-2&gt;.zones.$CATZ        0 IN PTR    example.net.
-group.&lt;unique-2&gt;.zones.$CATZ  0 IN TXT    nodnssec
-</pre><a href="#section-4.4.2.1-1" class="pilcrow">¶</a>
+group.&lt;unique-2&gt;.zones.$CATZ  0 IN TXT    operator-x-sign-with-nsec3
+group.&lt;unique-2&gt;.zones.$CATZ  0 IN TXT    operator-y-nsec3
+
+</pre><a href="#section-4.4.2.1-4" class="pilcrow">¶</a>
 </div>
-<p id="section-4.4.2.1-2">In this case, the consumer might be implemented and configured in the way that the member zones with "nodnssec" group assigned will not be signed with DNSSEC, and the zones with "sign-with-nsec3" group assigned will be signed with DNSSEC with NSEC3 chain.<a href="#section-4.4.2.1-2" class="pilcrow">¶</a></p>
-<p id="section-4.4.2.1-3">By generating the catalog zone (snippet) above, the producer signals how the consumer shall treat DNSSEC for the zones example.net. and example.com., respectively.<a href="#section-4.4.2.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.4.2.1-5">In this scenario, consumer(s) shall not sign the member zone "example.com." with
+DNSSEC.
+For "example.net.", the consumers, at two different operators, shall configure
+the member zone to be signed with an NSEC3 chain.  The group value that indicates
+that depends on what has been agreed with each operator ("operator-x-sign-with-nsec3"
+vs. "operator-y-nsec").<a href="#section-4.4.2.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1657,27 +1656,27 @@ group.&lt;unique-2&gt;.zones.$CATZ  0 IN TXT    nodnssec
         </h3>
 <p id="section-4.5-1">Implementations and operators of catalog zones may choose to provide their own properties.
 Custom properties can occur both globally, or for a specific member zone.
-To prevent a name clash with future properties, such properties should be represented below the label <code>ext</code>.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
-<p id="section-4.5-2"><code>ext</code> is not a placeholder, so a custom property would have domains names as follows:<a href="#section-4.5-2" class="pilcrow">¶</a></p>
+To prevent a name clash with future properties, such properties MUST be represented below the label <code>ext</code>.<a href="#section-4.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.5-2"><code>ext</code> is not a placeholder. A custom property is named as follows:<a href="#section-4.5-2" class="pilcrow">¶</a></p>
 <div class="alignLeft art-text artwork" id="section-4.5-3">
 <pre>; a global custom property:
-&lt;your-property&gt;.ext.$CATZ
+&lt;property-prefix&gt;.ext.$CATZ
 
 ; a member zone custom property:
-&lt;your-property&gt;.ext.&lt;unique-N&gt;.zones.$CATZ
+&lt;property-prefix&gt;.ext.&lt;unique-N&gt;.zones.$CATZ
 </pre><a href="#section-4.5-3" class="pilcrow">¶</a>
 </div>
-<p id="section-4.5-4"><code>&lt;your-property&gt;</code> may consist of one or more labels.<a href="#section-4.5-4" class="pilcrow">¶</a></p>
+<p id="section-4.5-4"><code>&lt;property-prefix&gt;</code> may consist of one or more labels.<a href="#section-4.5-4" class="pilcrow">¶</a></p>
 <p id="section-4.5-5">Implementations SHOULD namespace their custom properties to limit risk of clashes with other implementations of catalog zones.
-For example by including the name of the implementation in the property, e.g. like: <code>&lt;property-name&gt;.&lt;implementation-name&gt;.ext.$CATZ</code>.<a href="#section-4.5-5" class="pilcrow">¶</a></p>
+This can be achieved by using two labels as the <code>&lt;property-prefix&gt;</code>, so that the
+name of the implementation is included in the prefix: <code>&lt;some-setting&gt;.&lt;implementation-name&gt;.ext.$CATZ</code>.<a href="#section-4.5-5" class="pilcrow">¶</a></p>
 <p id="section-4.5-6">Implementations MAY use such properties on the member zone level to store additional information about member zones,
 for example to flag them for specific treatment.<a href="#section-4.5-6" class="pilcrow">¶</a></p>
 <p id="section-4.5-7">Further, implementations MAY use custom properties on the global level to store additional information about the catalog zone itself.
 While there may be many use cases for this, a plausible one is to store default values for custom properties on the global level,
 then overriding them using a property of the same name on the member level (= under the <code>ext</code> label of the member node) if so desired.
-A property description should clearly say what semantics apply, and whether a property is global, member, or both.<a href="#section-4.5-7" class="pilcrow">¶</a></p>
-<p id="section-4.5-8">The meaning of the custom properties described in this section is determined by the implementation alone, without expectation of interoperability.
-A catalog consumer SHOULD ignore custom properties it does not understand.<a href="#section-4.5-8" class="pilcrow">¶</a></p>
+A property agreement between producer and consumer should clearly define what semantics apply, and whether a property is global, member, or both.<a href="#section-4.5-7" class="pilcrow">¶</a></p>
+<p id="section-4.5-8">The meaning of the custom properties described in this section is determined by the implementation alone, without expectation of interoperability.<a href="#section-4.5-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1700,29 +1699,21 @@ changes to the catalog within the running nameserver automatically without any
 manual intervention.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">Nameservers MAY allow loading and transfer of broken zones with incorrect
 catalog zone syntax (as they are treated as regular zones).
-Catalog consumers MUST ignore broken catalog zones, however a clear error
-message stating the reason why the catalog zone is broken MUST be logged.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+The reason a catalog zone is considered broken SHOULD be communicated clearly to the operator (e.g. through a log message).<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 <p id="section-5.1-4">When a previously correct catalog zone becomes a broken catalog zone, because
 of an update through an incremental transfer or otherwise, it loses its catalog
 meaning.
-No special processing occurs, no previously by this catalog configured member
-are removed or reconfigured in any way.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
-<p id="section-5.1-5">If a name server restarts with a broken catalog zone, the broken catalog should
-not prevent the name server from starting up and serving the member zones in
+No special processing occurs. Member zones previously configured by this catalog
+MUST NOT be removed or reconfigured in any way.<a href="#section-5.1-4" class="pilcrow">¶</a></p>
+<p id="section-5.1-5">If a name server restarts with a broken catalog zone, the broken catalog SHOULD
+NOT prevent the name server from starting up and serving the member zones in
 the last valid version of the catalog zone.<a href="#section-5.1-5" class="pilcrow">¶</a></p>
-<p id="section-5.1-6">Processing of a broken catalog will start (or resume) when the catalog turns
+<p id="section-5.1-6">Processing of a broken catalog SHALL start (or resume) when the catalog turns
 into a correct catalog zone, for example by an additional update (through zone
 transfer or updates) fixing the catalog zone.<a href="#section-5.1-6" class="pilcrow">¶</a></p>
 <p id="section-5.1-7">Similarly, when a catalog zone expires, it loses its catalog meaning and
 MUST no longer be processed as such.
 No special processing occurs until the zone becomes fresh again.<a href="#section-5.1-7" class="pilcrow">¶</a></p>
-<p id="section-5.1-8">Great power comes with great responsibility: Catalog zones simplifies zone
-provisioning by orchestrating zones on secondary name servers from a single
-data source - the catalog.  Hence, the catalog source has great power and
-changes must be treated carefully. For example if the catalog is generated by
-some script and this script for whatever reason generates an empty catalog,
-millions of member zones may get deleted from their secondaries within seconds
-and all the affected domains may be offline in a blink.<a href="#section-5.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="nameclash">
@@ -1759,7 +1750,7 @@ Only when the zone was configured from a specific catalog zone, and the zone is 
 <a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-migrating-member-zones-betw" class="section-name selfRef">Migrating member zones between catalogs</a>
         </h3>
 <p id="section-5.5-1">If all consumers of the catalog zones involved support the <code>coo</code> property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in <a href="#cooproperty" class="xref">Section 4.4.1</a>.
-Otherwise a migration of member zone from a catalog zone <code>$OLDCATZ</code> to a catalog zone <code>$NEWCATZ</code> has to be done by: first removing the member zone from <code>$OLDCATZ</code>; second adding the member zone to <code>$NEWCATZ</code>.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+Otherwise a migration of a member zone from a catalog zone <code>$OLDCATZ</code> to a catalog zone <code>$NEWCATZ</code> has to be done by: first removing the member zone from <code>$OLDCATZ</code>; second adding the member zone to <code>$NEWCATZ</code>.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
 <p id="section-5.5-2">If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from <code>$OLDCATZ</code> yet (because of a lost packet or down time or otherwise), but did already see the update of <code>$NEWCATZ</code>, they may consider the update adding the member zone in <code>$NEWCATZ</code> to be a name clash (see <a href="#nameclash" class="xref">Section 5.2</a>) and as a consequence the member is not migrated to <code>$NEWCATZ</code>.
 This possibility needs to be anticipated with a member zone migration.
 Recovery from such a situation is out of the scope of this document.
@@ -1782,14 +1773,14 @@ It may for example entail a manually forced retransfer of <code>$NEWCATZ</code> 
       <h2 id="name-implementation-and-operatio">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-implementation-and-operatio" class="section-name selfRef">Implementation and operational Notes</a>
       </h2>
-<p id="section-6-1">Although any valid domain name can be used for the catalog name $CATZ, it is
-RECOMMENDED to use either a domain name owned by the catalog producer, or to
-use a name under a suitable Special-Use Domain Name <span>[<a href="#RFC6761" class="xref">RFC6761</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<p id="section-6-2">Catalog zones on secondary nameservers would have to be setup manually, perhaps
-as static configuration, similar to how ordinary DNS zones are configured.
+<p id="section-6-1">Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer. It is
+RECOMMENDED to use either a domain name owned by the catalog producer, or
+to use a name under a suitable name such as "invalid." <span>[<a href="#RFC6761" class="xref">RFC6761</a>]</span>.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">Catalog zones on secondary nameservers would have to be set up manually, perhaps
+as static configuration, similar to how ordinary DNS zones are configured when catalog zones or another automatic configuration mechanism is not in place.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">Operators of catalog consumers should note that secondary name servers may
-receive DNS NOTIFY messages <span>[<a href="#RFC1996" class="xref">RFC1996</a>]</span> for a zones before they are seen as a
+receive DNS NOTIFY messages <span>[<a href="#RFC1996" class="xref">RFC1996</a>]</span> for zones before they are seen as
 newly added member zones to the catalog from which that secondary is
 provisioned.<a href="#section-6-3" class="pilcrow">¶</a></p>
 <p id="section-6-4">Although they are regular DNS zones, catalog zones contain only information for
@@ -1807,6 +1798,13 @@ For example, it is not possible to enumerate the contents of a multi-valued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.<a href="#section-6-5" class="pilcrow">¶</a></p>
+<p id="section-6-6">Great power comes with great responsibility: Catalog zones simplify zone
+provisioning by orchestrating zones on secondary name servers from a single
+data source - the catalog.  Hence, the catalog producer has great power and
+changes must be treated carefully. For example if the catalog is generated by
+some script and this script for whatever reason generates an empty catalog,
+millions of member zones may get deleted from their secondaries within seconds
+and all the affected domains may be offline in a blink.<a href="#section-6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security">
@@ -1816,7 +1814,7 @@ output of AXFR or an out-of-band method to perform queries on catalog zones.<a h
       </h2>
 <p id="section-7-1">As catalog zones are transmitted using DNS zone transfers,
 it is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication,
-for example by using TSIG <span>[<a href="#RFC8945" class="xref">RFC8945</a>]</span>, or Strict or Mutual TLS authentication with DNS Zone transfer over TLS <span>[<a href="#RFC9103" class="xref">RFC9103</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
+for example by using TSIG <span>[<a href="#RFC8945" class="xref">RFC8945</a>]</span>, or Strict or Mutual TLS authentication with DNS Zone transfer over TLS or QUIC <span>[<a href="#RFC9103" class="xref">RFC9103</a>]</span>.<a href="#section-7-1" class="pilcrow">¶</a></p>
 <p id="section-7-2">Use of DNS UPDATE <span>[<a href="#RFC2136" class="xref">RFC2136</a>]</span> to modify the content of catalog zones SHOULD similarly be authenticated.<a href="#section-7-2" class="pilcrow">¶</a></p>
 <p id="section-7-3">Zone transfers of member zones SHOULD similarly be authenticated.
 TSIG shared secrets used for member zones SHOULD NOT be mentioned in the catalog zone data.
@@ -1826,10 +1824,14 @@ It is RECOMMENDED to limit the systems able to query these zones.
 It is RECOMMENDED to transfer catalog zones confidentially <span>[<a href="#RFC9103" class="xref">RFC9103</a>]</span>.<a href="#section-7-4" class="pilcrow">¶</a></p>
 <p id="section-7-5">As with regular zones, primary and secondary nameservers for a catalog zone may
 be operated by different administrators.  The secondary nameservers may be
-configured as catalog consumer to synchronize catalog zones from the primary, but the primary's
+configured as a catalog consumer to synchronize catalog zones from the primary, but the primary's
 administrators may not have any administrative access to the secondaries.<a href="#section-7-5" class="pilcrow">¶</a></p>
-<p id="section-7-6">Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.<a href="#section-7-6" class="pilcrow">¶</a></p>
-<p id="section-7-7">With migration of member zones between catalogs using the <code>coo</code> property, it is possible for the owner of the target catalog (i.e. <code>$NEWCATZ</code>) to take over all associated state with the zone from the original owner (i.e. <code>$OLDCATZ</code>) by maintaining the same member node label (i.e. <code>&lt;unique-N&gt;</code>).
+<p id="section-7-6">Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
+To prevent unintended provisioning of zones, consumer(s) MAY scope the set of
+admissible member zones by any means deemed suitable (such as statically, via
+regular expressions, or dynamically, by verifying against another database
+before accepting a member zone).<a href="#section-7-6" class="pilcrow">¶</a></p>
+<p id="section-7-7">With migration of member zones between catalogs using the <code>coo</code> property, it is possible for the owner of the target catalog (i.e. <code>$NEWCATZ</code>) to take over all its associated state with the zone from the original owner (i.e. <code>$OLDCATZ</code>) by maintaining the same member node label (i.e. <code>&lt;unique-N&gt;</code>).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see <a href="#zonereset" class="xref">Section 5.6</a>) before or simultaneously with adding the <code>coo</code> property.<a href="#section-7-7" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1845,13 +1847,13 @@ the work.<a href="#section-8-1" class="pilcrow">¶</a></p>
 evaluated at ISC for easy zone management.  The chosen method of storing the
 catalog as a regular DNS zone was proposed by Stephen Morris.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <p id="section-8-3">The initial authors discovered that Paul Vixie's earlier <span>[<a href="#Metazones" class="xref">Metazones</a>]</span> proposal
-implemented a similar approach and reviewed it.  Catalog zones borrows some
+implemented a similar approach and reviewed it.  Catalog zones borrow some
 syntax ideas from Metazones, as both share this scheme of representing the
 catalog as a regular DNS zone.<a href="#section-8-3" class="pilcrow">¶</a></p>
 <p id="section-8-4">Thanks to Leo Vandewoestijne. Leo's presentation in the DNS devroom at the
 FOSDEM'20 <span>[<a href="#FOSDEM20" class="xref">FOSDEM20</a>]</span> was one of the motivations to take up and continue the
 effort of standardizing catalog zones.<a href="#section-8-4" class="pilcrow">¶</a></p>
-<p id="section-8-5">Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Patrik Lundin, Victoria Risk, Petr Spacek and Carsten Strotmann for reviewing draft proposals and offering comments and suggestions.<a href="#section-8-5" class="pilcrow">¶</a></p>
+<p id="section-8-5">Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Shane Kerr, Warren Kumari, Patrik Lundin, Matthijs Mekking, Victoria Risk, Josh Soref, Petr Spacek, Michael StJohns, Carsten Strotmann and Tim Wicinski for reviewing draft proposals and offering comments and suggestions.<a href="#section-8-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <section id="section-9">
@@ -1926,12 +1928,10 @@ effort of standardizing catalog zones.<a href="#section-8-4" class="pilcrow">¶<
 to DNS Catalog Zones as described in this document.<a href="#appendix-A-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-3.1">
-          <p id="appendix-A-3.1.1">Knot DNS 3.1 (released August 2, 2021) supports full producing and consuming of catalog zones, including the group property.<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.1.1">Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.<a href="#appendix-A-3.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.2">
-          <p id="appendix-A-3.2.1">PowerDNS has a proof of concept external program called
-<a href="https://github.com/PowerDNS/powercatz/">PowerCATZ</a>, that can process DNS
-Catalog Zones.<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-3.2.1">PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones.<a href="#appendix-A-3.2.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-3.3">
           <p id="appendix-A-3.3.1">Proof of concept <a href="https://github.com/IETF-Hackathon/NSDCatZ">python scripts</a>
@@ -2090,6 +2090,26 @@ hackathon at the IETF-109.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <p id="appendix-B-25.12">Great power comes with great responsibility (Thanks Klaus!)<a href="#appendix-B-25.12" class="pilcrow">¶</a></p>
 <p id="appendix-B-25.13">Mention the new BIND implementation<a href="#appendix-B-25.13" class="pilcrow">¶</a></p>
 <p id="appendix-B-25.14">All invalid properties cause a broken catalog zone, including invalid <code>group</code> and <code>version</code> properties.<a href="#appendix-B-25.14" class="pilcrow">¶</a></p>
+<p id="appendix-B-25.15">Add Aram Sargsyan as author (he did the BIND9 implementation)<a href="#appendix-B-25.15" class="pilcrow">¶</a></p>
+<p id="appendix-B-25.16"><code>group</code> properties can have more than one value<a href="#appendix-B-25.16" class="pilcrow">¶</a></p>
+</blockquote>
+<ul class="normal">
+<li class="normal" id="appendix-B-26.1">draft-toorop-dnsop-dns-catalog-zones-07<a href="#appendix-B-26.1" class="pilcrow">¶</a>
+</li>
+      </ul>
+<blockquote id="appendix-B-27">
+        <p id="appendix-B-27.1">Some spelling fixes from Tim Wicinski and Josh Soref<a href="#appendix-B-27.1" class="pilcrow">¶</a></p>
+<p id="appendix-B-27.2">Replace SHOULDs with MUSTs for ignoring things that are meaningless to a catalog consumer (Thanks Michael StJohns)<a href="#appendix-B-27.2" class="pilcrow">¶</a></p>
+<p id="appendix-B-27.3">Update the list of people to thank in the Acknowledgements section<a href="#appendix-B-27.3" class="pilcrow">¶</a></p>
+<p id="appendix-B-27.4">Mention PowerDNS support of catalog zones from version 4.7.0 onwards<a href="#appendix-B-27.4" class="pilcrow">¶</a></p>
+</blockquote>
+<ul class="normal">
+<li class="normal" id="appendix-B-28.1">draft-toorop-dnsop-dns-catalog-zones-08<a href="#appendix-B-28.1" class="pilcrow">¶</a>
+</li>
+      </ul>
+<blockquote id="appendix-B-29">
+        <p id="appendix-B-29.1">Address AD Review comments (editorial only)<a href="#appendix-B-29.1" class="pilcrow">¶</a></p>
+<p id="appendix-B-29.2">When DoT is mentioned, also mention now-standardized DoQ<a href="#appendix-B-29.2" class="pilcrow">¶</a></p>
 </blockquote>
 </section>
 </div>
@@ -2155,6 +2175,14 @@ hackathon at the IETF-109.<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:peter@desec.io" class="email">peter@desec.io</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Aram Sargsyan</span></div>
+<div dir="auto" class="left"><span class="org">Internet Systems Consortium</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:aram@isc.org" class="email">aram@isc.org</a>
 </div>
 </address>
 </section>
