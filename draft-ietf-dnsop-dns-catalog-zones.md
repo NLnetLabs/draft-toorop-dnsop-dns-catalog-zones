@@ -226,7 +226,7 @@ as well as a mechanism to allow implementers to store additional information in 
 The meaning of such custom properties is determined by the implementation in question.
 
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
-This document defines a single mandatory global property in (#version). Member-specific properties are described in (#properties).
+This document defines a single mandatory global property in (#version). Member-specific properties are described in (#memberproperties).
 
 More properties may be defined in future documents.
 
@@ -255,7 +255,7 @@ NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
 
 
-## Member Zone Properties {#properties}
+## Member Zone Properties {#memberproperties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
 The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
@@ -324,10 +324,10 @@ consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    nodnssec
+group.<unique-1>.zones.$CATZ  0 IN TXT    "nodnssec"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    operator-x-sign-with-nsec3
-group.<unique-2>.zones.$CATZ  0 IN TXT    operator-y-nsec3
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-sign-with-nsec3"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y-nsec3"
 
 ```
 
