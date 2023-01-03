@@ -147,6 +147,10 @@ Catalog consumer
 : An entity that extracts information from the catalog zone (such as a DNS
   server that configures itself according to the catalog zone's contents).
 
+This document makes use of terminology that is specific to the DNS, such as SOA, NS, RDATA and PTR.
+Since these terms have specific meanings in the DNS they are not expanded at first use in this document.
+For definitions of those and other terms, see [@!RFC8499].
+
 # Description {#description}
 
 A catalog zone is a DNS zone whose contents are specially crafted. Its records primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
