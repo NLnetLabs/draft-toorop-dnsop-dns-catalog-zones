@@ -173,8 +173,7 @@ update is made to the catalog zone's contents as per serial number arithmetic
 defined in [@!RFC1982].  Otherwise, catalog consumers might not notice
 updates to the catalog zone's contents.
 
-There is no requirement to be able to query the catalog zone via recursive nameservers.
-However, at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
+Although catalog zones are not intended to be queried via recursive resolution (see (#security)), at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
 ## Member Zones {#listofmemberzones}
@@ -204,10 +203,7 @@ A changed label may indicate that the state for a zone needs to be reset (see (#
 Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
-
-As catalog zones are for authoritative nameserver management only and are not
-intended for general querying via recursive resolvers, the TTL field's value
-has no meaning in this context and SHOULD be ignored.
+The TTL field's value has no meaning in this context and SHOULD be ignored.
 
 
 ## Properties
@@ -456,8 +452,8 @@ newly added member zones to the catalog from which that secondary is
 provisioned.
 
 Although they are regular DNS zones, catalog zones contain only information for
-the management of a set of authoritative nameservers.  For this reason,
-operators may want to limit the systems able to query these zones.
+the management of a set of authoritative nameservers.  To prevent unintended
+exposure to other parties, operators SHOULD limit the systems able to query these zones.
 
 Querying/serving catalog zone contents may be inconvenient via DNS
 due to the nature of their representation.
@@ -483,7 +479,7 @@ and all the affected domains may be offline in a blink.
 # Security Considerations {#security}
 
 As catalog zones are transmitted using DNS zone transfers,
-it is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication,
+it is RECOMMENDED that catalog zone transfers are protected from unexpected modifications by way of authentication,
 for example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS or QUIC [@!RFC9103,@!RFC9250].
 
 Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD similarly be authenticated.
@@ -492,9 +488,8 @@ Zone transfers of member zones SHOULD similarly be authenticated.
 TSIG shared secrets used for member zones SHOULD NOT be mentioned in the catalog zone data.
 However, key identifiers may be shared within catalog zones.
 
-Catalog zones reveal the zones served by the consumers of the catalog zone.
-It is RECOMMENDED to limit the systems able to query these zones.
-It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103,@!RFC9250].
+Catalog zones reveal the zones served by their consumers, including their properties.
+To prevent unintentional exposure of catalog zone contents, it is RECOMMENDED to limit the systems able to query them and to conduct catalog zone transfers confidentially [@!RFC9103,@!RFC9250].
 
 As with regular zones, primary and secondary nameservers for a catalog zone may
 be operated by different administrators.  The secondary nameservers may be
@@ -568,6 +563,22 @@ Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Sha
 </reference>
 
 {backmatter}
+
+# Catalog Zone Example
+
+The following is a full example of a catalog zone containing three member zones with various properties:
+
+```
+catalog.invalid.                                             0  SOA    invalid. invalid. 1625079950 3600 600 2147483646 0
+catalog.invalid.                                             0  NS     invalid.
+version.catalog.invalid.                                     0  TXT    "2"
+nj2xg5bnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.com.
+nvxxezjnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.net.
+group.nvxxezjnmz2w4ltd.zones.catalog.invalid.                0  TXT    "unsigned"
+nfwxa33sorqw45bo.zones.catalog.invalid.                      0  PTR    example.org.
+group.nfwxa33sorqw45bo.zones.catalog.invalid.                0  TXT    "signed"
+metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector.example.net.
+```
 
 # Implementation Status
 
