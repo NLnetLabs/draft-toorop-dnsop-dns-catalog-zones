@@ -163,8 +163,7 @@ Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
 standards for such zones.
 
-A catalog zone is primarily intended for the management of a farm of authoritative nameservers.
-The content of catalog zones may not be accessible from any recursive nameserver.
+A catalog zone is primarily intended for the management of a farm of authoritative nameservers, and should not be expected to be accessible from any recursive nameserver.
 
 # Catalog Zone Structure
 
