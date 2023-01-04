@@ -168,14 +168,8 @@ The content of catalog zones may not be accessible from any recursive nameserver
 
 # Catalog Zone Structure
 
-## SOA and NS Records
-
-As with any other DNS zone, a catalog zone MUST have a SOA record and at least one NS record at its apex.
-
-A catalog zone's SOA SERIAL field MUST increase when an
-update is made to the catalog zone's contents as per serial number arithmetic
-defined in [@!RFC1982].  Otherwise, catalog consumers might not notice
-updates to the catalog zone's contents.
+A catalog zone MUST follow the usual rules for DNS zones.
+In particular, SOA and NS record sets MUST be present and adhere to standard requirements (such as [@!RFC1982]).
 
 Although catalog zones are not intended to be queried via recursive resolution (see (#security)), at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
