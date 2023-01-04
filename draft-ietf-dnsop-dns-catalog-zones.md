@@ -99,7 +99,7 @@ zones to be provisioned as one or more regular DNS zones.
 
 # Introduction
 
-The content of a DNS zone is synchronized amongst its primary and secondary
+The content of a DNS zone is synchronized among its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in [@!RFC1035]) is not automatically synchronized
 with the secondaries.  To add or remove a zone, the administrator of a DNS
@@ -198,7 +198,7 @@ For example, if a catalog zone lists three zones "example.com.",
 ```
 
 where `<unique-N>` is a label that tags each record in the collection.
-`<unique-N>` has an unique value in the collection.
+`<unique-N>` has a unique value in the collection.
 When different `<unique-N>` labels hold the same PTR value (i.e. point to the same member zone), the catalog zone is broken and MUST NOT be processed (see (#generalrequirements)).
 
 Member node labels carry no informational meaning beyond labeling member zones.
@@ -427,9 +427,9 @@ When via a single update or transfer, the member node's label value (`<unique-N>
 ## Migrating member zones between catalogs {#zonemigration}
 
 If all consumers of the catalog zones involved support the `coo` property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in (#cooproperty).
-Otherwise a migration of a member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
+Otherwise, a migration of a member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
 
-If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` yet (because of a lost packet or down time or otherwise), but did already see the update of `$NEWCATZ`, they may consider the update adding the member zone in `$NEWCATZ` to be a name clash (see (#nameclash)) and as a consequence the member is not migrated to `$NEWCATZ`.
+If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` yet (because of a lost packet or downtime or otherwise), but did already see the update of `$NEWCATZ`, they may consider the update adding the member zone in `$NEWCATZ` to be a name clash (see (#nameclash)) and as a consequence the member is not migrated to `$NEWCATZ`.
 This possibility needs to be anticipated with a member zone migration.
 Recovery from such a situation is out of the scope of this document.
 It may for example entail a manually forced retransfer of `$NEWCATZ` to consumers after they have been detected to have received and processed the removal of the member zone from `$OLDCATZ`.
@@ -467,7 +467,7 @@ queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases, at all, using DNS QUERY.
-For example, it is not possible to enumerate the contents of a multi-valued
+For example, it is not possible to enumerate the contents of a multivalued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.
