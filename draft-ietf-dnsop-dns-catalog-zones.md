@@ -509,6 +509,10 @@ before accepting a member zone).
 With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all its associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
 
+# IANA Considerations
+
+This document has no IANA actions.
+
 # Acknowledgements
 
 Our deepest thanks and appreciation go to Stephen Morris,
