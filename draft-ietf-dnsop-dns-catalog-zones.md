@@ -99,7 +99,7 @@ zones to be provisioned as one or more regular DNS zones.
 
 # Introduction
 
-The content of a DNS zone is synchronized amongst its primary and secondary
+The content of a DNS zone is synchronized among its primary and secondary
 nameservers using AXFR and IXFR.  However, the list of zones served by the
 primary (called a catalog in [@!RFC1035]) is not automatically synchronized
 with the secondaries.  To add or remove a zone, the administrator of a DNS
@@ -147,9 +147,13 @@ Catalog consumer
 : An entity that extracts information from the catalog zone (such as a DNS
   server that configures itself according to the catalog zone's contents).
 
+This document makes use of terminology that is specific to the DNS, such as for transfer mechanisms (AXFR, IXFR), for record types (SOA, NS, PTR), and other technical terms (such as RDATA).
+Since these terms have specific meanings in the DNS they are not expanded at first use in this document.
+For definitions of those and other terms, see [@!RFC8499].
+
 # Description {#description}
 
-A catalog zone is a DNS zone whose contents are specially crafted. Its records primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
+A catalog zone is a DNS zone whose contents are specially crafted. Its resource records (RR) primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
 
 Catalog consumers MUST ignore any RR in the catalog zone which is meaningless to or otherwise not supported by the implementation.
 
@@ -157,24 +161,16 @@ Authoritative servers may be pre-configured with multiple catalog zones, each as
 
 Although the contents of a catalog zone are interpreted and acted upon by
 nameservers, a catalog zone is a regular DNS zone and so must adhere to the
-standards for such zones.
+standards for DNS zones.
 
-A catalog zone is primarily intended for the management of a farm of authoritative nameservers.
-The content of catalog zones may not be accessible from any recursive nameserver.
+A catalog zone is primarily intended for the management of a farm of authoritative nameservers, and should not be expected to be accessible from any recursive nameserver.
 
 # Catalog Zone Structure
 
-## SOA and NS Records
+A catalog zone MUST follow the usual rules for DNS zones.
+In particular, SOA and NS record sets MUST be present and adhere to standard requirements (such as [@!RFC1982]).
 
-As with any other DNS zone, a catalog zone MUST have a SOA record and at least one NS record at its apex.
-
-A catalog zone's SOA SERIAL field MUST increase when an
-update is made to the catalog zone's contents as per serial number arithmetic
-defined in [@!RFC1982].  Otherwise, catalog consumers might not notice
-updates to the catalog zone's contents.
-
-There is no requirement to be able to query the catalog zone via recursive nameservers.
-However, at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
+Although catalog zones are not intended to be queried via recursive resolution (see (#security)), at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
 ## Member Zones {#listofmemberzones}
@@ -195,8 +191,8 @@ For example, if a catalog zone lists three zones "example.com.",
 ```
 
 where `<unique-N>` is a label that tags each record in the collection.
-`<unique-N>` has an unique value in the collection.
-When different `<unique-N>` labels hold the same PTR value (i.e. point to the same member zone), the catalog zone is broken and MUST NOT be processed (see (#generalrequirements)).
+`<unique-N>` has a unique value in the collection.
+When different `<unique-N>` labels hold the same PTR value (i.e., point to the same member zone), the catalog zone is broken and MUST NOT be processed (see (#generalrequirements)).
 
 Member node labels carry no informational meaning beyond labeling member zones.
 A changed label may indicate that the state for a zone needs to be reset (see (#zonereset)).
@@ -204,10 +200,7 @@ A changed label may indicate that the state for a zone needs to be reset (see (#
 Having the zones uniquely tagged with the `<unique-N>` label ensures that additional RRs can be added below the member node (see (#properties)).
 
 The CLASS field of every RR in a catalog zone MUST be IN (1).
-
-As catalog zones are for authoritative nameserver management only and are not
-intended for general querying via recursive resolvers, the TTL field's value
-has no meaning in this context and SHOULD be ignored.
+The TTL field's value has no meaning in this context and SHOULD be ignored.
 
 
 ## Properties
@@ -226,7 +219,7 @@ as well as a mechanism to allow implementers to store additional information in 
 The meaning of such custom properties is determined by the implementation in question.
 
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
-This document defines a single mandatory global property in (#version). Member-specific properties are described in (#properties).
+This document defines a single mandatory global property in (#version). Member-specific properties are described in (#memberproperties).
 
 More properties may be defined in future documents.
 
@@ -245,7 +238,7 @@ Catalog consumers MUST NOT apply catalog zone processing to
 These conditions signify a broken catalog zone which MUST NOT be processed (see
 (#generalrequirements)).
 
-For this memo, the value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
+The value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
 
 ``` dns-zone
 version.$CATZ 0 IN TXT "2"
@@ -255,7 +248,7 @@ NB: Version 1 was used in a draft version of this memo and reflected
 the implementation first found in BIND 9.11.
 
 
-## Member Zone Properties {#properties}
+## Member Zone Properties {#memberproperties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
 The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
@@ -280,7 +273,7 @@ The presence of more than one record in the RRset indicates a broken catalog zon
 When a consumer of a catalog zone `$OLDCATZ` receives an update which adds or changes a `coo` property for a member zone in `$OLDCATZ`, it does *not* migrate the member zone immediately.
 The migration has to wait for an update of `$NEWCATZ`. in which the member zone is present. The consumer MUST verify, before the actual migration, that `coo` property pointing to `$NEWCATZ` is still present in `$OLDCATZ`.
 
-Unless the member node label (i.e. `<unique-N>`) for the member is the same in `$NEWCATZ`, all its associated state for a just migrated zone MUST be reset (see (#zonereset)).
+Unless the member node label (i.e., `<unique-N>`) for the member is the same in `$NEWCATZ`, all its associated state for a just migrated zone MUST be reset (see (#zonereset)).
 Note that the owner of `$OLDCATZ` allows for the zone associated state to be taken over by the owner of `$NEWCATZ` by default.
 To prevent the takeover of state, the owner of `$OLDCATZ` must remove this state by updating the associated properties or by performing a zone state reset (see (#zonereset)) before or simultaneous with adding the `coo` property. (see also (#security))
 
@@ -311,7 +304,7 @@ This is left to the implementation.
 Group properties are represented by TXT resource records.  The record contents
 (group names) carry no pre-defined meaning, and a registry for them does not
 exist.  Their interpretation is purely a matter of agreement between the
-producer and the consumer of the catalog.
+producer and the consumer(s) of the catalog.
 
 For example, the "nodnssec" group could be defined to indicate that a zone not
 be signed with DNSSEC.  Conversely, an agreement could define that group names
@@ -324,10 +317,10 @@ consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    nodnssec
+group.<unique-1>.zones.$CATZ  0 IN TXT    "nodnssec"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    operator-x-sign-with-nsec3
-group.<unique-2>.zones.$CATZ  0 IN TXT    operator-y-nsec3
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-sign-with-nsec3"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y-nsec3"
 
 ```
 
@@ -427,9 +420,9 @@ When via a single update or transfer, the member node's label value (`<unique-N>
 ## Migrating member zones between catalogs {#zonemigration}
 
 If all consumers of the catalog zones involved support the `coo` property, it is RECOMMENDED to perform migration of a member zone by following the procedure described in (#cooproperty).
-Otherwise a migration of a member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
+Otherwise, a migration of a member zone from a catalog zone `$OLDCATZ` to a catalog zone `$NEWCATZ` has to be done by: first removing the member zone from `$OLDCATZ`; second adding the member zone to `$NEWCATZ`.
 
-If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` yet (because of a lost packet or down time or otherwise), but did already see the update of `$NEWCATZ`, they may consider the update adding the member zone in `$NEWCATZ` to be a name clash (see (#nameclash)) and as a consequence the member is not migrated to `$NEWCATZ`.
+If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from `$OLDCATZ` yet (because of a lost packet or downtime or otherwise), but did already see the update of `$NEWCATZ`, they may consider the update adding the member zone in `$NEWCATZ` to be a name clash (see (#nameclash)) and as a consequence the member is not migrated to `$NEWCATZ`.
 This possibility needs to be anticipated with a member zone migration.
 Recovery from such a situation is out of the scope of this document.
 It may for example entail a manually forced retransfer of `$NEWCATZ` to consumers after they have been detected to have received and processed the removal of the member zone from `$OLDCATZ`.
@@ -442,12 +435,12 @@ A zone state reset may be performed by a change of the member node's name (see (
 
 # Implementation and operational Notes {#implementationnotes}
 
-Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer. It is
+Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer (with the exception of reserved names). It is
 RECOMMENDED to use either a domain name owned by the catalog producer, or
 to use a name under a suitable name such as "invalid." [@!RFC6761].
 
 Catalog zones on secondary nameservers would have to be set up manually, perhaps
-as static configuration, similar to how ordinary DNS zones are configured when catalog zones or another automatic configuration mechanism is not in place.
+as static configuration, similar to how ordinary DNS zones are configured when catalog zones or another automatic configuration mechanism are not in place.
 The secondary additionally needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.
 
 Operators of catalog consumers should note that secondary name servers may
@@ -456,8 +449,8 @@ newly added member zones to the catalog from which that secondary is
 provisioned.
 
 Although they are regular DNS zones, catalog zones contain only information for
-the management of a set of authoritative nameservers.  For this reason,
-operators may want to limit the systems able to query these zones.
+the management of a set of authoritative nameservers.  To prevent unintended
+exposure to other parties, operators SHOULD limit the systems able to query these zones.
 
 Querying/serving catalog zone contents may be inconvenient via DNS
 due to the nature of their representation.
@@ -467,7 +460,7 @@ queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases, at all, using DNS QUERY.
-For example, it is not possible to enumerate the contents of a multi-valued
+For example, it is not possible to enumerate the contents of a multivalued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
 output of AXFR or an out-of-band method to perform queries on catalog zones.
@@ -478,12 +471,12 @@ data source - the catalog.  Hence, the catalog producer has great power and
 changes must be treated carefully. For example if the catalog is generated by
 some script and this script for whatever reason generates an empty catalog,
 millions of member zones may get deleted from their secondaries within seconds
-and all the affected domains may be offline in a blink.
+and all the affected domains may be offline in a blink of an eye.
 
 # Security Considerations {#security}
 
 As catalog zones are transmitted using DNS zone transfers,
-it is RECOMMENDED that catalog zone transfer are protected from unexpected modifications by way of authentication,
+it is RECOMMENDED that catalog zone transfers are protected from unexpected modifications by way of authentication,
 for example by using TSIG [@!RFC8945], or Strict or Mutual TLS authentication with DNS Zone transfer over TLS or QUIC [@!RFC9103,@!RFC9250].
 
 Use of DNS UPDATE [@!RFC2136] to modify the content of catalog zones SHOULD similarly be authenticated.
@@ -492,9 +485,8 @@ Zone transfers of member zones SHOULD similarly be authenticated.
 TSIG shared secrets used for member zones SHOULD NOT be mentioned in the catalog zone data.
 However, key identifiers may be shared within catalog zones.
 
-Catalog zones reveal the zones served by the consumers of the catalog zone.
-It is RECOMMENDED to limit the systems able to query these zones.
-It is RECOMMENDED to transfer catalog zones confidentially [@!RFC9103,@!RFC9250].
+Catalog zones reveal the zones served by their consumers, including their properties.
+To prevent unintentional exposure of catalog zone contents, it is RECOMMENDED to limit the systems able to query them and to conduct catalog zone transfers confidentially [@!RFC9103,@!RFC9250].
 
 As with regular zones, primary and secondary nameservers for a catalog zone may
 be operated by different administrators.  The secondary nameservers may be
@@ -507,8 +499,12 @@ admissible member zones by any means deemed suitable (such as statically, via
 regular expressions, or dynamically, by verifying against another database
 before accepting a member zone).
 
-With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e. `$NEWCATZ`) to take over all its associated state with the zone from the original owner (i.e. `$OLDCATZ`) by maintaining the same member node label (i.e. `<unique-N>`).
+With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e., `$NEWCATZ`) to take over all its associated state with the zone from the original owner (i.e., `$OLDCATZ`) by maintaining the same member node label (i.e., `<unique-N>`).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
+
+# IANA Considerations
+
+This document has no IANA actions.
 
 # Acknowledgements
 
@@ -568,6 +564,22 @@ Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Sha
 </reference>
 
 {backmatter}
+
+# Catalog Zone Example
+
+The following is a full example of a catalog zone containing three member zones with various properties:
+
+```
+catalog.invalid.                                             0  SOA    invalid. invalid. 1625079950 3600 600 2147483646 0
+catalog.invalid.                                             0  NS     invalid.
+version.catalog.invalid.                                     0  TXT    "2"
+nj2xg5bnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.com.
+nvxxezjnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.net.
+group.nvxxezjnmz2w4ltd.zones.catalog.invalid.                0  TXT    "unsigned"
+nfwxa33sorqw45bo.zones.catalog.invalid.                      0  PTR    example.org.
+group.nfwxa33sorqw45bo.zones.catalog.invalid.                0  TXT    "signed"
+metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector.example.net.
+```
 
 # Implementation Status
 
