@@ -586,17 +586,21 @@ metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector
 **Note to the RFC Editor**: please remove this entire appendix before publication.
 
 In the following implementation status descriptions, "DNS Catalog Zones" refers
-to DNS Catalog Zones as described in this document.
+to DNS Catalog Zones version 2 as described in this document.
+Version 1 of catalog zones was initially developed by ISC for BIND, but never standardized in the IETF.
+Support version 1 catalog zones is explicitly mentioned per implementation.
+Support for the `coo` and `group` properties are also explicitly mentioned per implementation.
 
 * Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.
 
-* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones.
+* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones version 2 and consuming of catalog zones version 1.
+  PowerDNS does support the `coo` property, and the `group` property on the producing side.
 
 * Proof of concept [python scripts](https://github.com/IETF-Hackathon/NSDCatZ)
   that can be used for both generating and consuming DNS Catalog Zones with NSD
   have been developed during the hackathon at the IETF-109.
 
-* BIND 9.18.3+ supports version 2 catalog zones as described in this document
+* BIND 9.18.3+ supports version 2 catalog zones as described in this document including the `coo` property, as well as version 1 catalog zones.
 
 Interoperability between the above implementations has been tested during the
 hackathon at the IETF-109.
