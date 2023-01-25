@@ -336,9 +336,9 @@ vs. "operator-y-nsec").
 
 Implementations and operators of catalog zones may choose to provide their own properties.
 Custom properties can occur both globally, or for a specific member zone.
-To prevent a name clash with future properties, such properties MUST be represented below the label `ext`.
+To prevent a name clash with future properties, such properties MUST be represented below the label "ext".
 
-`ext` is not a placeholder. A custom property is named as follows:
+"ext" is not a placeholder. A custom property is named as follows:
 
 ```
 ; a global custom property:
@@ -433,7 +433,7 @@ It may be desirable to reset state (such as zone data and DNSSEC keys) associate
 
 A zone state reset may be performed by a change of the member node's name (see (#namechange)).
 
-# Implementation and operational Notes {#implementationnotes}
+# Implementation and Operational Notes {#implementationnotes}
 
 Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer (with the exception of reserved names). It is
 RECOMMENDED to use either a domain name owned by the catalog producer, or
