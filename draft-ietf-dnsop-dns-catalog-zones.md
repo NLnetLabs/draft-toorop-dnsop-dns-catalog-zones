@@ -290,7 +290,7 @@ The property is defined by a TXT record in the sub-node labeled `group`.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
-Consumer operators SHOULD namespace their group properties to limit risk of clashes.
+Consumer operators SHOULD namespace their group property values to limit risk of clashes.
 
 The consumer MUST ignore `group` property values it does not understand.
 
