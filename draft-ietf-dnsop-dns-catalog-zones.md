@@ -59,7 +59,7 @@ organization = "NLnet Labs"
  country = "Netherlands"
 
 [[author]]
-initials="K."
+initials="C.R."
 surname ="Monshouwer"
 fullname="Kees Monshouwer"
 [author.address]
