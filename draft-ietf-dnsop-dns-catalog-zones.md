@@ -251,7 +251,7 @@ the implementation first found in BIND 9.11.
 ## Member Zone Properties {#memberproperties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
-The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
+The member properties described in this document are all optional and implementations MAY choose to implement all, some or none of them.
 Member zone properties are represented by RRsets below the corresponding member node.
 
 ### Change of Ownership (`coo` property) {#cooproperty}
