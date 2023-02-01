@@ -155,7 +155,7 @@ For definitions of those and other terms, see [@!RFC8499].
 
 A catalog zone is a DNS zone whose contents are specially crafted. Its resource records (RR) primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
 
-Catalog consumers MUST ignore any RR in the catalog zone which is meaningless to or otherwise not supported by the implementation.
+Catalog consumers MUST ignore any RRs in the catalog zone for which no processing is specified or which are otherwise not supported by the implementation.
 
 Authoritative servers may be pre-configured with multiple catalog zones, each associated with a different set of configurations.
 
