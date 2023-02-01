@@ -234,6 +234,7 @@ Catalog consumers MUST NOT apply catalog zone processing to
   - zones with a `version` property with more than one RR in the RRset
   - zones with a `version` property without an expected value in the
     `version.$CATZ` TXT RR
+  - zones with a `version` property with a schema version value which is not implemented by the consumer (e.g. version "1")
 
 These conditions signify a broken catalog zone which MUST NOT be processed (see
 (#generalrequirements)).
