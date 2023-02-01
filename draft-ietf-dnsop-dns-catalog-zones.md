@@ -410,7 +410,8 @@ A clash between an existing member zone's name and an incoming member zone's nam
 ## Member zone removal {#zoneremoval}
 
 When a member zone is removed from a specific catalog zone, an authoritative server MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
-Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed.
+Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone MUST no longer be served.
+Any associated state (such as zone data and DNSSEC keys) MUST not be reused for a zone with the same name automatically, though may be archived for mistake recovery purposes.
 
 ## Member node name change {#namechange}
 
