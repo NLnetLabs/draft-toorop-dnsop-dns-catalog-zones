@@ -290,6 +290,7 @@ The exact handling of the `group` property value is left to the consumer's imple
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Consumer operators SHOULD namespace their group property values to limit risk of clashes.
 
 The consumer MUST ignore `group` property values it does not understand.
 When a consumer encounters multiple `group` property values for a single member zone, it MAY choose to process all, some or none of them. This is left to the implementation.
@@ -328,9 +329,9 @@ that depends on what has been agreed with each operator ("operator-x-foo" vs. "o
 
 Implementations and operators of catalog zones may choose to provide their own properties.
 Custom properties can occur both globally, or for a specific member zone.
-To prevent a name clash with future properties, such properties MUST be represented below the label `ext`.
+To prevent a name clash with future properties, such properties MUST be represented below the label "ext".
 
-`ext` is not a placeholder. A custom property is named as follows:
+"ext" is not a placeholder. A custom property is named as follows:
 
 ```
 ; a global custom property:
@@ -402,7 +403,8 @@ A clash between an existing member zone's name and an incoming member zone's nam
 ## Member zone removal {#zoneremoval}
 
 When a member zone is removed from a specific catalog zone, an authoritative server MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
-Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed.
+Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone MUST no longer be served.
+Any associated state (such as zone data and DNSSEC keys) MUST not be reused for a zone with the same name automatically, though may be archived for mistake recovery purposes.
 
 ## Member node name change {#namechange}
 
@@ -425,7 +427,7 @@ It may be desirable to reset state (such as zone data and DNSSEC keys) associate
 
 A zone state reset may be performed by a change of the member node's name (see (#namechange)).
 
-# Implementation and operational Notes {#implementationnotes}
+# Implementation and Operational Notes {#implementationnotes}
 
 Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer (with the exception of reserved names). It is
 RECOMMENDED to use either a domain name owned by the catalog producer, or
@@ -486,7 +488,7 @@ configured as a catalog consumer to synchronize catalog zones from the primary, 
 administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
-To prevent unintended provisioning of zones, consumer(s) MAY scope the set of
+To prevent unintended provisioning of zones, consumer(s) SHOULD scope the set of
 admissible member zones by any means deemed suitable (such as statically, via
 regular expressions, or dynamically, by verifying against another database
 before accepting a member zone).
@@ -580,17 +582,21 @@ metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector
 **Note to the RFC Editor**: please remove this entire appendix before publication.
 
 In the following implementation status descriptions, "DNS Catalog Zones" refers
-to DNS Catalog Zones as described in this document.
+to DNS Catalog Zones version 2 as described in this document.
+Version 1 of catalog zones was initially developed by ISC for BIND, but never standardized in the IETF.
+Support version 1 catalog zones is explicitly mentioned per implementation.
+Support for the `coo` and `group` properties are also explicitly mentioned per implementation.
 
 * Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.
 
-* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones.
+* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones version 2 and consuming of catalog zones version 1.
+  PowerDNS does support the `coo` property, and the `group` property on the producing side.
 
 * Proof of concept [python scripts](https://github.com/IETF-Hackathon/NSDCatZ)
   that can be used for both generating and consuming DNS Catalog Zones with NSD
   have been developed during the hackathon at the IETF-109.
 
-* BIND 9.18.3+ supports version 2 catalog zones as described in this document
+* BIND 9.18.3+ supports version 2 catalog zones as described in this document including the `coo` property, as well as version 1 catalog zones.
 
 Interoperability between the above implementations has been tested during the
 hackathon at the IETF-109.
