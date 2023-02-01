@@ -290,7 +290,6 @@ The exact handling of the `group` property value is left to the consumer's imple
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
-Consumer operators SHOULD namespace their `group` property values to limit risk of clashes.
 
 The consumer MUST ignore `group` property values it does not understand.
 When a consumer encounters multiple `group` property values for a single member zone, it MAY choose to process all, some or none of them. This is left to the implementation.
@@ -301,7 +300,7 @@ Group properties are represented by TXT resource records. The record content
 has no pre-defined meaning. Their interpretation is purely a matter
 of agreement between the producer and the consumer(s) of the catalog.
 
-For example, the "template-x" group could be agreed to indicate that a zone not
+For example, the "foo" group could be agreed to indicate that a zone not
 be signed with DNSSEC. Conversely, an agreement could define that group names
 starting with "operator-" indicate in which way a given DNS operator should set
 up certain aspects of the member zone's DNSSEC configuration.
@@ -312,18 +311,17 @@ consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    "template-x"
+group.<unique-1>.zones.$CATZ  0 IN TXT    "foo"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-template-y"
-group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "template-42"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-foo"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
 
 ```
 
 In this scenario, consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
 For "example.net.", the consumers, at two different operators, will configure
 the member zone to be signed with a specific combination of settings. The group value that indicates
-that depends on what has been agreed with each operator ("operator-x-template-y"
-vs. "operator-y" "template-42").
+that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").
 
 
 ## Custom Properties (`*.ext` properties) {#customproperties}
