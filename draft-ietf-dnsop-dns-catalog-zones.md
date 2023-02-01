@@ -494,7 +494,7 @@ configured as a catalog consumer to synchronize catalog zones from the primary, 
 administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
-To prevent unintended provisioning of zones, consumer(s) MAY scope the set of
+To prevent unintended provisioning of zones, consumer(s) SHOULD scope the set of
 admissible member zones by any means deemed suitable (such as statically, via
 regular expressions, or dynamically, by verifying against another database
 before accepting a member zone).
