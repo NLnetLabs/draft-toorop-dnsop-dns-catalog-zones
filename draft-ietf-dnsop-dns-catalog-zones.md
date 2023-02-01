@@ -411,7 +411,7 @@ A clash between an existing member zone's name and an incoming member zone's nam
 
 When a member zone is removed from a specific catalog zone, a consumer MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
 Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed from the consumer.
-The associated state (such as zone data and DNSSEC keys) may be archived before removal for mistake recovery purposes.
+Consumer operators may consider to temporarily archive associated state to facilitate mistake recovery, but for a limited time only (eg one week).
 
 ## Member node name change {#namechange}
 
