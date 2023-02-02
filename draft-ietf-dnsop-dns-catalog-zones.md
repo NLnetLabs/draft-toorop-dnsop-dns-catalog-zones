@@ -290,6 +290,7 @@ The exact handling of the `group` property value is left to the consumer's imple
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Implementations MAY facilitate mapping of a specific `group` value to specific configuration configurable *on a per catalog zone basis* to allow for producers that publish their catalog zone at multiple consumer operators.
 Consumer operators SHOULD namespace their group property values to limit risk of clashes.
 
 The consumer MUST ignore `group` property values it does not understand.
