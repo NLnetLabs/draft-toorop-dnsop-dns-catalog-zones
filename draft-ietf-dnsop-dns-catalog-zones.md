@@ -285,7 +285,7 @@ The old owner may remove the member zone containing the `coo` property from `$OL
 With a `group` property, consumer(s) can be signaled to treat some member zones within the catalog zone differently.
 
 The consumer MAY apply different configuration options when processing member zones, based on the value of the `group` property.
-A `group` property value is stored as content of a TXT record directly below the member node.
+A `group` property value is stored as the entire RDATA of a TXT record directly below the member node.
 The exact handling of the `group` property value is left to the consumer's implementation and configuration.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
