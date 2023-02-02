@@ -566,17 +566,20 @@ Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Sha
 The following is a full example of a catalog zone containing three member zones with various properties:
 
 ```
-catalog.invalid.                                             0  SOA    invalid. invalid. 1625079950 3600 600 2147483646 0
-catalog.invalid.                                             0  NS     invalid.
-example.vendor.ext.catalog.invalid.                          0  CNAME  example.net.
-version.catalog.invalid.                                     0  TXT    "2"
-nj2xg5bnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.com.
-nvxxezjnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.net.
-group.nvxxezjnmz2w4ltd.zones.catalog.invalid.                0  TXT    "template-x"
-nfwxa33sorqw45bo.zones.catalog.invalid.                      0  PTR    example.org.
-coo.nfwxa33sorqw45bo.zones.catalog.invalid.                  0  PTR    newcatz.invalid.
-group.nfwxa33sorqw45bo.zones.catalog.invalid.                0  TXT    "template-y"
-metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector.example.net.
+catalog.invalid.                                0  SOA   invalid. (
+                        invalid. 1625079950 3600 600 2147483646 0 )
+catalog.invalid.                                0  NS    invalid.
+example.vendor.ext.catalog.invalid.             0  CNAME example.net.
+version.catalog.invalid.                        0  TXT   "2"
+nj2xg5b.zones.catalog.invalid.                  0  PTR   example.com.
+nvxxezj.zones.catalog.invalid.                  0  PTR   example.net.
+group.nvxxezj.zones.catalog.invalid.            0  TXT   "template-x"
+nfwxa33.zones.catalog.invalid.                  0  PTR   example.org.
+coo.nfwxa33.zones.catalog.invalid.              0  PTR   (
+                        newcatz.invalid. )
+group.nfwxa33.zones.catalog.invalid.            0  TXT   "template-y"
+metrics.vendor.ext.nfwxa33.zones.catalog.invalid. 0  CNAME (
+                        collector.example.net. )
 ```
 
 # Implementation Status
