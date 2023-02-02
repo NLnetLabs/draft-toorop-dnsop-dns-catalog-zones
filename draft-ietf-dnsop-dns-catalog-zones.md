@@ -59,7 +59,7 @@ organization = "NLnet Labs"
  country = "Netherlands"
 
 [[author]]
-initials="K."
+initials="C.R."
 surname ="Monshouwer"
 fullname="Kees Monshouwer"
 [author.address]
@@ -252,7 +252,7 @@ the implementation first found in BIND 9.11.
 ## Member Zone Properties {#memberproperties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
-The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
+The member properties described in this document are all optional and implementations MAY choose to implement all, some or none of them.
 Member zone properties are represented by RRsets below the corresponding member node.
 
 ### Change of Ownership (`coo` property) {#cooproperty}
@@ -286,29 +286,25 @@ The old owner may remove the member zone containing the `coo` property from `$OL
 With a `group` property, consumer(s) can be signaled to treat some member zones within the catalog zone differently.
 
 The consumer MAY apply different configuration options when processing member zones, based on the value of the `group` property.
-The exact handling of configuration referred to by the `group` property value is left to the consumer's implementation and configuration.
-The property is defined by a TXT record in the sub-node labeled `group`.
+A `group` property value is stored as the entire RDATA of a TXT record directly below the member node.
+The exact handling of the `group` property value is left to the consumer's implementation and configuration.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Implementations MAY facilitate mapping of a specific `group` value to specific configuration configurable *on a per catalog zone basis* to allow for producers that publish their catalog zone at multiple consumer operators.
 Consumer operators SHOULD namespace their group property values to limit risk of clashes.
 
 The consumer MUST ignore `group` property values it does not understand.
-
-When a consumer sees multiple values in a `group` property of a single member
-zone that it *does* understand, it MAY choose to process multiple, any one or
-none of them.
-This is left to the implementation.
+When a consumer encounters multiple `group` property values for a single member zone, it MAY choose to process all, some or none of them. This is left to the implementation.
 
 #### Example
 
-Group properties are represented by TXT resource records.  The record contents
-(group names) carry no pre-defined meaning, and a registry for them does not
-exist.  Their interpretation is purely a matter of agreement between the
-producer and the consumer(s) of the catalog.
+Group properties are represented by TXT resource records. The record content
+has no pre-defined meaning. Their interpretation is purely a matter
+of agreement between the producer and the consumer(s) of the catalog.
 
-For example, the "nodnssec" group could be defined to indicate that a zone not
-be signed with DNSSEC.  Conversely, an agreement could define that group names
+For example, the "foo" group could be agreed to indicate that a zone not
+be signed with DNSSEC. Conversely, an agreement could define that group names
 starting with "operator-" indicate in which way a given DNS operator should set
 up certain aspects of the member zone's DNSSEC configuration.
 
@@ -318,19 +314,17 @@ consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    "nodnssec"
+group.<unique-1>.zones.$CATZ  0 IN TXT    "foo"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-sign-with-nsec3"
-group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y-nsec3"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-foo"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
 
 ```
 
-In this scenario, consumer(s) shall not sign the member zone "example.com." with
-DNSSEC.
-For "example.net.", the consumers, at two different operators, shall configure
-the member zone to be signed with an NSEC3 chain.  The group value that indicates
-that depends on what has been agreed with each operator ("operator-x-sign-with-nsec3"
-vs. "operator-y-nsec").
+In this scenario, consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
+For "example.net.", the consumers, at two different operators, will configure
+the member zone to be signed with a specific combination of settings. The group value that indicates
+that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").
 
 
 ## Custom Properties (`*.ext` properties) {#customproperties}
@@ -574,12 +568,14 @@ The following is a full example of a catalog zone containing three member zones 
 ```
 catalog.invalid.                                             0  SOA    invalid. invalid. 1625079950 3600 600 2147483646 0
 catalog.invalid.                                             0  NS     invalid.
+example.vendor.ext.catalog.invalid.                          0  CNAME  example.net.
 version.catalog.invalid.                                     0  TXT    "2"
 nj2xg5bnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.com.
 nvxxezjnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.net.
-group.nvxxezjnmz2w4ltd.zones.catalog.invalid.                0  TXT    "unsigned"
+group.nvxxezjnmz2w4ltd.zones.catalog.invalid.                0  TXT    "template-x"
 nfwxa33sorqw45bo.zones.catalog.invalid.                      0  PTR    example.org.
-group.nfwxa33sorqw45bo.zones.catalog.invalid.                0  TXT    "signed"
+coo.nfwxa33sorqw45bo.zones.catalog.invalid.                  0  PTR    newcatz.invalid.
+group.nfwxa33sorqw45bo.zones.catalog.invalid.                0  TXT    "template-y"
 metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector.example.net.
 ```
 
