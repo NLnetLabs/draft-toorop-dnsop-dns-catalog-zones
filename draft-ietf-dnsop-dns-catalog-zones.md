@@ -59,7 +59,7 @@ organization = "NLnet Labs"
  country = "Netherlands"
 
 [[author]]
-initials="K."
+initials="C.R."
 surname ="Monshouwer"
 fullname="Kees Monshouwer"
 [author.address]
@@ -155,7 +155,7 @@ For definitions of those and other terms, see [@!RFC8499].
 
 A catalog zone is a DNS zone whose contents are specially crafted. Its resource records (RR) primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.
 
-Catalog consumers MUST ignore any RR in the catalog zone which is meaningless to or otherwise not supported by the implementation.
+Catalog consumers MUST ignore any RRs in the catalog zone for which no processing is specified or which are otherwise not supported by the implementation.
 
 Authoritative servers may be pre-configured with multiple catalog zones, each associated with a different set of configurations.
 
@@ -234,11 +234,12 @@ Catalog consumers MUST NOT apply catalog zone processing to
   - zones with a `version` property with more than one RR in the RRset
   - zones with a `version` property without an expected value in the
     `version.$CATZ` TXT RR
+  - zones with a `version` property with a schema version value which is not implemented by the consumer (e.g. version "1")
 
 These conditions signify a broken catalog zone which MUST NOT be processed (see
 (#generalrequirements)).
 
-The value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
+For this memo, the value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
 
 ``` dns-zone
 version.$CATZ 0 IN TXT "2"
@@ -251,7 +252,7 @@ the implementation first found in BIND 9.11.
 ## Member Zone Properties {#memberproperties}
 
 Each member zone MAY have one or more additional properties, described in this chapter.
-The member properties described in this document are all optional and implementations MAY choose to implement one, all or none of them. 
+The member properties described in this document are all optional and implementations MAY choose to implement all, some or none of them.
 Member zone properties are represented by RRsets below the corresponding member node.
 
 ### Change of Ownership (`coo` property) {#cooproperty}
@@ -285,29 +286,25 @@ The old owner may remove the member zone containing the `coo` property from `$OL
 With a `group` property, consumer(s) can be signaled to treat some member zones within the catalog zone differently.
 
 The consumer MAY apply different configuration options when processing member zones, based on the value of the `group` property.
-The exact handling of configuration referred to by the `group` property value is left to the consumer's implementation and configuration.
-The property is defined by a TXT record in the sub-node labeled `group`.
+A `group` property value is stored as the entire RDATA of a TXT record directly below the member node.
+The exact handling of the `group` property value is left to the consumer's implementation and configuration.
 
 The producer MAY assign a `group` property to all, some, or none of the member zones within a catalog zone.
 The producer MAY assign more than one `group` property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
-Consumer operators SHOULD namespace their group properties to limit risk of clashes.
+Implementations MAY facilitate mapping of a specific `group` value to specific configuration configurable *on a per catalog zone basis* to allow for producers that publish their catalog zone at multiple consumer operators.
+Consumer operators SHOULD namespace their group values to reduce the risk of having to resolve clashes.
 
-The consumer MUST ignore `group` property values it does not understand.
-
-When a consumer sees multiple values in a `group` property of a single member
-zone that it *does* understand, it MAY choose to process multiple, any one or
-none of them.
-This is left to the implementation.
+The consumer MUST ignore `group` values it does not understand.
+When a consumer encounters multiple `group` values for a single member zone, it MAY choose to process all, some or none of them. This is left to the implementation.
 
 #### Example
 
-Group properties are represented by TXT resource records.  The record contents
-(group names) carry no pre-defined meaning, and a registry for them does not
-exist.  Their interpretation is purely a matter of agreement between the
-producer and the consumer(s) of the catalog.
+Group properties are represented by TXT resource records. The record content
+has no pre-defined meaning. Their interpretation is purely a matter
+of agreement between the producer and the consumer(s) of the catalog.
 
-For example, the "nodnssec" group could be defined to indicate that a zone not
-be signed with DNSSEC.  Conversely, an agreement could define that group names
+For example, the "foo" group could be agreed to indicate that a zone not
+be signed with DNSSEC. Conversely, an agreement could define that group names
 starting with "operator-" indicate in which way a given DNS operator should set
 up certain aspects of the member zone's DNSSEC configuration.
 
@@ -317,28 +314,26 @@ consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":
 
 ```
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
-group.<unique-1>.zones.$CATZ  0 IN TXT    "nodnssec"
+group.<unique-1>.zones.$CATZ  0 IN TXT    "foo"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
-group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-sign-with-nsec3"
-group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y-nsec3"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-foo"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
 
 ```
 
-In this scenario, consumer(s) shall not sign the member zone "example.com." with
-DNSSEC.
-For "example.net.", the consumers, at two different operators, shall configure
-the member zone to be signed with an NSEC3 chain.  The group value that indicates
-that depends on what has been agreed with each operator ("operator-x-sign-with-nsec3"
-vs. "operator-y-nsec").
+In this scenario, consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
+For "example.net.", the consumers, at two different operators, will configure
+the member zone to be signed with a specific combination of settings. The group value that indicates
+that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").
 
 
 ## Custom Properties (`*.ext` properties) {#customproperties}
 
 Implementations and operators of catalog zones may choose to provide their own properties.
 Custom properties can occur both globally, or for a specific member zone.
-To prevent a name clash with future properties, such properties MUST be represented below the label `ext`.
+To prevent a name clash with future properties, such properties MUST be represented below the label "ext".
 
-`ext` is not a placeholder. A custom property is named as follows:
+"ext" is not a placeholder. A custom property is named as follows:
 
 ```
 ; a global custom property:
@@ -409,8 +404,9 @@ A clash between an existing member zone's name and an incoming member zone's nam
 
 ## Member zone removal {#zoneremoval}
 
-When a member zone is removed from a specific catalog zone, an authoritative server MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
-Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed.
+When a member zone is removed from a specific catalog zone, a consumer MUST NOT remove the zone and associated state data if the zone was not configured from that specific catalog zone.
+Only when the zone was configured from a specific catalog zone, and the zone is removed as a member from that specific catalog zone, the zone and associated state (such as zone data and DNSSEC keys) MUST be removed from the consumer.
+Consumer operators may consider to temporarily archive associated state to facilitate mistake recovery.
 
 ## Member node name change {#namechange}
 
@@ -433,7 +429,7 @@ It may be desirable to reset state (such as zone data and DNSSEC keys) associate
 
 A zone state reset may be performed by a change of the member node's name (see (#namechange)).
 
-# Implementation and operational Notes {#implementationnotes}
+# Implementation and Operational Notes {#implementationnotes}
 
 Although any valid domain name can be used for the catalog name $CATZ, a catalog producer MUST NOT use names that are not under the control of the catalog producer (with the exception of reserved names). It is
 RECOMMENDED to use either a domain name owned by the catalog producer, or
@@ -494,7 +490,7 @@ configured as a catalog consumer to synchronize catalog zones from the primary, 
 administrators may not have any administrative access to the secondaries.
 
 Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
-To prevent unintended provisioning of zones, consumer(s) MAY scope the set of
+To prevent unintended provisioning of zones, consumer(s) SHOULD scope the set of
 admissible member zones by any means deemed suitable (such as statically, via
 regular expressions, or dynamically, by verifying against another database
 before accepting a member zone).
@@ -570,15 +566,22 @@ Thanks to Brian Conry, Klaus Darilion, Brian Dickson, Tony Finch, Evan Hunt, Sha
 The following is a full example of a catalog zone containing three member zones with various properties:
 
 ```
-catalog.invalid.                                             0  SOA    invalid. invalid. 1625079950 3600 600 2147483646 0
-catalog.invalid.                                             0  NS     invalid.
-version.catalog.invalid.                                     0  TXT    "2"
-nj2xg5bnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.com.
-nvxxezjnmz2w4ltd.zones.catalog.invalid.                      0  PTR    example.net.
-group.nvxxezjnmz2w4ltd.zones.catalog.invalid.                0  TXT    "unsigned"
-nfwxa33sorqw45bo.zones.catalog.invalid.                      0  PTR    example.org.
-group.nfwxa33sorqw45bo.zones.catalog.invalid.                0  TXT    "signed"
-metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector.example.net.
+catalog.invalid.                                0  SOA   invalid. (
+                        invalid. 1625079950 3600 600 2147483646 0 )
+catalog.invalid.                                0  NS    invalid.
+example.vendor.ext.catalog.invalid.             0  CNAME example.net.
+version.catalog.invalid.                        0  TXT   "2"
+nj2xg5b.zones.catalog.invalid.                  0  PTR   example.com.
+nvxxezj.zones.catalog.invalid.                  0  PTR   example.net.
+group.nvxxezj.zones.catalog.invalid.            0  TXT   (
+                        "operator-x-foo" )
+nfwxa33.zones.catalog.invalid.                  0  PTR   example.org.
+coo.nfwxa33.zones.catalog.invalid.              0  PTR   (
+                        newcatz.invalid. )
+group.nfwxa33.zones.catalog.invalid.            0  TXT   (
+                        "operator-y-bar" )
+metrics.vendor.ext.nfwxa33.zones.catalog.invalid. 0  CNAME (
+                        collector.example.net. )
 ```
 
 # Implementation Status
@@ -586,17 +589,21 @@ metrics.vendor.ext.nfwxa33sorqw45bo.zones.catalog.invalid.   0  CNAME  collector
 **Note to the RFC Editor**: please remove this entire appendix before publication.
 
 In the following implementation status descriptions, "DNS Catalog Zones" refers
-to DNS Catalog Zones as described in this document.
+to DNS Catalog Zones version 2 as described in this document.
+Version 1 of catalog zones was initially developed by ISC for BIND, but never standardized in the IETF.
+Support version 1 catalog zones is explicitly mentioned per implementation.
+Support for the `coo` and `group` properties are also explicitly mentioned per implementation.
 
 * Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.
 
-* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones.
+* PowerDNS from version 4.7 (released October 3, 2022) supports both producing and consuming of catalog zones version 2 and consuming of catalog zones version 1.
+  PowerDNS does support the `coo` property, and the `group` property on the producing side.
 
 * Proof of concept [python scripts](https://github.com/IETF-Hackathon/NSDCatZ)
   that can be used for both generating and consuming DNS Catalog Zones with NSD
   have been developed during the hackathon at the IETF-109.
 
-* BIND 9.18.3+ supports version 2 catalog zones as described in this document
+* BIND 9.18.3+ supports version 2 catalog zones as described in this document including the `coo` property, as well as version 1 catalog zones.
 
 Interoperability between the above implementations has been tested during the
 hackathon at the IETF-109.
