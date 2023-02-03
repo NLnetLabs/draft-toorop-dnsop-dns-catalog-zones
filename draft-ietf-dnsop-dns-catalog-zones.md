@@ -239,7 +239,7 @@ Catalog consumers MUST NOT apply catalog zone processing to
 These conditions signify a broken catalog zone which MUST NOT be processed (see
 (#generalrequirements)).
 
-The value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
+For this memo, the value of the `version.$CATZ` TXT RR MUST be set to "2", i.e.:
 
 ``` dns-zone
 version.$CATZ 0 IN TXT "2"
