@@ -516,6 +516,7 @@ Property prefix | Description         | Status          |Reference
 version         | Schema version      | Standards Track | [this document]
 coo             | Change of Ownership | Standards Track | [this document]
 group           | Group               | Standards Track | [this document]
+\*.ext           | Custom properties   | Private Use     | [this document]
 
 The meanings of the fields are as follows:
 
