@@ -511,6 +511,9 @@ Assignment Policy:
 Reference:
 : [this document]
 
+Note:
+: This registry does not apply to Catalog Zones version "1", but applies to Catalog Zones version "2" as specified in [this document].
+
 Property prefix | Description         | Status          |Reference
 ----------------|---------------------|-----------------|----------------
 version         | Schema version      | Standards Track | [this document]
