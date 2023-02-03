@@ -506,7 +506,7 @@ Registry Name:
 : DNS Catalog Zones Properties
 
 Assignment Policy:
-: Expert Review
+: Expert Review, except for property prefixes ending in the label "ext", which are for Private Use.
 
 Reference:
 : [this document]
