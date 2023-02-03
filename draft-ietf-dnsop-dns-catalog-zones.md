@@ -573,11 +573,13 @@ example.vendor.ext.catalog.invalid.             0  CNAME example.net.
 version.catalog.invalid.                        0  TXT   "2"
 nj2xg5b.zones.catalog.invalid.                  0  PTR   example.com.
 nvxxezj.zones.catalog.invalid.                  0  PTR   example.net.
-group.nvxxezj.zones.catalog.invalid.            0  TXT   "template-x"
+group.nvxxezj.zones.catalog.invalid.            0  TXT   (
+                        "operator-x-foo" )
 nfwxa33.zones.catalog.invalid.                  0  PTR   example.org.
 coo.nfwxa33.zones.catalog.invalid.              0  PTR   (
                         newcatz.invalid. )
-group.nfwxa33.zones.catalog.invalid.            0  TXT   "template-y"
+group.nfwxa33.zones.catalog.invalid.            0  TXT   (
+                        "operator-y-bar" )
 metrics.vendor.ext.nfwxa33.zones.catalog.invalid. 0  CNAME (
                         collector.example.net. )
 ```
