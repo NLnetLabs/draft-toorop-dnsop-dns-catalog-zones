@@ -126,24 +126,24 @@ The key words "**MUST**", "**MUST NOT**", "**REQUIRED**",
 BCP 14 [@!RFC2119;@!RFC8174] when, and only when, they appear in all
 capitals, as shown here.
 
-Catalog zone
+Catalog zone:
 : A DNS zone containing a DNS catalog, that is, a list of DNS zones and associated properties.
 
-Member zone
+Member zone:
 : A DNS zone whose configuration is published inside a catalog zone.
 
-Member node
+Member node:
 : A DNS name in the Catalog zone representing a Member zone.
 
-`$CATZ`
+`$CATZ`:
 : Used in examples as a placeholder to represent the domain name of the
   catalog zone itself.
   `$OLDCATZ` and `$NEWCATZ` are used to discuss migration of a member zone from one catalog zone `$OLDCATZ` to another catalog zone `$NEWCATZ`.
 
-Catalog producer
+Catalog producer:
 : An entity that generates and is responsible for the contents of the catalog zone.
 
-Catalog consumer
+Catalog consumer:
 : An entity that extracts information from the catalog zone (such as a DNS
   server that configures itself according to the catalog zone's contents).
 
