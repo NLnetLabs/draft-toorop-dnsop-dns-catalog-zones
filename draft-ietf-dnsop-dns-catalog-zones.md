@@ -170,7 +170,7 @@ A catalog zone is primarily intended for the management of a farm of authoritati
 A catalog zone MUST follow the usual rules for DNS zones.
 In particular, SOA and NS record sets MUST be present and adhere to standard requirements (such as [@!RFC1982]).
 
-Although catalog zones are not intended to be queried via recursive resolution (see (#security)), at least one NS RR is still required so that catalog zone is a syntactically correct DNS zone.
+Although catalog zones are not intended to be queried via recursive resolution (see (#security)), at least one NS RR is still required so that a catalog zone is a syntactically correct DNS zone.
 A single NS RR with a NSDNAME field containing the absolute name "invalid." is RECOMMENDED [@!RFC2606;@!RFC6761].
 
 ## Member Zones {#listofmemberzones}
@@ -624,7 +624,7 @@ metrics.vendor.ext.nfwxa33.zones.catalog.invalid. 0  CNAME (
 In the following implementation status descriptions, "DNS Catalog Zones" refers
 to DNS Catalog Zones version 2 as described in this document.
 Version 1 of catalog zones was initially developed by ISC for BIND, but never standardized in the IETF.
-Support version 1 catalog zones is explicitly mentioned per implementation.
+Support for version 1 catalog zones is explicitly mentioned per implementation.
 Support for the `coo` and `group` properties are also explicitly mentioned per implementation.
 
 * Knot DNS 3.1 (released August 2, 2021) supports both producing and consuming of catalog zones, including the group property.
