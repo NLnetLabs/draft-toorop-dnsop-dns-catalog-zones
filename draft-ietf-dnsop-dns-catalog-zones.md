@@ -221,7 +221,7 @@ The meaning of such custom properties is determined by the implementation in que
 Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
 This document defines a single mandatory global property in (#version). Member-specific properties are described in (#memberproperties).
 
-More properties may be defined in future documents.
+This document includes a set of initial properties which can be extended via the IANA registry defined and created in (#iana).
 
 ### Schema Version (`version` property) {#version}
 
@@ -498,9 +498,42 @@ before accepting a member zone).
 With migration of member zones between catalogs using the `coo` property, it is possible for the owner of the target catalog (i.e., `$NEWCATZ`) to take over all its associated state with the zone from the original owner (i.e., `$OLDCATZ`) by maintaining the same member node label (i.e., `<unique-N>`).
 To prevent the takeover of the zone associated state, the original owner has to enforce a zone state reset by changing the member node label (see (#zonereset)) before or simultaneously with adding the `coo` property.
 
-# IANA Considerations
+# IANA Considerations {#iana}
 
-This document has no IANA actions.
+IANA is requested to create a registry on the "Domain Name System (DNS) Parameters" IANA web page as follows:
+
+Registry Name:
+: DNS Catalog Zones Properties
+
+Assignment Policy:
+: Expert Review, except for property prefixes ending in the label "ext", which are for Private Use.
+
+Reference:
+: [this document]
+
+Note:
+: This registry does not apply to Catalog Zones version "1", but applies to Catalog Zones version "2" as specified in [this document].
+
+Property prefix | Description         | Status          |Reference
+----------------|---------------------|-----------------|----------------
+version         | Schema version      | Standards Track | [this document]
+coo             | Change of Ownership | Standards Track | [this document]
+group           | Group               | Standards Track | [this document]
+\*.ext           | Custom properties   | Private Use     | [this document]
+
+The meanings of the fields are as follows:
+
+Property prefix:
+: One or more domain name labels
+
+Description:
+: A human readable short description or name for the property
+
+Status:
+: IETF Document status or "External" if not documented in an IETF document.
+
+Reference:
+: A stable reference to the document in which this property is defined.
 
 # Acknowledgements
 
