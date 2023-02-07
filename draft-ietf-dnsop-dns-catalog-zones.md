@@ -809,3 +809,32 @@ hackathon at the IETF-109.
 > Address AD Review comments (editorial only)
 
 > When DoT is mentioned, also mention now-standardized DoQ
+
+* draft-toorop-dnsop-dns-catalog-zones-08
+
+> Editorial nits from David Blacka, Lars Eggert, Russ Housley, Erik Kline, Éric Vyncke and Paul Wouters
+
+> Addes a Catalog Zone Exampla
+
+> Mention that the document uses DNS specific terminology and reference RFC8499
+
+> Added IANA Considerations sections, with a registry for Catalog Zones properties
+
+> Updated Implementation status also with respect to Catalog zones version "1" support
+
+> Updates to Rename "group properties" to "group property values" or "group values" to reduce confusion about who will determine those values (operators and not implementations)
+
+> Change example group values in non descriptive names
+
+> Add some more clarifications on that and how group values are determined in producer/consumer agreements
+
+> Stronger checking suggestion (SHOULD instead of MAY) in accepting member zones by consumers in the Security section
+
+> Added mistake recovery text to the Member zone removal section
+
+> Replace vague language ("meaningless") with more precise wording
+
+> Catalog consumers that know only version "2" MUST not process version "1" catalog zones and consider it broken.
+
+> The entire RDATA of a group property is it's value
+
