@@ -210,7 +210,7 @@ Catalog zone information is stored in the form of "properties".
 Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node (or underneath the catalog zone apex), with RR type(s) as appropriate for the respective property.
 
 Known properties with the correct RR type, but which are for some reason
-invalid (for example because of an impossible value, wrong RR type or because of an illegal
+invalid (for example because of an impossible value or because of an illegal
 number of RRs in the RRset), denote a broken catalog zone which MUST NOT be
 processed (see (#generalrequirements)).
 
