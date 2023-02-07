@@ -214,14 +214,15 @@ invalid (for example because of an impossible value or because of an illegal
 number of RRs in the RRset), denote a broken catalog zone which MUST NOT be
 processed (see (#generalrequirements)).
 
-This specification defines a number of so-called properties,
-as well as a mechanism to allow implementers to store additional information in the catalog zone with Custom properties, see (#customproperties).
+This document includes a set of initial properties which can be extended via the IANA registry defined and created in (#iana).
+Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
+This document defines a mandatory global property in (#version).
+The "zones" label from (#listofmemberzones) can also be seen as a global property and is listed as such in the IANA registry in (#iana).
+Member-specific properties are described in (#memberproperties).
+
+Implementers may store additional information in the catalog zone with Custom properties, see (#customproperties).
 The meaning of such custom properties is determined by the implementation in question.
 
-Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
-This document defines a single mandatory global property in (#version). Member-specific properties are described in (#memberproperties).
-
-This document includes a set of initial properties which can be extended via the IANA registry defined and created in (#iana).
 
 ### Schema Version (`version` property) {#version}
 
@@ -514,12 +515,13 @@ Reference:
 Note:
 : This registry does not apply to Catalog Zones version "1", but applies to Catalog Zones version "2" as specified in [this document].
 
-Property prefix | Description         | Status          |Reference
-----------------|---------------------|-----------------|----------------
-version         | Schema version      | Standards Track | [this document]
-coo             | Change of Ownership | Standards Track | [this document]
-group           | Group               | Standards Track | [this document]
-\*.ext           | Custom properties   | Private Use     | [this document]
+Property prefix | Description          | Status          |Reference
+----------------|----------------------|-----------------|----------------
+zones           | List of member zones | Standards Track | [this document]
+version         | Schema version       | Standards Track | [this document]
+coo             | Change of Ownership  | Standards Track | [this document]
+group           | Group                | Standards Track | [this document]
+\*.ext           | Custom properties    | Private Use     | [this document]
 
 The meanings of the fields are as follows:
 
