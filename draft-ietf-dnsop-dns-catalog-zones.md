@@ -322,7 +322,7 @@ group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
 
 ```
 
-By agreement, "foo" could in this scenario indicate that the consumer(s) shall not sign the member zone "example.com." with DNSSEC.
+In this scenario, consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
 For "example.net.", the consumers, at two different operators, will configure
 the member zone to be signed with a specific combination of settings. The group value that indicates
 that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").
