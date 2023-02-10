@@ -600,19 +600,19 @@ Thanks to Joe Abley, David Blacka, Brian Conry, Klaus Darilion, Brian Dickson, T
 The following is a full example of a catalog zone containing three member zones with various properties:
 
 ```
-catalog.example.com.                               0  SOA   invalid. (
+catalog.example.com.                            0  SOA   invalid. (
                         hostmaster.example.com. 1 3600 600 604800 0 )
-catalog.example.com.                               0  NS    invalid.
-example.vendor.ext.catalog.example.com.            0  CNAME example.net.
-version.catalog.example.com.                       0  TXT   "2"
-nj2xg5b.zones.catalog.example.com.                 0  PTR   example.com.
-nvxxezj.zones.catalog.example.com.                 0  PTR   example.net.
-group.nvxxezj.zones.catalog.example.com.           0  TXT   (
+catalog.example.com.                            0  NS    invalid.
+example.vendor.ext.catalog.example.com.         0  CNAME example.net.
+version.catalog.example.com.                    0  TXT   "2"
+nj2xg5b.zones.catalog.example.com.              0  PTR   example.com.
+nvxxezj.zones.catalog.example.com.              0  PTR   example.net.
+group.nvxxezj.zones.catalog.example.com.        0  TXT   (
                         "operator-x-foo" )
-nfwxa33.zones.catalog.example.com.                 0  PTR   example.org.
-coo.nfwxa33.zones.catalog.example.com.             0  PTR   (
+nfwxa33.zones.catalog.example.com.              0  PTR   example.org.
+coo.nfwxa33.zones.catalog.example.com.          0  PTR   (
                         newcatalog.example.net. )
-group.nfwxa33.zones.catalog.example.com.           0  TXT   (
+group.nfwxa33.zones.catalog.example.com.        0  TXT   (
                         "operator-y-bar" )
 metrics.vendor.ext.nfwxa33.zones.catalog.example.com. 0  CNAME (
                         collector.example.net. )
