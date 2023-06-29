@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE rfc [
+ <!ENTITY nbsp    "&#160;">
+ <!ENTITY zwsp   "&#8203;">
+ <!ENTITY nbhy   "&#8209;">
+ <!ENTITY wj     "&#8288;">
+]> 
+
+<rfc version="3" ipr="trust200902" docName="draft-ietf-dnsop-dns-catalog-zones-09" number="9432" submissionType="IETF" category="std" consensus="true" xml:lang="en" tocInclude="true" sortRefs="true" symRefs="true" updates="" obsoletes="" xmlns:xi="http://www.w3.org/2001/XInclude">
+
+<front>
+  <title abbrev="DNS Catalog Zones">DNS Catalog Zones</title>
+  <seriesInfo name="RFC" value="9432"/>
+
+  <author initials="P." surname="van Dijk" fullname="Peter van Dijk">
+    <organization>PowerDNS</organization>
+    <address><postal>
+      <city>Den Haag</city>
+      <country>Netherlands</country>
+      </postal><email>peter.van.dijk@powerdns.com</email>
+  </address></author>
+
+  <author initials="L." surname="Peltan" fullname="Libor Peltan">
+    <organization>CZ.NIC</organization>
+    <address><postal>
+      <country>Czech Republic</country>
+      </postal><email>libor.peltan@nic.cz</email>
+  </address></author>
+
+  <author initials="O." surname="Sury" fullname="Ondrej Sury">
+    <organization>Internet Systems Consortium</organization>
+    <address><postal>
+      <country>Czech Republic</country>
+      </postal><email>ondrej@isc.org</email>
+  </address></author>
+
+  <author initials="W." surname="Toorop" fullname="Willem Toorop">
+    <organization>NLnet Labs</organization>
+    <address><postal>
+      <street>Science Park 400</street>
+      <city>Amsterdam</city>
+      <code>1098 XH</code>
+      <country>Netherlands</country>
+      </postal><email>willem@nlnetlabs.nl</email>
+  </address></author>
+<!-- [rfced] Generally, authors use a single first initial with a
+surname in the header. Is the use of two initials intentional
+(i.e., "C.R. Monshouwer")? Additionally, we note that the
+initials provided do no match the author's full name. If an
+update is necessary, please let us know the desired form.
+
+Original:
+   C.R. Monshouwer -->
+
+  <author initials="C.R." surname="Monshouwer" fullname="Kees Monshouwer">
+    <organization></organization>
+    <address><postal>
+      <country>Netherlands</country>
+      </postal><email>mind@monshouwer.eu</email>
+  </address></author>
+
+  <author initials="P." surname="Thomassen" fullname="Peter Thomassen">
+    <organization>deSEC, SSE - Secure Systems Engineering</organization>
+    <address><postal>
+      <street></street>
+      <city>Berlin</city>
+      <country>Germany</country>
+      </postal><email>peter@desec.io</email>
+  </address></author>
+
+  <author initials="A." surname="Sargsyan" fullname="Aram Sargsyan">
+    <organization>Internet Systems Consortium</organization>
+    <address><postal>
+      <street></street>
+      </postal><email>aram@isc.org</email>
+  </address></author>
+<date year="2023" month="June"/>
+<area>ops</area>
+<workgroup>dnsop</workgroup>
+
+<!-- [rfced] Please insert any keywords (beyond those that appear in the title) for use on https://www.rfc-editor.org/search. -->
+
+<abstract>
+<t>This document describes a method for automatic DNS zone provisioning among DNS
+primary and secondary name servers by storing and transferring the catalog of
+zones to be provisioned as one or more regular DNS zones.</t>
+</abstract>
+
+</front>
+
+<middle>
+
+<section anchor="introduction"><name>Introduction</name>
+<t>The content of a DNS zone is synchronized among its primary and secondary
+name servers using Authoritative Transfer (AXFR) and Incremental Zone Transfer (IXFR).  
+However, the list of zones served by the
+primary (called a "catalog" in <xref target="RFC1035"></xref>) is not automatically synchronized
+with the secondaries.  To add or remove a zone, the administrator of a DNS
+name server farm has to not only add or remove the zone from the primary but must also 
+add or remove configuration for the zone from all secondaries.  This
+can be both inconvenient and error-prone. In addition, the steps required are
+dependent on the name server implementation.</t>
+<t>This document describes a method in which the list of zones is represented as a
+regular DNS zone (called a "catalog zone" here) and transferred using DNS zone
+transfers.  When entries are added to or removed from the catalog zone, it is
+distributed to the secondary name servers just like any other zone.  Secondary
+name servers can then add, remove, or modify the zones they serve in accordance with the
+changes to the catalog zone. Other use cases of name server remote configuration
+by catalog zones are possible where the catalog consumer might not be a
+secondary.</t>
+</section>
+
+<section anchor="terminology"><name>Terminology</name>
+        <t>
+    The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>", "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL
+    NOT</bcp14>", "<bcp14>SHOULD</bcp14>", "<bcp14>SHOULD NOT</bcp14>", "<bcp14>RECOMMENDED</bcp14>", "<bcp14>NOT RECOMMENDED</bcp14>",
+    "<bcp14>MAY</bcp14>", and "<bcp14>OPTIONAL</bcp14>" in this document are to be interpreted as
+    described in BCP&nbsp;14 <xref target="RFC2119"/> <xref target="RFC8174"/> 
+    when, and only when, they appear in all capitals, as shown here.
+        </t>
+
+<!-- [rfced] In the html and pdf outputs, the text enclosed in <tt> is output in
+fixed-width font. In the txt output, there are no changes to the font,
+and the quotation marks have been removed. 
+
+In the html and pdf outputs, the text enclosed in <em> is output in
+italics. In the txt output, the text enclosed in <em> appears with an
+underscore before and after.
+
+Please review carefully and let us know if the output is acceptable or if any
+updates are needed. -->
+
+
+<!--[rfced] Section 2. Should the terminology list be placed in
+alphabetical order, or is the current order preferred? -->
+	
+<dl>
+<dt>Catalog zone:</dt>
+<dd>A DNS zone containing a DNS catalog, which is a list of DNS zones and associated properties.</dd>
+<dt>Member zone:</dt>
+<dd>A DNS zone whose configuration is published inside a catalog zone.</dd>
+<dt>Member node:</dt>
+<dd>A DNS name in the catalog zone representing a member zone.</dd>
+<dt><tt>$CATZ</tt>:</dt>
+<dd>Used in examples as a placeholder to represent the domain name of the
+catalog zone itself.
+<tt>$OLDCATZ</tt> and <tt>$NEWCATZ</tt> are used to discuss migration of a member zone from one catalog zone (<tt>$OLDCATZ</tt>) to another catalog zone (<tt>$NEWCATZ</tt>).</dd>
+<dt>Catalog producer:</dt>
+<dd>An entity that generates and is responsible for the contents of the catalog zone.</dd>
+<dt>Catalog consumer:</dt>
+<dd>An entity that extracts information from the catalog zone (such as a DNS
+server that configures itself according to the catalog zone's contents).</dd>
+</dl>
+<t>
+<!-- [rfced] May we rephrase the following sentence to make it more uniform?
+
+Original: 
+   This document makes use of terminology that is specific to the DNS,
+   such as for transfer mechanisms (AXFR, IXFR), for record types (SOA, NS, PTR),
+   and other technical terms (such as RDATA).
+
+Perhaps: 
+   This document makes use of terminology for transfer mechanisms (AXFR
+   and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as
+   RDATA) that are specific to the DNS. -->
+This document makes use of terminology that is specific to the DNS, such as transfer mechanisms (AXFR and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as RDATA).
+Since these terms have specific meanings in the DNS, they are not expanded upon first use in this document.
+For definitions of these and other terms, see <xref target="RFC8499"></xref>.</t>
+</section>
+
+<section anchor="description"><name>Description</name>
+<t>A catalog zone is a DNS zone whose contents are specially crafted. Its resource records (RRs) primarily constitute a list of PTR records referencing other DNS zones (so-called "member zones"). The catalog zone may contain other records indicating additional metadata (so-called "properties") associated with these member zones.</t>
+<t>Catalog consumers <bcp14>MUST</bcp14> ignore any RRs in the catalog zone for which no processing is specified or which are otherwise not supported by the implementation.</t>
+<t>Authoritative servers may be pre-configured with multiple catalog zones, each associated with a different set of configurations.</t>
+<t>Although the contents of a catalog zone are interpreted and acted upon by
+name servers, a catalog zone is a regular DNS zone and must adhere to the
+standards for DNS zones.</t>
+<t>A catalog zone is primarily intended for the management of a farm of authoritative name servers and should not be expected to be accessible from any recursive name server.</t>
+</section>
+
+<section anchor="catalog-zone-structure"><name>Catalog Zone Structure</name>
+<t>A catalog zone <bcp14>MUST</bcp14> follow the usual rules for DNS zones.
+In particular, SOA and NS record sets <bcp14>MUST</bcp14> be present and adhere to standard requirements (such as <xref target="RFC1982"></xref>).</t>
+<t>Although catalog zones are not intended to be queried via recursive resolution (see <xref target="security"></xref>), at least one NS RR is still required so that a catalog zone is a syntactically correct DNS zone.
+A single NS RR with a NSDNAME field containing the absolute name "invalid." is <bcp14>RECOMMENDED</bcp14> <xref target="RFC2606"></xref> <xref target="RFC6761"></xref>.</t>
+
+<section anchor="listofmemberzones"><name>Member Zones</name>
+<t>The list of member zones is specified as a collection of member nodes represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.</t>
+<!-- [rfced] We suggest rephrasing the following sentence. Specifically, the
+phrase "instead of as" can be improved for a better sentence flow. Does
+the following suggestion retain the intended meaning?
+
+Original: 
+   The names of member zones are represented on the RDATA side (instead
+   of as a part of owner names) of a PTR record, so that all valid domain names
+   may be represented regardless of their length [RFC1035].
+
+Perhaps: 
+   The names of member zones are represented on the RDATA side of a PTR
+   record (instead of being represented as a part of owner names) so that all
+   valid domain names may be represented regardless of their length
+   [RFC1035]. -->
+
+<t>The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length <xref target="RFC1035"></xref>.
+This PTR record <bcp14>MUST</bcp14> be the only record in the PTR RRset with the same name.
+The presence of more than one record in the RRset indicates a broken catalog zone that <bcp14>MUST NOT</bcp14> be processed (see <xref target="generalrequirements"></xref>).</t>
+<t>For example, if a catalog zone lists three zones ("example.com.",
+"example.net.", and "example.org."), the member node RRs would appear as follows:</t>
+<!-- [rfced] We have a few questions regarding the sourcecode in this document.
+
+a) We have updated the blocks of artwork in Sections 4.1 and 4.2.1 to
+sourcecode with the type listed as "dns-rr". Please let us know if this change
+is incorrect.
+
+b) Please review the "type" attribute of each sourcecode element
+in the XML file to ensure correctness. If the current list of preferred
+values for "type" (https://www.rfc-editor.org/materials/sourcecode-types.txt) 
+does not contain an applicable type, then feel free to let us
+know. Also, it is acceptable to leave the "type" attribute not
+set. -->
+<sourcecode type="dns-rr"><![CDATA[
+<unique-1>.zones.$CATZ 0 IN PTR example.com.
+<unique-2>.zones.$CATZ 0 IN PTR example.net.
+<unique-3>.zones.$CATZ 0 IN PTR example.org.
+]]></sourcecode>
+
+<t>where <tt>&lt;unique-N&gt;</tt> is a label that tags each record in the collection and has a unique value.
+When different <tt>&lt;unique-N&gt;</tt> labels hold the same PTR value (i.e., point to the same member zone), the catalog zone is broken and <bcp14>MUST NOT</bcp14> be processed (see <xref target="generalrequirements"></xref>).</t>
+<t>Member node labels carry no informational meaning beyond labeling member zones.
+A changed label may indicate that the state for a zone needs to be reset (see <xref target="zonereset"></xref>).</t>
+<t>Having the zones uniquely tagged with the <tt>&lt;unique-N&gt;</tt> label ensures that additional RRs can be added below the member node (see <xref target="properties"></xref>).</t>
+<t>The CLASS field of every RR in a catalog zone <bcp14>MUST</bcp14> be IN (1).
+The TTL field's value has no meaning in this context and <bcp14>SHOULD</bcp14> be ignored.</t>
+</section>
+
+<section anchor="properties"><name>Properties</name>
+<t>Catalog zone information is stored in the form of "properties".</t>
+<t>Properties are identified by their name, which is used as an owner name prefix for one or more record sets underneath a member node (or underneath the catalog zone apex), with RR type(s) as appropriate for the respective property.</t>
+<t>Known properties that have the correct RR type but are for some reason
+invalid (for example, because of an impossible value or because of an illegal
+number of RRs in the RRset) denote a broken catalog zone, which <bcp14>MUST NOT</bcp14> be
+processed (see <xref target="generalrequirements"></xref>).</t>
+<t>This document includes a set of initial properties that can be extended via the IANA registry defined and created in <xref target="iana"></xref>.
+Some properties are defined at the global level; others are scoped to apply only to a specific member zone.
+This document defines a mandatory global property in <xref target="version"></xref>.
+The "zones" label from <xref target="listofmemberzones"></xref> can also be seen as a global property and is listed as such in the IANA registry in <xref target="iana"></xref>.
+Member-specific properties are described in <xref target="memberproperties"></xref>.</t>
+<t>Implementers may store additional information in the catalog zone with custom properties; see <xref target="customproperties"></xref>.
+The meaning of such custom properties is determined by the implementation in question.</t>
+
+<section anchor="version"><name>Schema Version (<tt>version</tt> property)</name>
+<t>The catalog zone schema version is specified by an integer value embedded in a TXT RR named <tt>version.$CATZ</tt>.
+All catalog zones <bcp14>MUST</bcp14> have a TXT RRset named <tt>version.$CATZ</tt> with exactly one RR.</t>
+<t>Catalog consumers <bcp14>MUST NOT</bcp14> apply catalog zone processing to:</t>
+
+<ul>
+<li>zones without the <tt>version</tt> property</li>
+<li>zones with a <tt>version</tt> property with more than one RR in the RRset</li>
+<li>zones with a <tt>version</tt> property without an expected value in the
+<tt>version.$CATZ</tt> TXT RR</li>
+<li>zones with a <tt>version</tt> property with a schema version value that is not implemented by the consumer (e.g., version "1")</li>
+</ul>
+<t>These conditions signify a broken catalog zone, which <bcp14>MUST NOT</bcp14> be processed (see
+<xref target="generalrequirements"></xref>).</t>
+<t>For this memo, the value of the <tt>version.$CATZ</tt> TXT RR <bcp14>MUST</bcp14> be set to "2"; that is:</t>
+
+<sourcecode type="dns-rr"><![CDATA[version.$CATZ 0 IN TXT "2"
+]]></sourcecode>
+<!-- [rfced] Will most readers understand that "NB" means to take
+special note, or would you like to rephrase as follows so that
+"NB" is not mistaken as a term?
+
+Original:
+   NB: Version 1 was used in a draft version of this memo and reflected
+   the implementation first found in BIND 9.11. 
+
+Perhaps:
+   Note that Version 1 was used in an earlier draft version of this memo 
+   and reflected the implementation first found in BIND 9.11. -->
+
+<t>NB: Version 1 was used in an earlier draft version of this memo and reflected
+the implementation first found in BIND 9.11.</t>
+</section>
+</section>
+
+<section anchor="memberproperties"><name>Member Zone Properties</name>
+<t>Each member zone <bcp14>MAY</bcp14> have one or more additional properties that are  described in this section.
+The member properties described in this document are all optional, and implementations <bcp14>MAY</bcp14> choose to implement all, some, or none of them.
+Member zone properties are represented by RRsets below the corresponding member node.</t>
+
+<section anchor="cooproperty"><name>Change of Ownership (<tt>coo</tt> property)</name>
+<t>The <tt>coo</tt> property facilitates controlled migration of a member zone from one catalog to another.</t>
+<t>A Change Of Ownership is signaled by the <tt>coo</tt> property in the catalog zone currently "owning" the zone.
+The name of the new catalog is the value of a PTR record in the relevant coo property in the old catalog.
+For example, if member "example.com." migrates from catalog zone <tt>$OLDCATZ</tt> to catalog zone <tt>$NEWCATZ</tt>, this will appear in the <tt>$OLDCATZ</tt> catalog zone as follows:</t>
+
+<sourcecode type=""><![CDATA[
+<unique-N>.zones.$OLDCATZ 0 IN PTR example.com.
+coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
+]]></sourcecode>
+<t>The PTR RRset <bcp14>MUST</bcp14> consist of a single PTR record.
+The presence of more than one record in the RRset indicates a broken catalog zone, which <bcp14>MUST NOT</bcp14> be processed (see <xref target="generalrequirements"></xref>).</t>
+<t>When a consumer of a catalog zone <tt>$OLDCATZ</tt> receives an update that adds or changes a <tt>coo</tt> property for a member zone in <tt>$OLDCATZ</tt>, it does <em>not</em> migrate the member zone immediately.
+
+The migration has to wait for an update of <tt>$NEWCATZ</tt> in which the member zone is present. 
+<!-- [rfced] We suggest rephrasing the following sentence to provide a better
+flow of the text and avoid interrupters. Does the following suggestion
+retain the intended meaning?
+
+Original: 
+   The consumer MUST verify, before the actual migration, that coo
+   property pointing to $NEWCATZ is still present in $OLDCATZ.
+
+Perhaps: 
+   The consumer MUST verify that the coo property pointing to $NEWCATZ
+   is still present in $OLDCATZ before the actual migration. -->
+The consumer <bcp14>MUST</bcp14> verify, before the actual migration, that <tt>coo</tt> property pointing to <tt>$NEWCATZ</tt> is still present in <tt>$OLDCATZ</tt>.</t>
+<t>Unless the member node label (i.e., <tt>&lt;unique-N&gt;</tt>) for the member is the same in <tt>$NEWCATZ</tt>, all its associated states for a just migrated zone <bcp14>MUST</bcp14> be reset (see <xref target="zonereset"></xref>).
+Note that the owner of <tt>$OLDCATZ</tt> allows for the zone-associated state to be taken over by the owner of <tt>$NEWCATZ</tt> by default.
+<!-- [rfced] Is "state" referring to "zone-associated state" in this instance?
+To clarify, may we update the sentence as follows?
+
+Original:
+   To prevent the takeover of state, the owner of
+   $OLDCATZ must remove this state by updating the associated properties
+   or by performing a zone state reset (see Section 5.6) before or
+   simultaneous with adding the coo property. (see also Section 7)
+
+Perhaps:
+   To prevent the takeover of the zone-associated state, the owner of
+   $OLDCATZ must remove this state by updating the associated properties
+   or by performing a zone state reset (see Section 5.6) before or
+   simultaneous with adding the coo property (see Section 8). -->
+To prevent the takeover of state, the owner of <tt>$OLDCATZ</tt> must remove this state by updating the associated properties or by performing a zone state reset (see <xref target="zonereset"></xref>) before or simultaneous with adding the <tt>coo</tt> property (see <xref target="security"></xref>).</t>
+<t>The old owner may remove the member zone containing the <tt>coo</tt> property from <tt>$OLDCATZ</tt> once it has been established that all its consumers have processed the Change of Ownership.</t>
+</section>
+
+<section anchor="groups-group-property"><name>Groups (<tt>group</tt> property)</name>
+<t>With a <tt>group</tt> property, a consumer(s) can be signaled to treat some member zones within the catalog zone differently.</t>
+<t>The consumer <bcp14>MAY</bcp14> apply different configuration options when processing member zones, based on the value of the <tt>group</tt> property.
+A <tt>group</tt> property value is stored as the entire RDATA of a TXT record directly below the member node.
+The exact handling of the <tt>group</tt> property value is left to the consumer's implementation and configuration.</t>
+<t>The producer <bcp14>MAY</bcp14> assign a <tt>group</tt> property to all, some, or none of the member zones within a catalog zone.
+The producer <bcp14>MAY</bcp14> assign more than one <tt>group</tt> property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
+Implementations <bcp14>MAY</bcp14> facilitate mapping of a specific <tt>group</tt> value to a specific configuration configurable <em>on a per catalog zone basis</em> to allow for producers that publish their catalog zone at multiple consumer operators.
+Consumer operators <bcp14>SHOULD</bcp14> namespace their group values to reduce the risk of having to resolve clashes.</t>
+<t>The consumer <bcp14>MUST</bcp14> ignore <tt>group</tt> values it does not understand.
+When a consumer encounters multiple <tt>group</tt> values for a single member zone, it <bcp14>MAY</bcp14> choose to process all, some, or none of them. This is left to the implementation.</t>
+
+<section anchor="example"><name>Example</name>
+<t>Group properties are represented by TXT RRs. The record content
+has no pre-defined meaning. Their interpretation is purely a matter
+of agreement between the producer and the consumer(s) of the catalog.</t>
+<t>For example, the "foo" group could be agreed to indicate that a zone not
+be signed with DNSSEC. Conversely, an agreement could define that group names
+starting with "operator-" indicate in which way a given DNS operator should set
+up certain aspects of the member zone's DNSSEC configuration.</t>
+<t>Assuming that the catalog producer and consumer(s) have established such
+agreements, consider the following catalog zone (snippet) that signals to a
+consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":</t>
+
+<sourcecode type=""><![CDATA[
+<unique-1>.zones.$CATZ        0 IN PTR    example.com.
+group.<unique-1>.zones.$CATZ  0 IN TXT    "foo"
+<unique-2>.zones.$CATZ        0 IN PTR    example.net.
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-x-foo"
+group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
+]]></sourcecode>
+<t>In this scenario, a consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
+For "example.net.", the consumers, at two different operators, will configure
+the member zone to be signed with a specific combination of settings. 
+<!-- [rfced] We are having difficulty parsing the sentence
+below. Specifically, what is the second instance of "that" referring to?
+Please review and let us know how this sentence should be
+updated for clarity.
+
+Original: 
+   The group value that indicates that depends on what has been agreed
+   with each operator ("operator-x-foo" vs. "operator-y" "bar"). -->
+The group value that indicates
+that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").</t>
+</section>
+</section>
+</section>
+
+<section anchor="customproperties"><name>Custom Properties (<tt>*.ext</tt> properties)</name>
+<t>Implementations and operators of catalog zones may choose to provide their own properties.
+Custom properties can occur globally or for a specific member zone.
+To prevent a name clash with future properties, such properties <bcp14>MUST</bcp14> be represented below the label "ext".</t>
+<t>"ext" is not a placeholder. A custom property is named as follows:</t>
+
+<sourcecode type=""><![CDATA[
+; a global custom property:
+<property-prefix>.ext.$CATZ
+
+; a member zone custom property:
+<property-prefix>.ext.<unique-N>.zones.$CATZ
+]]></sourcecode>
+<t><tt>&lt;property-prefix&gt;</tt> may consist of one or more labels.</t>
+<t>Implementations <bcp14>SHOULD</bcp14> namespace their custom properties to limit risk of clashes with other implementations of catalog zones.
+This can be achieved by using two labels as the <tt>&lt;property-prefix&gt;</tt> so that the
+name of the implementation is included in the prefix: <tt>&lt;some-setting&gt;.&lt;implementation-name&gt;.ext.$CATZ</tt>.</t>
+<t>Implementations <bcp14>MAY</bcp14> use such properties on the member zone level to store additional information about member zones
+(e.g., to flag them for specific treatment).</t>
+<t>Further, implementations <bcp14>MAY</bcp14> use custom properties on the global level to store additional information about the catalog zone itself.
+While there may be many use cases for this, a plausible one is to store default values for custom properties on the global level,
+then override them using a property of the same name on the member level (= under the <tt>ext</tt> label of the member node) if so desired.
+A property agreement between producer and consumer should clearly define what semantics apply and whether a property is global, member, or both.</t>
+<t>The meaning of the custom properties described in this section is determined by the implementation alone without expectation of interoperability.</t>
+</section>
+</section>
+
+<section anchor="behavior"><name>Name Server Behavior</name>
+
+<section anchor="generalrequirements"><name>General Requirements</name>
+<t>As it is a regular DNS zone, a catalog zone can be transferred using DNS zone
+transfers among name servers.</t>
+<t>Catalog updates should be automatic; i.e., when a name server that supports
+catalog zones completes a zone transfer for a catalog zone, it <bcp14>SHOULD</bcp14> apply
+changes to the catalog within the running name server automatically without any
+manual intervention.</t>
+<t>Name servers <bcp14>MAY</bcp14> allow loading and transfer of broken zones with incorrect
+catalog zone syntax (as they are treated as regular zones).
+The reason a catalog zone is considered broken <bcp14>SHOULD</bcp14> be communicated clearly to the operator (e.g., through a log message).</t>
+<t>When a previously correct catalog zone becomes a broken catalog zone, it loses its catalog
+meaning because                 
+of an update through an incremental transfer or otherwise.
+No special processing occurs. Member zones previously configured by this catalog
+<bcp14>MUST NOT</bcp14> be removed or reconfigured in any way.</t>
+<t>If a name server restarts with a broken catalog zone, the broken catalog <bcp14>SHOULD
+NOT</bcp14> prevent the name server from starting up and serving the member zones in
+the last valid version of the catalog zone.</t>
+<t>Processing of a broken catalog <bcp14>SHALL</bcp14> start (or resume) when the catalog turns
+into a correct catalog zone, e.g., by an additional update (through zone
+transfer or updates) fixing the catalog zone.</t>
+<t>Similarly, when a catalog zone expires, it loses its catalog meaning and
+<bcp14>MUST</bcp14> no longer be processed as such.
+No special processing occurs until the zone becomes fresh again.</t>
+</section>
+
+<section anchor="nameclash"><name>Member Zone Name Clash</name>
+<t>If there is a clash between an existing zone's name (from either an existing member zone or an otherwise configured zone) and an incoming
+member zone's name (via transfer or update), the new instance of the zone <bcp14>MUST</bcp14>
+be ignored and an error <bcp14>SHOULD</bcp14> be logged.</t>
+<t>A clash between an existing member zone's name and an incoming member zone's name (via transfer or update) may be an attempt to migrate a zone to a different catalog, but it should not be treated as one except as described in <xref target="cooproperty"></xref>.</t>
+</section>
+
+<section anchor="zoneremoval"><name>Member Zone Removal</name>
+<t>When a member zone is removed from a specific catalog zone, a consumer <bcp14>MUST NOT</bcp14> remove the zone and associated state data if the zone was not configured from that specific catalog zone.
+<!-- [rfced] FYI - We have rearranged this sentence for readability. Please
+let us know if this change is incorrect or if there are any objections.
+
+Original: 
+   Only when the zone was configured from a specific catalog zone, and
+   the zone is removed as a member from that specific catalog zone, the zone and
+   associated state (such as zone data and DNSSEC keys) MUST be removed from the
+   consumer.
+
+Current: 
+   The zone and associated state (such as zone data and DNSSEC keys)
+   MUST be removed from the consumer only when the zone was configured from a
+   specific catalog zone and is removed as a member from that specific catalog
+   zone. -->
+The zone and associated state (such as zone data and DNSSEC keys) <bcp14>MUST</bcp14> be removed from the consumer only when the zone was configured from a specific catalog zone and is removed as a member from that specific catalog zone.
+Consumer operators may consider temporarily archiving associated state to facilitate mistake recovery.</t>
+</section>
+<!-- [rfced] FYI - We have updated the following text in Section 5.4
+for easy readability. Specifically, we have rearranged the first
+two phrases for better sentence flow and clarified some of the
+text. Please let us know any objections.
+
+Original: 
+   When via a single update or transfer, the member node's label value
+   (<unique-N>) changes, catalog consumers MUST process this as a member
+   zone removal including all the zone's associated state (as described in
+   Section 5.3), immediately followed by processing the member as a newly to
+   be configured zone in the same catalog.  
+
+Current: 
+   When the member node's label value (<unique-N>) changes via a single update 
+   or transfer, catalog consumers MUST process this as a member zone removal, 
+   including the removal of all the zone's associated state (as described in 
+   Section 5.3), and then immediately process the member as a newly added zone 
+   to be configured in the same catalog.-->
+
+ <section anchor="namechange"><name>Member Node Name
+     Change</name>
+<t>When the member node's label value (<tt>&lt;unique-N&gt;</tt>) changes via a single update or transfer, catalog consumers <bcp14>MUST</bcp14> process this as a member zone removal, including the removal of all the zone's associated state (as described in <xref target="zoneremoval"></xref>), and then immediately process the member as a newly added zone to be configured in the same catalog.
+</t>
+</section>
+
+<section anchor="zonemigration"><name>Migrating Member Zones between Catalogs</name>
+<t>If all consumers of the catalog zones involved support the <tt>coo</tt> property, it is <bcp14>RECOMMENDED</bcp14> to perform migration of a member zone by following the procedure described in <xref target="cooproperty"></xref>. Otherwise, the migration of a member zone from a catalog zone <tt>$OLDCATZ</tt> to a catalog zone <tt>$NEWCATZ</tt> has to be done by first removing the member zone from <tt>$OLDCATZ</tt> and then adding the member zone to <tt>$NEWCATZ</tt>.</t>
+
+<!-- [rfced] FYI - We have updated the following text for readability. Please
+let us know of any objections or technical inaccuracy.
+
+Original:
+   If in the process of a migration some consumers of the involved
+   catalog zones did not catch the removal of the member zone from
+   $OLDCATZ yet (because of a lost packet or downtime or otherwise), but
+   did already see the update of $NEWCATZ, they may consider the update
+   adding the member zone in $NEWCATZ to be a name clash (see
+   Section 5.2) and as a consequence the member is not migrated to
+   $NEWCATZ. 
+
+Current:
+   In the process of a migration, if some consumers of the involved
+   catalog zones did not catch the removal of the member zone from
+   $OLDCATZ yet (because of a lost packet, downtime, or otherwise) but
+   already saw the update of $NEWCATZ, they may consider the update by
+   adding the member zone in $NEWCATZ to be a name clash (see
+   Section 5.2); as a consequence, the member is not migrated to
+   $NEWCATZ. -->
+<t>In the process of a migration, if some consumers of the involved catalog zones did not catch the removal of the member zone from <tt>$OLDCATZ</tt> yet (because of a lost packet, downtime, or otherwise) but already saw the update of <tt>$NEWCATZ</tt>, they may consider the update by adding the member zone in <tt>$NEWCATZ</tt> to be a name clash (see <xref target="nameclash"></xref>); as a consequence, the member is not migrated to <tt>$NEWCATZ</tt>.
+This possibility needs to be anticipated with a member zone migration.
+Recovery from such a situation is out of the scope of this document.
+For example, it may entail a manually forced retransfer of <tt>$NEWCATZ</tt> to consumers after they have been detected to have received and processed the removal of the member zone from <tt>$OLDCATZ</tt>.</t>
+</section>
+
+<section anchor="zonereset"><name>Zone-Associated State Reset</name>
+<t>It may be desirable to reset state (such as zone data and DNSSEC keys) associated with a member zone.</t>
+<t>A zone state reset may be performed by a change of the member node's name (see <xref target="namechange"></xref>).</t>
+</section>
+</section>
+
+<section anchor="implementationnotes"><name>Implementation and Operational Notes</name>
+<t>Although any valid domain name can be used for the catalog name $CATZ, a catalog producer <bcp14>MUST NOT</bcp14> use names that are not under the control of the catalog producer (with the exception of reserved names). 
+It is
+<bcp14>RECOMMENDED</bcp14> to use either a domain name owned by the catalog producer or a domain name under a suitable name such as "invalid." <xref target="RFC6761"></xref>.</t>
+<t>Catalog zones on secondary name servers would have to be set up manually, perhaps
+as static configuration, similar to how ordinary DNS zones are configured when catalog zones or another automatic configuration mechanism are not in place.
+Additionally, the secondary needs to be configured as a catalog consumer for the catalog zone to enable processing of the member zones in the catalog, such as automatic synchronization of the member zones for secondary service.</t>
+<t>Operators of catalog consumers should note that secondary name servers may
+receive DNS NOTIFY messages <xref target="RFC1996"></xref> for zones before they are seen as
+newly added member zones to the catalog from which that secondary is
+provisioned.</t>
+<t>Although they are regular DNS zones, catalog zones only contain information for
+the management of a set of authoritative name servers.  To prevent unintended
+exposure to other parties, operators <bcp14>SHOULD</bcp14> limit the systems able to query these zones.</t>
+<t>Querying/serving catalog zone contents may be inconvenient via DNS
+due to the nature of their representation.
+Therefore, an administrator may want to use a different method for
+looking at data inside the catalog zone.  Typical
+queries might include dumping the list of member zones, dumping a member zone's
+effective configuration, querying a specific property value of a member zone,
+etc.  Because of the structure of catalog zones, it may not be possible to
+perform these queries intuitively, or in some cases at all, using DNS QUERY.
+<!-- [rfced] Should we change "QUERY" to "query" in this context? Or should
+"QUERY" remain capitalized due to its association with "DNS QUERY" in the
+previous sentence?
+
+Original:
+   Because of the structure of catalog zones, it may not be
+   possible to perform these queries intuitively, or in some cases, at
+   all, using DNS QUERY.  
+
+   For example, it is not possible to enumerate
+   the contents of a multivalued property (such as the list of member
+   zones) with a single QUERY.
+
+Perhaps:
+   Because of the structure of catalog zones, it may not be
+   possible to perform these queries intuitively, or in some 
+   cases at all, using DNS QUERY.  
+
+   For example, it is not possible to enumerate
+   the contents of a multivalued property (such as the list of member
+   zones) with a single query. -->
+For example, it is not possible to enumerate the contents of a multivalued
+property (such as the list of member zones) with a single QUERY.
+Implementations are therefore advised to provide a tool that uses either the
+output of AXFR or an out-of-band method to perform queries on catalog zones.</t>
+<t>Great power comes with great responsibility. Catalog zones simplify zone
+provisioning by orchestrating zones on secondary name servers from a single
+data source: the catalog.  Hence, the catalog producer has great power and
+changes must be treated carefully. For example, if the catalog is generated by
+some script and this script generates an empty catalog,
+millions of member zones may get deleted from their secondaries within seconds,
+and all the affected domains may be offline in a blink of an eye.</t>
+</section>
+
+
+<section anchor="security"><name>Security Considerations</name>
+<t>As catalog zones are transmitted using DNS zone transfers,
+it is <bcp14>RECOMMENDED</bcp14> that catalog zone transfers be protected from unexpected modifications by way of authentication, e.g., by using a Transaction Signature (TSIG) <xref target="RFC8945"></xref> or Strict or Mutual TLS authentication with DNS zone transfer over TLS or QUIC <xref target="RFC9103"></xref>.</t>
+<t>Use of DNS UPDATE <xref target="RFC2136"></xref> to modify the content of catalog zones <bcp14>SHOULD</bcp14> similarly be authenticated.</t>
+<t>Zone transfers of member zones <bcp14>SHOULD</bcp14> similarly be authenticated.
+TSIG shared secrets used for member zones <bcp14>SHOULD NOT</bcp14> be mentioned in the catalog zone data.
+However, key identifiers may be shared within catalog zones.</t>
+<t>Catalog zones reveal the zones served by their consumers, including their properties.
+To prevent unintentional exposure of catalog zone contents, it is <bcp14>RECOMMENDED</bcp14> to limit the systems able to query them and to conduct catalog zone transfers confidentially <xref target="RFC9103"></xref>.</t>
+<t>As with regular zones, primary and secondary name servers for a catalog zone may
+be operated by different administrators.  The secondary name servers may be
+configured as a catalog consumer to synchronize catalog zones from the primary, but the primary's
+administrators may not have any administrative access to the secondaries.</t>
+<t>Administrative control over what zones are served from the configured name servers shifts completely from the server operator (consumer) to the "owner" (producer) of the catalog zone content.
+To prevent unintended provisioning of zones, a consumer(s) <bcp14>SHOULD</bcp14> scope the set of
+admissible member zones by any means deemed suitable (such as statically via
+regular expressions, or dynamically by verifying against another database
+before accepting a member zone).</t>
+<t>With migration of member zones between catalogs using the <tt>coo</tt> property, it is possible for the owner of the target catalog (i.e., <tt>$NEWCATZ</tt>) to take over all its associated state with the zone from the original owner (i.e., <tt>$OLDCATZ</tt>) by maintaining the same member node label (i.e., <tt>&lt;unique-N&gt;</tt>).
+To prevent the takeover of the zone-associated state, the original owner has to enforce a zone state reset by changing the member node label (see <xref target="zonereset"></xref>) before or simultaneously with adding the <tt>coo</tt> property.</t>
+</section>
+<section anchor="iana"><name>IANA Considerations</name>
+<t>IANA has created the "DNS Catalog Zones Properties" registry under the "Domain Name System (DNS) Parameters" registry as follows:</t>
+
+<!-- [rfced] We have included some specific questions about the IANA
+text below. In addition to responding to those questions, please
+review all of the IANA-related updates carefully and let us know
+if any further updates are needed.
+
+1) The note in this document does not match the note in the "DNS Catalog
+Zones Properties" registry (see
+<https://www.iana.org/assignments/dns-parameters/>).  Should the IANA
+registry be updated to match this document, or vice versa?
+
+IANA registry:
+   This registry applies to Catalog Zones schema version "2" as specified 
+   in [RFC-ietf-dnsop-dns-catalog-zones-09].
+
+This document (current):
+   This registry does not apply to catalog zones version "1" but applies 
+   to catalog zones version "2" as specified in RFC 9432.
+
+
+2) Does this description mean that the status is only displayed for an 
+IETF Stream RFC?  Does "External" include documents produced by other 
+streams (e.g., IRTF)? If so, may we update the text as follows?
+
+Original:
+   Status: IETF Document status or "External" if not documented in an
+   IETF document.
+
+Perhaps:
+   Status: IETF Stream RFC status or "External" if not documented in an
+   IETF Stream RFC.
+-->
+
+<dl>
+<dt>Registry Name:</dt>
+<dd>DNS Catalog Zones Properties</dd>
+<dt>Assignment Policy:</dt>
+<dd>Expert Review, except for property prefixes ending in the label "ext", which are for Private Use <xref target="RFC8126"/>.</dd>
+<dt>Reference:</dt>
+<dd>RFC 9432</dd>
+<dt>Note:</dt>
+<dd>This registry does not apply to catalog zones version "1", but applies to catalog zones version "2" as specified in RFC 9432.</dd>
+</dl>
+<table>
+<name>DNS Catalog Zones Properties Registry</name>
+<thead>
+<tr>
+<th>Property Prefix</th>
+<th>Description</th>
+<th>Status</th>
+<th>Reference</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>zones</td>
+<td>List of member zones</td>
+<td>Standards Track</td>
+<td>RFC 9432</td>
+</tr>
+
+<tr>
+<td>version</td>
+<td>Schema version</td>
+<td>Standards Track</td>
+<td>RFC 9432</td>
+</tr>
+
+<tr>
+<td>coo</td>
+<td>Change of Ownership</td>
+<td>Standards Track</td>
+<td>RFC 9432</td>
+</tr>
+
+<tr>
+<td>group</td>
+<td>Group</td>
+<td>Standards Track</td>
+<td>RFC 9432</td>
+</tr>
+
+<tr>
+<td>*.ext</td>
+<td>Custom properties</td>
+<td>Private Use</td>
+<td>RFC 9432</td>
+</tr>
+</tbody>
+</table><t>The meanings of the fields are as follows:</t>
+<dl>
+<dt>Property prefix:</dt>
+<dd>One or more domain name labels.</dd>
+<dt>Description:</dt>
+<dd>A human-readable short description or name for the property.</dd>
+<dt>Status:</dt>
+<dd>IETF Document status or "External" if not documented in an IETF Document.</dd>
+<dt>Reference:</dt>
+<dd>A stable reference to the document in which this property is defined.</dd>
+</dl>
+</section>
+</middle>
+<back>
+<references>
+<name>References</name>
+<references>
+<name>Normative References</name>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1982.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.1996.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2136.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.2606.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.6761.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8499.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8945.xml"/>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.9103.xml"/>
+</references>
+<references><name>Informative References</name>
+<xi:include href="https://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml"/>
+
+<reference anchor="FOSDEM20" target="https://archive.fosdem.org/2020/schedule/event/dns_catz/">
+  <front>
+    <title>
+Extending Catalog zones - another approach in automating maintenance
+</title>
+    <author fullname="Leo Vandewoestijne" initials="L." surname="Vandewoestijne"></author>
+    <date month="February" year="2020"></date>
+  </front>
+</reference>
+
+<reference anchor="Metazones" target="https://www.semanticscholar.org/paper/Federated-Domain-Name-Service-Using-DNS-Metazones-Vixie/dc12b0116332f5c236b05c71bbe20499f3c6c4b6">
+  <front>
+    <title>Federated Domain Name Service Using DNS Metazones</title>
+    <author fullname="Paul Vixie" initials="P." surname="Vixie"></author>
+    <date month="April" year="2006"></date>
+  </front>
+<seriesInfo name="DOI" value="10.1093/ietcom/e89-b.4.1144"/>
+</reference>
+</references>
+</references>
+<section anchor="catalog-zone-example"><name>Catalog Zone Example</name>
+<t>The following is a full example of a catalog zone containing three member zones with various properties:</t>
+
+<sourcecode type=""><![CDATA[
+catalog.invalid.                                0  SOA   invalid. (
+                        invalid. 1625079950 3600 600 2147483646 0 )
+catalog.invalid.                                0  NS    invalid.
+example.vendor.ext.catalog.invalid.             0  CNAME example.net.
+version.catalog.invalid.                        0  TXT   "2"
+nj2xg5b.zones.catalog.invalid.                  0  PTR   example.com.
+nvxxezj.zones.catalog.invalid.                  0  PTR   example.net.
+group.nvxxezj.zones.catalog.invalid.            0  TXT   (
+                        "operator-x-foo" )
+nfwxa33.zones.catalog.invalid.                  0  PTR   example.org.
+coo.nfwxa33.zones.catalog.invalid.              0  PTR   (
+                        newcatz.invalid. )
+group.nfwxa33.zones.catalog.invalid.            0  TXT   (
+                        "operator-y-bar" )
+metrics.vendor.ext.nfwxa33.zones.catalog.invalid. 0  CNAME (
+                        collector.example.net. )
+]]></sourcecode>
+</section>
+<section anchor="acknowledgements" numbered="false"><name>Acknowledgements</name>
+<t>Our deepest thanks and appreciation go to <contact fullname="Stephen Morris"/>,                     
+<contact fullname="Ray Bellis"/>, and <contact fullname="Witold Krecicki"/> who initiated this document  
+and did the bulk of                                                                                    
+the work.</t>
+<t>Catalog zones originated as the chosen method among various proposals that were                     
+evaluated at Internet Systems Consortium (ISC) for easy zone management.  The chosen method of storing the                           
+catalog as a regular DNS zone was proposed by <contact fullname="Stephen Morris"/>.</t>
+<t>The initial authors discovered that <contact fullname="Paul Vixie"/>'s earlier <xref                
+target="Metazones"></xref> proposal                                                                    
+implemented a similar approach, and they reviewed it.  Catalog zones borrow some                             
+syntax ideas from <xref
+target="Metazones"></xref>, as both share this scheme of representing the                             
+catalog as a regular DNS zone.</t>
+<t>Thanks to <contact fullname="Leo Vandewoestijne"/>. Leo's presentation in the DNS devroom at    
+FOSDEM'20 <xref target="FOSDEM20"></xref> was one of the motivations to take up and continue the       
+effort of standardizing catalog zones.</t>
+<t>Thanks to <contact fullname="Joe Abley"/>, <contact fullname="David Blacka"/>, <contact             
+fullname="Brian Conry"/>, <contact fullname="Klaus Darilion"/>, <contact fullname="Brian Dickson"/>,   
+<contact fullname="Tony Finch"/>, <contact fullname="Evan Hunt"/>, <contact fullname="Shane Kerr"/>,   
+<contact fullname="Warren Kumari"/>, <contact fullname="Patrik Lundin"/>, <contact fullname="Matthijs 
+Mekking"/>, <contact fullname="Victoria Risk"/>, <contact fullname="Josh Soref"/>, <contact            
+fullname="Petr Spacek"/>, <contact fullname="Michael StJohns"/>, <contact fullname="Carsten            
+Strotmann"/>, and <contact fullname="Tim Wicinski"/> for reviewing earlier draft versions and offering         
+comments and suggestions.</t>
+</section>
+<!-- [rfced] Throughout the text, the terms "nameserver" and "name server" are
+used inconsistently. To match RFCs 6761, 8945, and 9103, we have updated
+each instance of "nameserver" to "name server". Please let us know any
+objections. -->
+
+<!-- [rfced] Please review the "Inclusive Language" portion of the online
+Style Guide
+<https://www.rfc-editor.org/styleguide/part2/#inclusive_language> and let
+us know if any changes are needed. Note that our script did not flag any
+words in particular, but this should still be reviewed as a best
+practice. -->
+
+</back>
+</rfc>
