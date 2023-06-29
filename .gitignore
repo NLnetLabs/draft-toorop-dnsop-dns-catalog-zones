@@ -2,6 +2,7 @@
 /*.txt
 !/AUTH48-reply.txt
 /*.xml
+!/AUTH48-rfc9432.xml
 /archive/*.html
 /archive/*.txt
 /archive/*.xml
