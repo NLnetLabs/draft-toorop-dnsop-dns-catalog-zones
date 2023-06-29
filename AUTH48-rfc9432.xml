@@ -120,18 +120,6 @@ secondary.</t>
     when, and only when, they appear in all capitals, as shown here.
         </t>
 
-<!-- [rfced] In the html and pdf outputs, the text enclosed in <tt> is output in
-fixed-width font. In the txt output, there are no changes to the font,
-and the quotation marks have been removed. 
-
-In the html and pdf outputs, the text enclosed in <em> is output in
-italics. In the txt output, the text enclosed in <em> appears with an
-underscore before and after.
-
-Please review carefully and let us know if the output is acceptable or if any
-updates are needed. -->
-
-
 <!--[rfced] Section 2. Should the terminology list be placed in
 alphabetical order, or is the current order preferred? -->
 	
@@ -280,7 +268,7 @@ Member zone properties are represented by RRsets below the corresponding member 
 <section anchor="cooproperty"><name>Change of Ownership (<tt>coo</tt> property)</name>
 <t>The <tt>coo</tt> property facilitates controlled migration of a member zone from one catalog to another.</t>
 <t>A Change Of Ownership is signaled by the <tt>coo</tt> property in the catalog zone currently "owning" the zone.
-The name of the new catalog is the value of a PTR record in the relevant coo property in the old catalog.
+The name of the new catalog is the value of a PTR record in the relevant <tt>coo<tt> property in the old catalog.
 For example, if member "example.com." migrates from catalog zone <tt>$OLDCATZ</tt> to catalog zone <tt>$NEWCATZ</tt>, this will appear in the <tt>$OLDCATZ</tt> catalog zone as follows:</t>
 
 <sourcecode type="dns-rr"><![CDATA[
@@ -332,12 +320,12 @@ The exact handling of the <tt>group</tt> property value is left to the consumer'
 <t>The producer <bcp14>MAY</bcp14> assign a <tt>group</tt> property to all, some, or none of the member zones within a catalog zone.
 The producer <bcp14>MAY</bcp14> assign more than one <tt>group</tt> property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
 Implementations <bcp14>MAY</bcp14> facilitate mapping of a specific <tt>group</tt> value to a specific configuration configurable <em>on a per catalog zone basis</em> to allow for producers that publish their catalog zone at multiple consumer operators.
-Consumer operators <bcp14>SHOULD</bcp14> namespace their group values to reduce the risk of having to resolve clashes.</t>
+Consumer operators <bcp14>SHOULD</bcp14> namespace their <tt>group</tt> values to reduce the risk of having to resolve clashes.</t>
 <t>The consumer <bcp14>MUST</bcp14> ignore <tt>group</tt> values it does not understand.
 When a consumer encounters multiple <tt>group</tt> values for a single member zone, it <bcp14>MAY</bcp14> choose to process all, some, or none of them. This is left to the implementation.</t>
 
 <section anchor="example"><name>Example</name>
-<t>Group properties are represented by TXT RRs. The record content
+<t><tt>group</tt> properties are represented by TXT RRs. The record content
 has no pre-defined meaning. Their interpretation is purely a matter
 of agreement between the producer and the consumer(s) of the catalog.</t>
 <t>For example, the "foo" group could be agreed to indicate that a zone not
@@ -366,7 +354,7 @@ updated for clarity.
 Original: 
    The group value that indicates that depends on what has been agreed
    with each operator ("operator-x-foo" vs. "operator-y" "bar"). -->
-The group value that indicates
+The <tt>group</tt> value that indicates
 that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").</t>
 </section>
 </section>
