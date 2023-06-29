@@ -207,18 +207,6 @@ This PTR record <bcp14>MUST</bcp14> be the only record in the PTR RRset with the
 The presence of more than one record in the RRset indicates a broken catalog zone that <bcp14>MUST NOT</bcp14> be processed (see <xref target="generalrequirements"></xref>).</t>
 <t>For example, if a catalog zone lists three zones ("example.com.",
 "example.net.", and "example.org."), the member node RRs would appear as follows:</t>
-<!-- [rfced] We have a few questions regarding the sourcecode in this document.
-
-a) We have updated the blocks of artwork in Sections 4.1 and 4.2.1 to
-sourcecode with the type listed as "dns-rr". Please let us know if this change
-is incorrect.
-
-b) Please review the "type" attribute of each sourcecode element
-in the XML file to ensure correctness. If the current list of preferred
-values for "type" (https://www.rfc-editor.org/materials/sourcecode-types.txt) 
-does not contain an applicable type, then feel free to let us
-know. Also, it is acceptable to leave the "type" attribute not
-set. -->
 <sourcecode type="dns-rr"><![CDATA[
 <unique-1>.zones.$CATZ 0 IN PTR example.com.
 <unique-2>.zones.$CATZ 0 IN PTR example.net.
@@ -295,7 +283,7 @@ Member zone properties are represented by RRsets below the corresponding member 
 The name of the new catalog is the value of a PTR record in the relevant coo property in the old catalog.
 For example, if member "example.com." migrates from catalog zone <tt>$OLDCATZ</tt> to catalog zone <tt>$NEWCATZ</tt>, this will appear in the <tt>$OLDCATZ</tt> catalog zone as follows:</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 <unique-N>.zones.$OLDCATZ 0 IN PTR example.com.
 coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 ]]></sourcecode>
@@ -360,7 +348,7 @@ up certain aspects of the member zone's DNSSEC configuration.</t>
 agreements, consider the following catalog zone (snippet) that signals to a
 consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
 group.<unique-1>.zones.$CATZ  0 IN TXT    "foo"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
@@ -390,7 +378,7 @@ Custom properties can occur globally or for a specific member zone.
 To prevent a name clash with future properties, such properties <bcp14>MUST</bcp14> be represented below the label "ext".</t>
 <t>"ext" is not a placeholder. A custom property is named as follows:</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 ; a global custom property:
 <property-prefix>.ext.$CATZ
 
@@ -751,7 +739,7 @@ Extending Catalog zones - another approach in automating maintenance
 <section anchor="catalog-zone-example"><name>Catalog Zone Example</name>
 <t>The following is a full example of a catalog zone containing three member zones with various properties:</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 catalog.invalid.                                0  SOA   invalid. (
                         invalid. 1625079950 3600 600 2147483646 0 )
 catalog.invalid.                                0  NS    invalid.
