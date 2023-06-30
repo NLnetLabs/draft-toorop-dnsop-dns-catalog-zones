@@ -121,6 +121,11 @@ Thanks, we accept the new text and have updated the attached xml with the sugges
 >    The consumer MUST verify that the coo property pointing to $NEWCATZ
 >    is still present in $OLDCATZ before the actual migration. -->
 > 
+
+We don't take the suggestion but have updated the xml with: "Before the actual migration the consumer MUST verify that the coo property pointing to $NEWCATZ is still present in $OLDCATZ."
+
+Is that also more clear in your opinion?
+
 > 
 > 10) <!-- [rfced] Is "state" referring to "zone-associated state" in this instance?
 > To clarify, may we update the sentence as follows?
@@ -149,6 +154,10 @@ We take the suggestion and have updated the attached xml accordingly.
 > Original: 
 >    The group value that indicates that depends on what has been agreed
 >    with each operator ("operator-x-foo" vs. "operator-y" "bar"). -->
+
+Whe adapted the xml with the following: The group value designated to indicate this combination of settings is pre-arranged with each operator  ("operator-x-foo" vs. "operator-y" "bar").
+
+Is that better?
 > 
 > 
 > 12) <!-- [rfced] FYI - We have rearranged this sentence for readability. Please
@@ -166,6 +175,9 @@ We take the suggestion and have updated the attached xml accordingly.
 >    specific catalog zone and is removed as a member from that specific catalog
 >    zone. -->
 > 
+
+FYI - We modified your rearrangement a bit in the attached updated xml, to say: The zone and associated state (such as zone data and DNSSEC keys) MUST be removed from the consumer when and only when the zone was configured initially from the same catalog.
+
 > 
 > 13) <!-- [rfced] FYI - We have updated the following text in Section 5.4
 > for easy readability. Specifically, we have rearranged the first
@@ -210,6 +222,9 @@ Works for me!
 >    Section 5.2); as a consequence, the member is not migrated to
 >    $NEWCATZ. -->
 > 
+
+FYI - we updated your readability update to the following in the attached xml: If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from $OLDCATZ yet (because of a lost packet or downtime or otherwise) but already saw the update of $NEWCATZ containing the addition of that member zone, they may consider this update to be a name clash (see Section 5.2) and as a consequence the member is not migrated to $NEWCATZ. 
+
 > 
 > 15) <!-- [rfced] Should we change "QUERY" to "query" in this context? Or should
 > "QUERY" remain capitalized due to its association with "DNS QUERY" in the
@@ -287,6 +302,9 @@ This is fine! Thanks
 > words in particular, but this should still be reviewed as a best
 > practice. -->
 > 
+
+After going over the text once again, I didn't see any issues with respect to "Inclusive Language"
+
 > 
 > Thank you.
 > 
