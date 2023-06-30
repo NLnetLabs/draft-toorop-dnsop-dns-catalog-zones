@@ -217,7 +217,7 @@ Member zone properties are represented by RRsets below the corresponding member 
 <section anchor="cooproperty"><name>Change of Ownership (<tt>coo</tt> property)</name>
 <t>The <tt>coo</tt> property facilitates controlled migration of a member zone from one catalog to another.</t>
 <t>A Change Of Ownership is signaled by the <tt>coo</tt> property in the catalog zone currently "owning" the zone.
-The name of the new catalog is the value of a PTR record in the relevant <tt>coo<tt> property in the old catalog.
+The name of the new catalog is the value of a PTR record in the relevant <tt>coo</tt> property in the old catalog.
 For example, if member "example.com." migrates from catalog zone <tt>$OLDCATZ</tt> to catalog zone <tt>$NEWCATZ</tt>, this will appear in the <tt>$OLDCATZ</tt> catalog zone as follows:</t>
 
 <sourcecode type="dns-rr"><![CDATA[
