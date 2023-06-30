@@ -128,18 +128,7 @@ catalog zone itself.
 server that configures itself according to the catalog zone's contents).</dd>
 </dl>
 <t>
-<!-- [rfced] May we rephrase the following sentence to make it more uniform?
-
-Original: 
-   This document makes use of terminology that is specific to the DNS,
-   such as for transfer mechanisms (AXFR, IXFR), for record types (SOA, NS, PTR),
-   and other technical terms (such as RDATA).
-
-Perhaps: 
-   This document makes use of terminology for transfer mechanisms (AXFR
-   and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as
-   RDATA) that are specific to the DNS. -->
-This document makes use of terminology that is specific to the DNS, such as transfer mechanisms (AXFR and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as RDATA).
+This document makes use of terminology for transfer mechanisms (AXFR and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as RDATA) that are specific to the DNS.
 Since these terms have specific meanings in the DNS, they are not expanded upon first use in this document.
 For definitions of these and other terms, see <xref target="RFC8499"></xref>.</t>
 </section>
@@ -162,22 +151,7 @@ A single NS RR with a NSDNAME field containing the absolute name "invalid." is <
 
 <section anchor="listofmemberzones"><name>Member Zones</name>
 <t>The list of member zones is specified as a collection of member nodes represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.</t>
-<!-- [rfced] We suggest rephrasing the following sentence. Specifically, the
-phrase "instead of as" can be improved for a better sentence flow. Does
-the following suggestion retain the intended meaning?
-
-Original: 
-   The names of member zones are represented on the RDATA side (instead
-   of as a part of owner names) of a PTR record, so that all valid domain names
-   may be represented regardless of their length [RFC1035].
-
-Perhaps: 
-   The names of member zones are represented on the RDATA side of a PTR
-   record (instead of being represented as a part of owner names) so that all
-   valid domain names may be represented regardless of their length
-   [RFC1035]. -->
-
-<t>The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length <xref target="RFC1035"></xref>.
+<t>The names of member zones are represented on the RDATA side of a PTR record (instead of being represented as a part of owner names) so that all valid domain names may be represented regardless of their length <xref target="RFC1035"></xref>.
 This PTR record <bcp14>MUST</bcp14> be the only record in the PTR RRset with the same name.
 The presence of more than one record in the RRset indicates a broken catalog zone that <bcp14>MUST NOT</bcp14> be processed (see <xref target="generalrequirements"></xref>).</t>
 <t>For example, if a catalog zone lists three zones ("example.com.",
@@ -230,19 +204,7 @@ All catalog zones <bcp14>MUST</bcp14> have a TXT RRset named <tt>version.$CATZ</
 
 <sourcecode type="dns-rr"><![CDATA[version.$CATZ 0 IN TXT "2"
 ]]></sourcecode>
-<!-- [rfced] Will most readers understand that "NB" means to take
-special note, or would you like to rephrase as follows so that
-"NB" is not mistaken as a term?
-
-Original:
-   NB: Version 1 was used in a draft version of this memo and reflected
-   the implementation first found in BIND 9.11. 
-
-Perhaps:
-   Note that Version 1 was used in an earlier draft version of this memo 
-   and reflected the implementation first found in BIND 9.11. -->
-
-<t>NB: Version 1 was used in an earlier draft version of this memo and reflected
+<t>Note that Version 1 was used in an earlier draft version of this memo and reflected
 the implementation first found in BIND 9.11.</t>
 </section>
 </section>
@@ -281,21 +243,7 @@ Perhaps:
 The consumer <bcp14>MUST</bcp14> verify, before the actual migration, that <tt>coo</tt> property pointing to <tt>$NEWCATZ</tt> is still present in <tt>$OLDCATZ</tt>.</t>
 <t>Unless the member node label (i.e., <tt>&lt;unique-N&gt;</tt>) for the member is the same in <tt>$NEWCATZ</tt>, all its associated states for a just migrated zone <bcp14>MUST</bcp14> be reset (see <xref target="zonereset"></xref>).
 Note that the owner of <tt>$OLDCATZ</tt> allows for the zone-associated state to be taken over by the owner of <tt>$NEWCATZ</tt> by default.
-<!-- [rfced] Is "state" referring to "zone-associated state" in this instance?
-To clarify, may we update the sentence as follows?
-
-Original:
-   To prevent the takeover of state, the owner of
-   $OLDCATZ must remove this state by updating the associated properties
-   or by performing a zone state reset (see Section 5.6) before or
-   simultaneous with adding the coo property. (see also Section 7)
-
-Perhaps:
-   To prevent the takeover of the zone-associated state, the owner of
-   $OLDCATZ must remove this state by updating the associated properties
-   or by performing a zone state reset (see Section 5.6) before or
-   simultaneous with adding the coo property (see Section 8). -->
-To prevent the takeover of state, the owner of <tt>$OLDCATZ</tt> must remove this state by updating the associated properties or by performing a zone state reset (see <xref target="zonereset"></xref>) before or simultaneous with adding the <tt>coo</tt> property (see <xref target="security"></xref>).</t>
+To prevent the takeover of the zone-associated state, the owner of <tt>$OLDCATZ</tt> must remove this state by updating the associated properties or by performing a zone state reset (see <xref target="zonereset"></xref>) before or simultaneous with adding the <tt>coo</tt> property (see <xref target="security"></xref>).</t>
 <t>The old owner may remove the member zone containing the <tt>coo</tt> property from <tt>$OLDCATZ</tt> once it has been established that all its consumers have processed the Change of Ownership.</t>
 </section>
 
@@ -529,39 +477,6 @@ To prevent the takeover of the zone-associated state, the original owner has to 
 </section>
 <section anchor="iana"><name>IANA Considerations</name>
 <t>IANA has created the "DNS Catalog Zones Properties" registry under the "Domain Name System (DNS) Parameters" registry as follows:</t>
-
-<!-- [rfced] We have included some specific questions about the IANA
-text below. In addition to responding to those questions, please
-review all of the IANA-related updates carefully and let us know
-if any further updates are needed.
-
-1) The note in this document does not match the note in the "DNS Catalog
-Zones Properties" registry (see
-<https://www.iana.org/assignments/dns-parameters/>).  Should the IANA
-registry be updated to match this document, or vice versa?
-
-IANA registry:
-   This registry applies to Catalog Zones schema version "2" as specified 
-   in [RFC-ietf-dnsop-dns-catalog-zones-09].
-
-This document (current):
-   This registry does not apply to catalog zones version "1" but applies 
-   to catalog zones version "2" as specified in RFC 9432.
-
-
-2) Does this description mean that the status is only displayed for an 
-IETF Stream RFC?  Does "External" include documents produced by other 
-streams (e.g., IRTF)? If so, may we update the text as follows?
-
-Original:
-   Status: IETF Document status or "External" if not documented in an
-   IETF document.
-
-Perhaps:
-   Status: IETF Stream RFC status or "External" if not documented in an
-   IETF Stream RFC.
--->
-
 <dl>
 <dt>Registry Name:</dt>
 <dd>DNS Catalog Zones Properties</dd>
@@ -570,7 +485,7 @@ Perhaps:
 <dt>Reference:</dt>
 <dd>RFC 9432</dd>
 <dt>Note:</dt>
-<dd>This registry does not apply to catalog zones version "1", but applies to catalog zones version "2" as specified in RFC 9432.</dd>
+<dd>This registry applies to Catalog Zones schema version "2" as specified in RFC 9432.</dd>
 </dl>
 <table>
 <name>DNS Catalog Zones Properties Registry</name>
@@ -626,7 +541,7 @@ Perhaps:
 <dt>Description:</dt>
 <dd>A human-readable short description or name for the property.</dd>
 <dt>Status:</dt>
-<dd>IETF Document status or "External" if not documented in an IETF Document.</dd>
+<dd>IETF Stream RFC status or "External" if not documented in an IETF Stream RFC.</dd>
 <dt>Reference:</dt>
 <dd>A stable reference to the document in which this property is defined.</dd>
 </dl>
@@ -720,11 +635,6 @@ fullname="Petr Spacek"/>, <contact fullname="Michael StJohns"/>, <contact fullna
 Strotmann"/>, and <contact fullname="Tim Wicinski"/> for reviewing earlier draft versions and offering         
 comments and suggestions.</t>
 </section>
-<!-- [rfced] Throughout the text, the terms "nameserver" and "name server" are
-used inconsistently. To match RFCs 6761, 8945, and 9103, we have updated
-each instance of "nameserver" to "name server". Please let us know any
-objections. -->
-
 <!-- [rfced] Please review the "Inclusive Language" portion of the online
 Style Guide
 <https://www.rfc-editor.org/styleguide/part2/#inclusive_language> and let
