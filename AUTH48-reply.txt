@@ -53,6 +53,8 @@ The order should remain as is, because the descriptions of the terms use the pre
 >    and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as
 >    RDATA) that are specific to the DNS. -->
 > 
+
+Thanks, we accept the new text and have updated the attached xml with the suggestion.
 > 
 > 6) <!-- [rfced] We suggest rephrasing the following sentence. Specifically, the
 > phrase "instead of as" can be improved for a better sentence flow. Does
@@ -69,6 +71,8 @@ The order should remain as is, because the descriptions of the terms use the pre
 >    valid domain names may be represented regardless of their length
 >    [RFC1035]. -->
 > 
+
+Thanks, we accept the new text and have updated the attached xml with the suggestion.
 > 
 > 7) <!-- [rfced] We have a few questions regarding the sourcecode in this document.
 > 
@@ -101,6 +105,8 @@ All our other sourcecode elements are also of type "dns-rr". The attached xml fi
 > Perhaps:
 >    Note that Version 1 was used in an earlier draft version of this memo 
 >    and reflected the implementation first found in BIND 9.11. -->
+
+Thanks, we accept the new text and have updated the attached xml with the suggestion.
 > 
 > 
 > 9) <!-- [rfced] We suggest rephrasing the following sentence to provide a better
@@ -131,6 +137,9 @@ All our other sourcecode elements are also of type "dns-rr". The attached xml fi
 >    or by performing a zone state reset (see Section 5.6) before or
 >    simultaneous with adding the coo property (see Section 8). -->
 > 
+
+We take the suggestion and have updated the attached xml accordingly.
+
 > 
 > 11) <!-- [rfced] We are having difficulty parsing the sentence
 > below. Specifically, what is the second instance of "that" referring to?
@@ -245,6 +254,9 @@ We prefer the original (and kept it in the attached xml).
 >    This registry does not apply to catalog zones version "1" but applies 
 >    to catalog zones version "2" as specified in RFC 9432.
 > 
+
+We take what is currently in the registry and I have updated the attached xml accordingly.
+
 > 
 > 2) Does this description mean that the status is only displayed for an 
 > IETF Stream RFC?  Does "External" include documents produced by other 
@@ -259,6 +271,7 @@ We prefer the original (and kept it in the attached xml).
 >    IETF Stream RFC.
 > -->
 > 
+Yes, we take the suggestion and have updated the xml accordingly
 > 
 > 17) <!-- [rfced] Throughout the text, the terms "nameserver" and "name server" are
 > used inconsistently. To match RFCs 6761, 8945, and 9103, we have updated
