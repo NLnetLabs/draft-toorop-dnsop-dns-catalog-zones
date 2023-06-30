@@ -44,14 +44,6 @@
       <country>Netherlands</country>
       </postal><email>willem@nlnetlabs.nl</email>
   </address></author>
-<!-- [rfced] Generally, authors use a single first initial with a
-surname in the header. Is the use of two initials intentional
-(i.e., "C.R. Monshouwer")? Additionally, we note that the
-initials provided do no match the author's full name. If an
-update is necessary, please let us know the desired form.
-
-Original:
-   C.R. Monshouwer -->
 
   <author initials="C.R." surname="Monshouwer" fullname="Kees Monshouwer">
     <organization></organization>
@@ -78,8 +70,6 @@ Original:
 <date year="2023" month="June"/>
 <area>ops</area>
 <workgroup>dnsop</workgroup>
-
-<!-- [rfced] Please insert any keywords (beyond those that appear in the title) for use on https://www.rfc-editor.org/search. -->
 
 <abstract>
 <t>This document describes a method for automatic DNS zone provisioning among DNS
@@ -120,9 +110,6 @@ secondary.</t>
     when, and only when, they appear in all capitals, as shown here.
         </t>
 
-<!--[rfced] Section 2. Should the terminology list be placed in
-alphabetical order, or is the current order preferred? -->
-	
 <dl>
 <dt>Catalog zone:</dt>
 <dd>A DNS zone containing a DNS catalog, which is a list of DNS zones and associated properties.</dd>
@@ -441,26 +428,8 @@ Current:
 The zone and associated state (such as zone data and DNSSEC keys) <bcp14>MUST</bcp14> be removed from the consumer only when the zone was configured from a specific catalog zone and is removed as a member from that specific catalog zone.
 Consumer operators may consider temporarily archiving associated state to facilitate mistake recovery.</t>
 </section>
-<!-- [rfced] FYI - We have updated the following text in Section 5.4
-for easy readability. Specifically, we have rearranged the first
-two phrases for better sentence flow and clarified some of the
-text. Please let us know any objections.
 
-Original: 
-   When via a single update or transfer, the member node's label value
-   (<unique-N>) changes, catalog consumers MUST process this as a member
-   zone removal including all the zone's associated state (as described in
-   Section 5.3), immediately followed by processing the member as a newly to
-   be configured zone in the same catalog.  
-
-Current: 
-   When the member node's label value (<unique-N>) changes via a single update 
-   or transfer, catalog consumers MUST process this as a member zone removal, 
-   including the removal of all the zone's associated state (as described in 
-   Section 5.3), and then immediately process the member as a newly added zone 
-   to be configured in the same catalog.-->
-
- <section anchor="namechange"><name>Member Node Name
+<section anchor="namechange"><name>Member Node Name
      Change</name>
 <t>When the member node's label value (<tt>&lt;unique-N&gt;</tt>) changes via a single update or transfer, catalog consumers <bcp14>MUST</bcp14> process this as a member zone removal, including the removal of all the zone's associated state (as described in <xref target="zoneremoval"></xref>), and then immediately process the member as a newly added zone to be configured in the same catalog.
 </t>
@@ -523,27 +492,6 @@ queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases at all, using DNS QUERY.
-<!-- [rfced] Should we change "QUERY" to "query" in this context? Or should
-"QUERY" remain capitalized due to its association with "DNS QUERY" in the
-previous sentence?
-
-Original:
-   Because of the structure of catalog zones, it may not be
-   possible to perform these queries intuitively, or in some cases, at
-   all, using DNS QUERY.  
-
-   For example, it is not possible to enumerate
-   the contents of a multivalued property (such as the list of member
-   zones) with a single QUERY.
-
-Perhaps:
-   Because of the structure of catalog zones, it may not be
-   possible to perform these queries intuitively, or in some 
-   cases at all, using DNS QUERY.  
-
-   For example, it is not possible to enumerate
-   the contents of a multivalued property (such as the list of member
-   zones) with a single query. -->
 For example, it is not possible to enumerate the contents of a multivalued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
