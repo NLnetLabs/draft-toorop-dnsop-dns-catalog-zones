@@ -11,9 +11,13 @@
 > Original:
 >    C.R. Monshouwer -->
 > 
+The original is correct. The initials should be C.R.
 > 
 > 2) <!-- [rfced] Please insert any keywords (beyond those that appear in the title) for use on https://www.rfc-editor.org/search. -->
 > 
+
+We don't need any additional keywords. Thanks!
+
 > 
 > 3) <!-- [rfced] In the html and pdf outputs, the text enclosed in <tt> is output in
 > fixed-width font. In the txt output, there are no changes to the font,
@@ -26,10 +30,16 @@
 > Please review carefully and let us know if the output is acceptable or if any
 > updates are needed. -->
 > 
+
+I have gone through the rendered version carefully and added a few <tt>'s. They are in the attached xml file.
+
 > 
 > 4) <!--[rfced] Section 2. Should the terminology list be placed in
 > alphabetical order, or is the current order preferred? -->
 > 
+
+The order should remain as is, because the descriptions of the terms use the previously defined terms.
+
 > 
 > 5) <!-- [rfced] May we rephrase the following sentence to make it more uniform?
 > 
@@ -66,6 +76,9 @@
 > sourcecode with the type listed as "dns-rr". Please let us know if this change
 > is incorrect.
 > 
+
+This is correct.
+
 > b) Please review the "type" attribute of each sourcecode element
 > in the XML file to ensure correctness. If the current list of preferred
 > values for "type" (https://www.rfc-editor.org/materials/sourcecode-types.txt) 
@@ -73,6 +86,9 @@
 > know. Also, it is acceptable to leave the "type" attribute not
 > set. -->
 > 
+
+All our other sourcecode elements are also of type "dns-rr". The attached xml file has them updated with that type.
+
 > 
 > 8) <!-- [rfced] Will most readers understand that "NB" means to take
 > special note, or would you like to rephrase as follows so that
@@ -161,6 +177,8 @@
 >    Section 5.3), and then immediately process the member as a newly added zone 
 >    to be configured in the same catalog.-->
 > 
+
+Works for me!
 > 
 > 14) <!-- [rfced] FYI - We have updated the following text for readability. Please
 > let us know of any objections or technical inaccuracy.
@@ -207,6 +225,8 @@
 >    zones) with a single query. -->
 > 
 > 
+
+We prefer the original (and kept it in the attached xml).
 > 16) <!-- [rfced] We have included some specific questions about the IANA
 > text below. In addition to responding to those questions, please
 > review all of the IANA-related updates carefully and let us know
@@ -245,6 +265,7 @@
 > each instance of "nameserver" to "name server". Please let us know any
 > objections. -->
 > 
+This is fine! Thanks
 > 
 > 18) <!-- [rfced] Please review the "Inclusive Language" portion of the online
 > Style Guide
