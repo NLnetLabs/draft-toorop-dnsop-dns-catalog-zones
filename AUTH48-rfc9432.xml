@@ -270,7 +270,7 @@ group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
 <t>In this scenario, a consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
 For "example.net.", the consumers, at two different operators, will configure
 the member zone to be signed with a specific combination of settings. 
-The <tt>group</tt> value designated to indicate this combination of settings is pre-arranged with each operator ("operator-x-foo" vs. "operator-y" "bar").</t>
+The <tt>group</tt> value designated to indicate this combination of settings is prearranged with each operator ("operator-x-foo" vs. "operator-y" "bar").</t>
 </section>
 </section>
 </section>
