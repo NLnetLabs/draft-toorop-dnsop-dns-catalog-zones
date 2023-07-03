@@ -230,7 +230,7 @@ The presence of more than one record in the RRset indicates a broken catalog zon
 
 The migration has to wait for an update of <tt>$NEWCATZ</tt> in which the member zone is present. 
 Before the actual migration the consumer <bcp14>MUST</bcp14> verify that the <tt>coo</tt> property pointing to <tt>$NEWCATZ</tt> is still present in <tt>$OLDCATZ</tt>.</t>
-<t>Unless the member node label (i.e., <tt>&lt;unique-N&gt;</tt>) for the member is the same in <tt>$NEWCATZ</tt>, all its associated states for a just migrated zone <bcp14>MUST</bcp14> be reset (see <xref target="zonereset"></xref>).
+<t>Unless the member node label (i.e., <tt>&lt;unique-N&gt;</tt>) for the member is the same in <tt>$NEWCATZ</tt>, all its associated state for a just migrated zone <bcp14>MUST</bcp14> be reset (see <xref target="zonereset"></xref>).
 Note that the owner of <tt>$OLDCATZ</tt> allows for the zone-associated state to be taken over by the owner of <tt>$NEWCATZ</tt> by default.
 To prevent the takeover of the zone-associated state, the owner of <tt>$OLDCATZ</tt> must remove this state by updating the associated properties or by performing a zone state reset (see <xref target="zonereset"></xref>) before or simultaneous with adding the <tt>coo</tt> property (see <xref target="security"></xref>).</t>
 <t>The old owner may remove the member zone containing the <tt>coo</tt> property from <tt>$OLDCATZ</tt> once it has been established that all its consumers have processed the Change of Ownership.</t>
