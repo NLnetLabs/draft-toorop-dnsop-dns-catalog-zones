@@ -1,0 +1,496 @@
+> Authors,
+> 
+> While reviewing this document during AUTH48, please resolve (as necessary) the following questions, which are also in the XML file.
+> 
+> 1) <!-- [rfced] Generally, authors use a single first initial with a
+> surname in the header. Is the use of two initials intentional
+> (i.e., "C.R. Monshouwer")? Additionally, we note that the
+> initials provided do no match the author's full name. If an
+> update is necessary, please let us know the desired form.
+> 
+> Original:
+>    C.R. Monshouwer -->
+> 
+The original is correct. The initials should be C.R.
+> 
+> 2) <!-- [rfced] Please insert any keywords (beyond those that appear in the title) for use on https://www.rfc-editor.org/search. -->
+> 
+
+We don't need any additional keywords. Thanks!
+
+> 
+> 3) <!-- [rfced] In the html and pdf outputs, the text enclosed in <tt> is output in
+> fixed-width font. In the txt output, there are no changes to the font,
+> and the quotation marks have been removed. 
+> 
+> In the html and pdf outputs, the text enclosed in <em> is output in
+> italics. In the txt output, the text enclosed in <em> appears with an
+> underscore before and after.
+> 
+> Please review carefully and let us know if the output is acceptable or if any
+> updates are needed. -->
+> 
+
+I have gone through the rendered version carefully and added a few <tt>'s. They are in the attached xml file.
+
+> 
+> 4) <!--[rfced] Section 2. Should the terminology list be placed in
+> alphabetical order, or is the current order preferred? -->
+> 
+
+The order should remain as is, because the descriptions of the terms use the previously defined terms.
+
+> 
+> 5) <!-- [rfced] May we rephrase the following sentence to make it more uniform?
+> 
+> Original: 
+>    This document makes use of terminology that is specific to the DNS,
+>    such as for transfer mechanisms (AXFR, IXFR), for record types (SOA, NS, PTR),
+>    and other technical terms (such as RDATA).
+> 
+> Perhaps: 
+>    This document makes use of terminology for transfer mechanisms (AXFR
+>    and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as
+>    RDATA) that are specific to the DNS. -->
+> 
+
+Thanks, we accept the new text and have updated the attached xml with the suggestion.
+> 
+> 6) <!-- [rfced] We suggest rephrasing the following sentence. Specifically, the
+> phrase "instead of as" can be improved for a better sentence flow. Does
+> the following suggestion retain the intended meaning?
+> 
+> Original: 
+>    The names of member zones are represented on the RDATA side (instead
+>    of as a part of owner names) of a PTR record, so that all valid domain names
+>    may be represented regardless of their length [RFC1035].
+> 
+> Perhaps: 
+>    The names of member zones are represented on the RDATA side of a PTR
+>    record (instead of being represented as a part of owner names) so that all
+>    valid domain names may be represented regardless of their length
+>    [RFC1035]. -->
+> 
+
+Thanks, we accept the new text and have updated the attached xml with the suggestion.
+> 
+> 7) <!-- [rfced] We have a few questions regarding the sourcecode in this document.
+> 
+> a) We have updated the blocks of artwork in Sections 4.1 and 4.2.1 to
+> sourcecode with the type listed as "dns-rr". Please let us know if this change
+> is incorrect.
+> 
+
+This is correct.
+
+> b) Please review the "type" attribute of each sourcecode element
+> in the XML file to ensure correctness. If the current list of preferred
+> values for "type" (https://www.rfc-editor.org/materials/sourcecode-types.txt) 
+> does not contain an applicable type, then feel free to let us
+> know. Also, it is acceptable to leave the "type" attribute not
+> set. -->
+> 
+
+All our other sourcecode elements are also of type "dns-rr". The attached xml file has them updated with that type.
+
+> 
+> 8) <!-- [rfced] Will most readers understand that "NB" means to take
+> special note, or would you like to rephrase as follows so that
+> "NB" is not mistaken as a term?
+> 
+> Original:
+>    NB: Version 1 was used in a draft version of this memo and reflected
+>    the implementation first found in BIND 9.11. 
+> 
+> Perhaps:
+>    Note that Version 1 was used in an earlier draft version of this memo 
+>    and reflected the implementation first found in BIND 9.11. -->
+
+Thanks, we accept the new text and have updated the attached xml with the suggestion.
+> 
+> 
+> 9) <!-- [rfced] We suggest rephrasing the following sentence to provide a better
+> flow of the text and avoid interrupters. Does the following suggestion
+> retain the intended meaning?
+> 
+> Original: 
+>    The consumer MUST verify, before the actual migration, that coo
+>    property pointing to $NEWCATZ is still present in $OLDCATZ.
+> 
+> Perhaps: 
+>    The consumer MUST verify that the coo property pointing to $NEWCATZ
+>    is still present in $OLDCATZ before the actual migration. -->
+> 
+
+We don't take the suggestion but have updated the xml with: "Before the actual migration the consumer MUST verify that the coo property pointing to $NEWCATZ is still present in $OLDCATZ."
+
+Is that also more clear in your opinion?
+
+Also, the first sentence in the paragraph following this line had "associated states" (plural) instead of "associated state" (singular) as it is used in the rest of the text. We corrected this too in the attached updated xml.
+
+> 
+> 10) <!-- [rfced] Is "state" referring to "zone-associated state" in this instance?
+> To clarify, may we update the sentence as follows?
+> 
+> Original:
+>    To prevent the takeover of state, the owner of
+>    $OLDCATZ must remove this state by updating the associated properties
+>    or by performing a zone state reset (see Section 5.6) before or
+>    simultaneous with adding the coo property. (see also Section 7)
+> 
+> Perhaps:
+>    To prevent the takeover of the zone-associated state, the owner of
+>    $OLDCATZ must remove this state by updating the associated properties
+>    or by performing a zone state reset (see Section 5.6) before or
+>    simultaneous with adding the coo property (see Section 8). -->
+> 
+
+We take the suggestion and have updated the attached xml accordingly.
+
+> 
+> 11) <!-- [rfced] We are having difficulty parsing the sentence
+> below. Specifically, what is the second instance of "that" referring to?
+> Please review and let us know how this sentence should be
+> updated for clarity.
+> 
+> Original: 
+>    The group value that indicates that depends on what has been agreed
+>    with each operator ("operator-x-foo" vs. "operator-y" "bar"). -->
+
+Whe adapted the xml with the following: The group value designated to indicate this combination of settings is pre-arranged with each operator  ("operator-x-foo" vs. "operator-y" "bar").
+
+Is that better?
+> 
+> 
+> 12) <!-- [rfced] FYI - We have rearranged this sentence for readability. Please
+> let us know if this change is incorrect or if there are any objections.
+> 
+> Original: 
+>    Only when the zone was configured from a specific catalog zone, and
+>    the zone is removed as a member from that specific catalog zone, the zone and
+>    associated state (such as zone data and DNSSEC keys) MUST be removed from the
+>    consumer.
+> 
+> Current: 
+>    The zone and associated state (such as zone data and DNSSEC keys)
+>    MUST be removed from the consumer only when the zone was configured from a
+>    specific catalog zone and is removed as a member from that specific catalog
+>    zone. -->
+> 
+
+FYI - We modified your rearrangement a bit in the attached updated xml, to say: The zone and associated state (such as zone data and DNSSEC keys) MUST be removed from the consumer when and only when the zone was configured initially from the same catalog.
+
+> 
+> 13) <!-- [rfced] FYI - We have updated the following text in Section 5.4
+> for easy readability. Specifically, we have rearranged the first
+> two phrases for better sentence flow and clarified some of the
+> text. Please let us know any objections.
+> 
+> Original: 
+>    When via a single update or transfer, the member node's label value
+>    (<unique-N>) changes, catalog consumers MUST process this as a member
+>    zone removal including all the zone's associated state (as described in
+>    Section 5.3), immediately followed by processing the member as a newly to
+>    be configured zone in the same catalog.  
+> 
+> Current: 
+>    When the member node's label value (<unique-N>) changes via a single update 
+>    or transfer, catalog consumers MUST process this as a member zone removal, 
+>    including the removal of all the zone's associated state (as described in 
+>    Section 5.3), and then immediately process the member as a newly added zone 
+>    to be configured in the same catalog.-->
+> 
+
+Works for me!
+> 
+> 14) <!-- [rfced] FYI - We have updated the following text for readability. Please
+> let us know of any objections or technical inaccuracy.
+> 
+> Original:
+>    If in the process of a migration some consumers of the involved
+>    catalog zones did not catch the removal of the member zone from
+>    $OLDCATZ yet (because of a lost packet or downtime or otherwise), but
+>    did already see the update of $NEWCATZ, they may consider the update
+>    adding the member zone in $NEWCATZ to be a name clash (see
+>    Section 5.2) and as a consequence the member is not migrated to
+>    $NEWCATZ. 
+> 
+> Current:
+>    In the process of a migration, if some consumers of the involved
+>    catalog zones did not catch the removal of the member zone from
+>    $OLDCATZ yet (because of a lost packet, downtime, or otherwise) but
+>    already saw the update of $NEWCATZ, they may consider the update by
+>    adding the member zone in $NEWCATZ to be a name clash (see
+>    Section 5.2); as a consequence, the member is not migrated to
+>    $NEWCATZ. -->
+> 
+
+FYI - we updated your readability update to the following in the attached xml: If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from $OLDCATZ yet (because of a lost packet or downtime or otherwise) but already saw the update of $NEWCATZ containing the addition of that member zone, they may consider this update to be a name clash (see Section 5.2) and as a consequence the member is not migrated to $NEWCATZ. 
+
+> 
+> 15) <!-- [rfced] Should we change "QUERY" to "query" in this context? Or should
+> "QUERY" remain capitalized due to its association with "DNS QUERY" in the
+> previous sentence?
+> 
+> Original:
+>    Because of the structure of catalog zones, it may not be
+>    possible to perform these queries intuitively, or in some cases, at
+>    all, using DNS QUERY.  
+> 
+>    For example, it is not possible to enumerate
+>    the contents of a multivalued property (such as the list of member
+>    zones) with a single QUERY.
+> 
+> Perhaps:
+>    Because of the structure of catalog zones, it may not be
+>    possible to perform these queries intuitively, or in some 
+>    cases at all, using DNS QUERY.  
+> 
+>    For example, it is not possible to enumerate
+>    the contents of a multivalued property (such as the list of member
+>    zones) with a single query. -->
+> 
+> 
+
+We prefer the original (and kept it in the attached xml).
+> 16) <!-- [rfced] We have included some specific questions about the IANA
+> text below. In addition to responding to those questions, please
+> review all of the IANA-related updates carefully and let us know
+> if any further updates are needed.
+> 
+> 1) The note in this document does not match the note in the "DNS Catalog
+> Zones Properties" registry (see
+> <https://www.iana.org/assignments/dns-parameters/>).  Should the IANA
+> registry be updated to match this document, or vice versa?
+> 
+> IANA registry:
+>    This registry applies to Catalog Zones schema version "2" as specified 
+>    in [RFC-ietf-dnsop-dns-catalog-zones-09].
+> 
+> This document (current):
+>    This registry does not apply to catalog zones version "1" but applies 
+>    to catalog zones version "2" as specified in RFC 9432.
+> 
+
+We take what is currently in the registry and I have updated the attached xml accordingly.
+
+> 
+> 2) Does this description mean that the status is only displayed for an 
+> IETF Stream RFC?  Does "External" include documents produced by other 
+> streams (e.g., IRTF)? If so, may we update the text as follows?
+> 
+> Original:
+>    Status: IETF Document status or "External" if not documented in an
+>    IETF document.
+> 
+> Perhaps:
+>    Status: IETF Stream RFC status or "External" if not documented in an
+>    IETF Stream RFC.
+> -->
+> 
+Yes, we take the suggestion and have updated the xml accordingly
+> 
+> 17) <!-- [rfced] Throughout the text, the terms "nameserver" and "name server" are
+> used inconsistently. To match RFCs 6761, 8945, and 9103, we have updated
+> each instance of "nameserver" to "name server". Please let us know any
+> objections. -->
+> 
+This is fine! Thanks
+> 
+> 18) <!-- [rfced] Please review the "Inclusive Language" portion of the online
+> Style Guide
+> <https://www.rfc-editor.org/styleguide/part2/#inclusive_language> and let
+> us know if any changes are needed. Note that our script did not flag any
+> words in particular, but this should still be reviewed as a best
+> practice. -->
+> 
+
+After going over the text once again, I didn't see any issues with respect to "Inclusive Language"
+
+> 
+> Thank you.
+> 
+> RFC Editor/mc/kc
+> 
+> 
+> On Jun 28, 2023, at 2:43 PM, rfc-editor@rfc-editor.org wrote:
+> 
+> *****IMPORTANT*****
+> 
+> Updated 2023/06/28
+> 
+> RFC Author(s):
+> --------------
+> 
+> Instructions for Completing AUTH48
+> 
+> Your document has now entered AUTH48.  Once it has been reviewed and 
+> approved by you and all coauthors, it will be published as an RFC.  
+> If an author is no longer available, there are several remedies 
+> available as listed in the FAQ (https://www.rfc-editor.org/faq/).
+> 
+> You and you coauthors are responsible for engaging other parties 
+> (e.g., Contributors or Working Group) as necessary before providing 
+> your approval.
+> 
+> Planning your review 
+> ---------------------
+> 
+> Please review the following aspects of your document:
+> 
+> *  RFC Editor questions
+> 
+>   Please review and resolve any questions raised by the RFC Editor 
+>   that have been included in the XML file as comments marked as 
+>   follows:
+> 
+>   <!-- [rfced] ... -->
+> 
+>   These questions will also be sent in a subsequent email.
+> 
+> *  Changes submitted by coauthors 
+> 
+>   Please ensure that you review any changes submitted by your 
+>   coauthors.  We assume that if you do not speak up that you 
+>   agree to changes submitted by your coauthors.
+> 
+> *  Content 
+> 
+>   Please review the full content of the document, as this cannot 
+>   change once the RFC is published.  Please pay particular attention to:
+>   - IANA considerations updates (if applicable)
+>   - contact information
+>   - references
+> 
+> *  Copyright notices and legends
+> 
+>   Please review the copyright notice and legends as defined in
+>   RFC 5378 and the Trust Legal Provisions 
+>   (TLP – https://trustee.ietf.org/license-info/).
+> 
+> *  Semantic markup
+> 
+>   Please review the markup in the XML file to ensure that elements of  
+>   content are correctly tagged.  For example, ensure that <sourcecode> 
+>   and <artwork> are set correctly.  See details at 
+>   <https://authors.ietf.org/rfcxml-vocabulary>.
+> 
+> *  Formatted output
+> 
+>   Please review the PDF, HTML, and TXT files to ensure that the 
+>   formatted output, as generated from the markup in the XML file, is 
+>   reasonable.  Please note that the TXT will have formatting 
+>   limitations compared to the PDF and HTML.
+> 
+> 
+> Submitting changes
+> ------------------
+> 
+> To submit changes, please reply to this email using ‘REPLY ALL’ as all 
+> the parties CCed on this message need to see your changes. The parties 
+> include:
+> 
+>   *  your coauthors
+> 
+>   *  rfc-editor@rfc-editor.org (the RPC team)
+> 
+>   *  other document participants, depending on the stream (e.g., 
+>      IETF Stream participants are your working group chairs, the 
+>      responsible ADs, and the document shepherd).
+> 
+>   *  auth48archive@rfc-editor.org, which is a new archival mailing list 
+>      to preserve AUTH48 conversations; it is not an active discussion 
+>      list:
+> 
+>     *  More info:
+>        https://mailarchive.ietf.org/arch/msg/ietf-announce/yb6lpIGh-4Q9l2USxIAe6P8O4Zc
+> 
+>     *  The archive itself:
+>        https://mailarchive.ietf.org/arch/browse/auth48archive/
+> 
+>     *  Note: If only absolutely necessary, you may temporarily opt out 
+>        of the archiving of messages (e.g., to discuss a sensitive matter).
+>        If needed, please add a note at the top of the message that you 
+>        have dropped the address. When the discussion is concluded, 
+>        auth48archive@rfc-editor.org will be re-added to the CC list and 
+>        its addition will be noted at the top of the message. 
+> 
+> You may submit your changes in one of two ways:
+> 
+> An update to the provided XML file
+> — OR —
+> An explicit list of changes in this format
+> 
+> Section # (or indicate Global)
+> 
+> OLD:
+> old text
+> 
+> NEW:
+> new text
+> 
+> You do not need to reply with both an updated XML file and an explicit 
+> list of changes, as either form is sufficient.
+> 
+> We will ask a stream manager to review and approve any changes that seem
+> beyond editorial in nature, e.g., addition of new text, deletion of text, 
+> and technical changes.  Information about stream managers can be found in 
+> the FAQ.  Editorial changes do not require approval from a stream manager.
+> 
+> 
+> Approving for publication
+> --------------------------
+> 
+> To approve your RFC for publication, please reply to this email stating
+> that you approve this RFC for publication.  Please use ‘REPLY ALL’,
+> as all the parties CCed on this message need to see your approval.
+> 
+> 
+> Files 
+> -----
+> 
+> The files are available here:
+>   https://www.rfc-editor.org/authors/rfc9432.xml
+>   https://www.rfc-editor.org/authors/rfc9432.html
+>   https://www.rfc-editor.org/authors/rfc9432.pdf
+>   https://www.rfc-editor.org/authors/rfc9432.txt
+> 
+> Diff file of the text:
+>   https://www.rfc-editor.org/authors/rfc9432-diff.html
+>   https://www.rfc-editor.org/authors/rfc9432-rfcdiff.html (side by side)
+> 
+> Diff of the XML: 
+>   https://www.rfc-editor.org/authors/rfc9432-xmldiff1.html
+> 
+> XMLv3 file that is a best effort to capture v3-related format updates 
+> only: 
+>   https://www.rfc-editor.org/authors/rfc9432.form.xml
+> 
+> For your convenience, we have also created an alt-diff file that will 
+> allow you to more easily view changes where text has been deleted or 
+> moved: 
+>   http://www.rfc-editor.org/authors/rfc9432-alt-diff.html
+> 
+> 
+> Tracking progress
+> -----------------
+> 
+> The details of the AUTH48 status of your document are here:
+>   https://www.rfc-editor.org/auth48/rfc9432
+> 
+> Please let us know if you have any questions.  
+> 
+> Thank you for your cooperation,
+> 
+> RFC Editor
+> 
+> --------------------------------------
+> RFC9432 (draft-ietf-dnsop-dns-catalog-zones-09)
+> 
+> Title            : DNS Catalog Zones
+> Author(s)        : P. van Dijk, L. Peltan, O. Surý, W. Toorop, K. Monshouwer, P. Thomassen, A. Sargsyan
+> WG Chair(s)      : Suzanne Woolf, Benno Overeinder, Tim Wicinski
+> 
+> Area Director(s) : Warren Kumari, Robert Wilton
+> 
+

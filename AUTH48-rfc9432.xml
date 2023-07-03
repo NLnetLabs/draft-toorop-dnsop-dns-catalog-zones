@@ -44,14 +44,6 @@
       <country>Netherlands</country>
       </postal><email>willem@nlnetlabs.nl</email>
   </address></author>
-<!-- [rfced] Generally, authors use a single first initial with a
-surname in the header. Is the use of two initials intentional
-(i.e., "C.R. Monshouwer")? Additionally, we note that the
-initials provided do no match the author's full name. If an
-update is necessary, please let us know the desired form.
-
-Original:
-   C.R. Monshouwer -->
 
   <author initials="C.R." surname="Monshouwer" fullname="Kees Monshouwer">
     <organization></organization>
@@ -78,8 +70,6 @@ Original:
 <date year="2023" month="June"/>
 <area>ops</area>
 <workgroup>dnsop</workgroup>
-
-<!-- [rfced] Please insert any keywords (beyond those that appear in the title) for use on https://www.rfc-editor.org/search. -->
 
 <abstract>
 <t>This document describes a method for automatic DNS zone provisioning among DNS
@@ -120,21 +110,6 @@ secondary.</t>
     when, and only when, they appear in all capitals, as shown here.
         </t>
 
-<!-- [rfced] In the html and pdf outputs, the text enclosed in <tt> is output in
-fixed-width font. In the txt output, there are no changes to the font,
-and the quotation marks have been removed. 
-
-In the html and pdf outputs, the text enclosed in <em> is output in
-italics. In the txt output, the text enclosed in <em> appears with an
-underscore before and after.
-
-Please review carefully and let us know if the output is acceptable or if any
-updates are needed. -->
-
-
-<!--[rfced] Section 2. Should the terminology list be placed in
-alphabetical order, or is the current order preferred? -->
-	
 <dl>
 <dt>Catalog zone:</dt>
 <dd>A DNS zone containing a DNS catalog, which is a list of DNS zones and associated properties.</dd>
@@ -153,18 +128,7 @@ catalog zone itself.
 server that configures itself according to the catalog zone's contents).</dd>
 </dl>
 <t>
-<!-- [rfced] May we rephrase the following sentence to make it more uniform?
-
-Original: 
-   This document makes use of terminology that is specific to the DNS,
-   such as for transfer mechanisms (AXFR, IXFR), for record types (SOA, NS, PTR),
-   and other technical terms (such as RDATA).
-
-Perhaps: 
-   This document makes use of terminology for transfer mechanisms (AXFR
-   and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as
-   RDATA) that are specific to the DNS. -->
-This document makes use of terminology that is specific to the DNS, such as transfer mechanisms (AXFR and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as RDATA).
+This document makes use of terminology for transfer mechanisms (AXFR and IXFR), record types (SOA, NS, and PTR), and other technical terms (such as RDATA) that are specific to the DNS.
 Since these terms have specific meanings in the DNS, they are not expanded upon first use in this document.
 For definitions of these and other terms, see <xref target="RFC8499"></xref>.</t>
 </section>
@@ -187,38 +151,11 @@ A single NS RR with a NSDNAME field containing the absolute name "invalid." is <
 
 <section anchor="listofmemberzones"><name>Member Zones</name>
 <t>The list of member zones is specified as a collection of member nodes represented by domain names under the owner name "zones" where "zones" is a direct child domain of the catalog zone.</t>
-<!-- [rfced] We suggest rephrasing the following sentence. Specifically, the
-phrase "instead of as" can be improved for a better sentence flow. Does
-the following suggestion retain the intended meaning?
-
-Original: 
-   The names of member zones are represented on the RDATA side (instead
-   of as a part of owner names) of a PTR record, so that all valid domain names
-   may be represented regardless of their length [RFC1035].
-
-Perhaps: 
-   The names of member zones are represented on the RDATA side of a PTR
-   record (instead of being represented as a part of owner names) so that all
-   valid domain names may be represented regardless of their length
-   [RFC1035]. -->
-
-<t>The names of member zones are represented on the RDATA side (instead of as a part of owner names) of a PTR record, so that all valid domain names may be represented regardless of their length <xref target="RFC1035"></xref>.
+<t>The names of member zones are represented on the RDATA side of a PTR record (instead of being represented as a part of owner names) so that all valid domain names may be represented regardless of their length <xref target="RFC1035"></xref>.
 This PTR record <bcp14>MUST</bcp14> be the only record in the PTR RRset with the same name.
 The presence of more than one record in the RRset indicates a broken catalog zone that <bcp14>MUST NOT</bcp14> be processed (see <xref target="generalrequirements"></xref>).</t>
 <t>For example, if a catalog zone lists three zones ("example.com.",
 "example.net.", and "example.org."), the member node RRs would appear as follows:</t>
-<!-- [rfced] We have a few questions regarding the sourcecode in this document.
-
-a) We have updated the blocks of artwork in Sections 4.1 and 4.2.1 to
-sourcecode with the type listed as "dns-rr". Please let us know if this change
-is incorrect.
-
-b) Please review the "type" attribute of each sourcecode element
-in the XML file to ensure correctness. If the current list of preferred
-values for "type" (https://www.rfc-editor.org/materials/sourcecode-types.txt) 
-does not contain an applicable type, then feel free to let us
-know. Also, it is acceptable to leave the "type" attribute not
-set. -->
 <sourcecode type="dns-rr"><![CDATA[
 <unique-1>.zones.$CATZ 0 IN PTR example.com.
 <unique-2>.zones.$CATZ 0 IN PTR example.net.
@@ -267,19 +204,7 @@ All catalog zones <bcp14>MUST</bcp14> have a TXT RRset named <tt>version.$CATZ</
 
 <sourcecode type="dns-rr"><![CDATA[version.$CATZ 0 IN TXT "2"
 ]]></sourcecode>
-<!-- [rfced] Will most readers understand that "NB" means to take
-special note, or would you like to rephrase as follows so that
-"NB" is not mistaken as a term?
-
-Original:
-   NB: Version 1 was used in a draft version of this memo and reflected
-   the implementation first found in BIND 9.11. 
-
-Perhaps:
-   Note that Version 1 was used in an earlier draft version of this memo 
-   and reflected the implementation first found in BIND 9.11. -->
-
-<t>NB: Version 1 was used in an earlier draft version of this memo and reflected
+<t>Note that Version 1 was used in an earlier draft version of this memo and reflected
 the implementation first found in BIND 9.11.</t>
 </section>
 </section>
@@ -292,10 +217,10 @@ Member zone properties are represented by RRsets below the corresponding member 
 <section anchor="cooproperty"><name>Change of Ownership (<tt>coo</tt> property)</name>
 <t>The <tt>coo</tt> property facilitates controlled migration of a member zone from one catalog to another.</t>
 <t>A Change Of Ownership is signaled by the <tt>coo</tt> property in the catalog zone currently "owning" the zone.
-The name of the new catalog is the value of a PTR record in the relevant coo property in the old catalog.
+The name of the new catalog is the value of a PTR record in the relevant <tt>coo</tt> property in the old catalog.
 For example, if member "example.com." migrates from catalog zone <tt>$OLDCATZ</tt> to catalog zone <tt>$NEWCATZ</tt>, this will appear in the <tt>$OLDCATZ</tt> catalog zone as follows:</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 <unique-N>.zones.$OLDCATZ 0 IN PTR example.com.
 coo.<unique-N>.zones.$OLDCATZ 0 IN PTR $NEWCATZ
 ]]></sourcecode>
@@ -304,35 +229,10 @@ The presence of more than one record in the RRset indicates a broken catalog zon
 <t>When a consumer of a catalog zone <tt>$OLDCATZ</tt> receives an update that adds or changes a <tt>coo</tt> property for a member zone in <tt>$OLDCATZ</tt>, it does <em>not</em> migrate the member zone immediately.
 
 The migration has to wait for an update of <tt>$NEWCATZ</tt> in which the member zone is present. 
-<!-- [rfced] We suggest rephrasing the following sentence to provide a better
-flow of the text and avoid interrupters. Does the following suggestion
-retain the intended meaning?
-
-Original: 
-   The consumer MUST verify, before the actual migration, that coo
-   property pointing to $NEWCATZ is still present in $OLDCATZ.
-
-Perhaps: 
-   The consumer MUST verify that the coo property pointing to $NEWCATZ
-   is still present in $OLDCATZ before the actual migration. -->
-The consumer <bcp14>MUST</bcp14> verify, before the actual migration, that <tt>coo</tt> property pointing to <tt>$NEWCATZ</tt> is still present in <tt>$OLDCATZ</tt>.</t>
-<t>Unless the member node label (i.e., <tt>&lt;unique-N&gt;</tt>) for the member is the same in <tt>$NEWCATZ</tt>, all its associated states for a just migrated zone <bcp14>MUST</bcp14> be reset (see <xref target="zonereset"></xref>).
+Before the actual migration the consumer <bcp14>MUST</bcp14> verify that the <tt>coo</tt> property pointing to <tt>$NEWCATZ</tt> is still present in <tt>$OLDCATZ</tt>.</t>
+<t>Unless the member node label (i.e., <tt>&lt;unique-N&gt;</tt>) for the member is the same in <tt>$NEWCATZ</tt>, all its associated state for a just migrated zone <bcp14>MUST</bcp14> be reset (see <xref target="zonereset"></xref>).
 Note that the owner of <tt>$OLDCATZ</tt> allows for the zone-associated state to be taken over by the owner of <tt>$NEWCATZ</tt> by default.
-<!-- [rfced] Is "state" referring to "zone-associated state" in this instance?
-To clarify, may we update the sentence as follows?
-
-Original:
-   To prevent the takeover of state, the owner of
-   $OLDCATZ must remove this state by updating the associated properties
-   or by performing a zone state reset (see Section 5.6) before or
-   simultaneous with adding the coo property. (see also Section 7)
-
-Perhaps:
-   To prevent the takeover of the zone-associated state, the owner of
-   $OLDCATZ must remove this state by updating the associated properties
-   or by performing a zone state reset (see Section 5.6) before or
-   simultaneous with adding the coo property (see Section 8). -->
-To prevent the takeover of state, the owner of <tt>$OLDCATZ</tt> must remove this state by updating the associated properties or by performing a zone state reset (see <xref target="zonereset"></xref>) before or simultaneous with adding the <tt>coo</tt> property (see <xref target="security"></xref>).</t>
+To prevent the takeover of the zone-associated state, the owner of <tt>$OLDCATZ</tt> must remove this state by updating the associated properties or by performing a zone state reset (see <xref target="zonereset"></xref>) before or simultaneous with adding the <tt>coo</tt> property (see <xref target="security"></xref>).</t>
 <t>The old owner may remove the member zone containing the <tt>coo</tt> property from <tt>$OLDCATZ</tt> once it has been established that all its consumers have processed the Change of Ownership.</t>
 </section>
 
@@ -344,12 +244,12 @@ The exact handling of the <tt>group</tt> property value is left to the consumer'
 <t>The producer <bcp14>MAY</bcp14> assign a <tt>group</tt> property to all, some, or none of the member zones within a catalog zone.
 The producer <bcp14>MAY</bcp14> assign more than one <tt>group</tt> property to one member zone. This will make it possible to transfer group information for different consumer operators in a single catalog zone.
 Implementations <bcp14>MAY</bcp14> facilitate mapping of a specific <tt>group</tt> value to a specific configuration configurable <em>on a per catalog zone basis</em> to allow for producers that publish their catalog zone at multiple consumer operators.
-Consumer operators <bcp14>SHOULD</bcp14> namespace their group values to reduce the risk of having to resolve clashes.</t>
+Consumer operators <bcp14>SHOULD</bcp14> namespace their <tt>group</tt> values to reduce the risk of having to resolve clashes.</t>
 <t>The consumer <bcp14>MUST</bcp14> ignore <tt>group</tt> values it does not understand.
 When a consumer encounters multiple <tt>group</tt> values for a single member zone, it <bcp14>MAY</bcp14> choose to process all, some, or none of them. This is left to the implementation.</t>
 
 <section anchor="example"><name>Example</name>
-<t>Group properties are represented by TXT RRs. The record content
+<t><tt>group</tt> properties are represented by TXT RRs. The record content
 has no pre-defined meaning. Their interpretation is purely a matter
 of agreement between the producer and the consumer(s) of the catalog.</t>
 <t>For example, the "foo" group could be agreed to indicate that a zone not
@@ -360,7 +260,7 @@ up certain aspects of the member zone's DNSSEC configuration.</t>
 agreements, consider the following catalog zone (snippet) that signals to a
 consumer(s) how to treat DNSSEC for the zones "example.net." and "example.com.":</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 <unique-1>.zones.$CATZ        0 IN PTR    example.com.
 group.<unique-1>.zones.$CATZ  0 IN TXT    "foo"
 <unique-2>.zones.$CATZ        0 IN PTR    example.net.
@@ -370,16 +270,7 @@ group.<unique-2>.zones.$CATZ  0 IN TXT    "operator-y" "bar"
 <t>In this scenario, a consumer(s) shall, by agreement, not sign the member zone "example.com." with DNSSEC.
 For "example.net.", the consumers, at two different operators, will configure
 the member zone to be signed with a specific combination of settings. 
-<!-- [rfced] We are having difficulty parsing the sentence
-below. Specifically, what is the second instance of "that" referring to?
-Please review and let us know how this sentence should be
-updated for clarity.
-
-Original: 
-   The group value that indicates that depends on what has been agreed
-   with each operator ("operator-x-foo" vs. "operator-y" "bar"). -->
-The group value that indicates
-that depends on what has been agreed with each operator ("operator-x-foo" vs. "operator-y" "bar").</t>
+The <tt>group</tt> value designated to indicate this combination of settings is pre-arranged with each operator ("operator-x-foo" vs. "operator-y" "bar").</t>
 </section>
 </section>
 </section>
@@ -390,7 +281,7 @@ Custom properties can occur globally or for a specific member zone.
 To prevent a name clash with future properties, such properties <bcp14>MUST</bcp14> be represented below the label "ext".</t>
 <t>"ext" is not a placeholder. A custom property is named as follows:</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 ; a global custom property:
 <property-prefix>.ext.$CATZ
 
@@ -448,43 +339,11 @@ be ignored and an error <bcp14>SHOULD</bcp14> be logged.</t>
 
 <section anchor="zoneremoval"><name>Member Zone Removal</name>
 <t>When a member zone is removed from a specific catalog zone, a consumer <bcp14>MUST NOT</bcp14> remove the zone and associated state data if the zone was not configured from that specific catalog zone.
-<!-- [rfced] FYI - We have rearranged this sentence for readability. Please
-let us know if this change is incorrect or if there are any objections.
-
-Original: 
-   Only when the zone was configured from a specific catalog zone, and
-   the zone is removed as a member from that specific catalog zone, the zone and
-   associated state (such as zone data and DNSSEC keys) MUST be removed from the
-   consumer.
-
-Current: 
-   The zone and associated state (such as zone data and DNSSEC keys)
-   MUST be removed from the consumer only when the zone was configured from a
-   specific catalog zone and is removed as a member from that specific catalog
-   zone. -->
-The zone and associated state (such as zone data and DNSSEC keys) <bcp14>MUST</bcp14> be removed from the consumer only when the zone was configured from a specific catalog zone and is removed as a member from that specific catalog zone.
+The zone and associated state (such as zone data and DNSSEC keys) <bcp14>MUST</bcp14> be removed from the consumer when and only when the zone was configured initially from the same catalog.
 Consumer operators may consider temporarily archiving associated state to facilitate mistake recovery.</t>
 </section>
-<!-- [rfced] FYI - We have updated the following text in Section 5.4
-for easy readability. Specifically, we have rearranged the first
-two phrases for better sentence flow and clarified some of the
-text. Please let us know any objections.
 
-Original: 
-   When via a single update or transfer, the member node's label value
-   (<unique-N>) changes, catalog consumers MUST process this as a member
-   zone removal including all the zone's associated state (as described in
-   Section 5.3), immediately followed by processing the member as a newly to
-   be configured zone in the same catalog.  
-
-Current: 
-   When the member node's label value (<unique-N>) changes via a single update 
-   or transfer, catalog consumers MUST process this as a member zone removal, 
-   including the removal of all the zone's associated state (as described in 
-   Section 5.3), and then immediately process the member as a newly added zone 
-   to be configured in the same catalog.-->
-
- <section anchor="namechange"><name>Member Node Name
+<section anchor="namechange"><name>Member Node Name
      Change</name>
 <t>When the member node's label value (<tt>&lt;unique-N&gt;</tt>) changes via a single update or transfer, catalog consumers <bcp14>MUST</bcp14> process this as a member zone removal, including the removal of all the zone's associated state (as described in <xref target="zoneremoval"></xref>), and then immediately process the member as a newly added zone to be configured in the same catalog.
 </t>
@@ -492,28 +351,7 @@ Current:
 
 <section anchor="zonemigration"><name>Migrating Member Zones between Catalogs</name>
 <t>If all consumers of the catalog zones involved support the <tt>coo</tt> property, it is <bcp14>RECOMMENDED</bcp14> to perform migration of a member zone by following the procedure described in <xref target="cooproperty"></xref>. Otherwise, the migration of a member zone from a catalog zone <tt>$OLDCATZ</tt> to a catalog zone <tt>$NEWCATZ</tt> has to be done by first removing the member zone from <tt>$OLDCATZ</tt> and then adding the member zone to <tt>$NEWCATZ</tt>.</t>
-
-<!-- [rfced] FYI - We have updated the following text for readability. Please
-let us know of any objections or technical inaccuracy.
-
-Original:
-   If in the process of a migration some consumers of the involved
-   catalog zones did not catch the removal of the member zone from
-   $OLDCATZ yet (because of a lost packet or downtime or otherwise), but
-   did already see the update of $NEWCATZ, they may consider the update
-   adding the member zone in $NEWCATZ to be a name clash (see
-   Section 5.2) and as a consequence the member is not migrated to
-   $NEWCATZ. 
-
-Current:
-   In the process of a migration, if some consumers of the involved
-   catalog zones did not catch the removal of the member zone from
-   $OLDCATZ yet (because of a lost packet, downtime, or otherwise) but
-   already saw the update of $NEWCATZ, they may consider the update by
-   adding the member zone in $NEWCATZ to be a name clash (see
-   Section 5.2); as a consequence, the member is not migrated to
-   $NEWCATZ. -->
-<t>In the process of a migration, if some consumers of the involved catalog zones did not catch the removal of the member zone from <tt>$OLDCATZ</tt> yet (because of a lost packet, downtime, or otherwise) but already saw the update of <tt>$NEWCATZ</tt>, they may consider the update by adding the member zone in <tt>$NEWCATZ</tt> to be a name clash (see <xref target="nameclash"></xref>); as a consequence, the member is not migrated to <tt>$NEWCATZ</tt>.
+<t>If in the process of a migration some consumers of the involved catalog zones did not catch the removal of the member zone from <tt>$OLDCATZ</tt> yet (because of a lost packet or downtime or otherwise) but already saw the update of <tt>$NEWCATZ</tt> containing the addition of that member zone, they may consider this update to be a name clash (see <xref target="nameclash"></xref>) and as a consequence the member is not migrated to <tt>$NEWCATZ</tt>.
 This possibility needs to be anticipated with a member zone migration.
 Recovery from such a situation is out of the scope of this document.
 For example, it may entail a manually forced retransfer of <tt>$NEWCATZ</tt> to consumers after they have been detected to have received and processed the removal of the member zone from <tt>$OLDCATZ</tt>.</t>
@@ -547,27 +385,6 @@ queries might include dumping the list of member zones, dumping a member zone's
 effective configuration, querying a specific property value of a member zone,
 etc.  Because of the structure of catalog zones, it may not be possible to
 perform these queries intuitively, or in some cases at all, using DNS QUERY.
-<!-- [rfced] Should we change "QUERY" to "query" in this context? Or should
-"QUERY" remain capitalized due to its association with "DNS QUERY" in the
-previous sentence?
-
-Original:
-   Because of the structure of catalog zones, it may not be
-   possible to perform these queries intuitively, or in some cases, at
-   all, using DNS QUERY.  
-
-   For example, it is not possible to enumerate
-   the contents of a multivalued property (such as the list of member
-   zones) with a single QUERY.
-
-Perhaps:
-   Because of the structure of catalog zones, it may not be
-   possible to perform these queries intuitively, or in some 
-   cases at all, using DNS QUERY.  
-
-   For example, it is not possible to enumerate
-   the contents of a multivalued property (such as the list of member
-   zones) with a single query. -->
 For example, it is not possible to enumerate the contents of a multivalued
 property (such as the list of member zones) with a single QUERY.
 Implementations are therefore advised to provide a tool that uses either the
@@ -605,39 +422,6 @@ To prevent the takeover of the zone-associated state, the original owner has to 
 </section>
 <section anchor="iana"><name>IANA Considerations</name>
 <t>IANA has created the "DNS Catalog Zones Properties" registry under the "Domain Name System (DNS) Parameters" registry as follows:</t>
-
-<!-- [rfced] We have included some specific questions about the IANA
-text below. In addition to responding to those questions, please
-review all of the IANA-related updates carefully and let us know
-if any further updates are needed.
-
-1) The note in this document does not match the note in the "DNS Catalog
-Zones Properties" registry (see
-<https://www.iana.org/assignments/dns-parameters/>).  Should the IANA
-registry be updated to match this document, or vice versa?
-
-IANA registry:
-   This registry applies to Catalog Zones schema version "2" as specified 
-   in [RFC-ietf-dnsop-dns-catalog-zones-09].
-
-This document (current):
-   This registry does not apply to catalog zones version "1" but applies 
-   to catalog zones version "2" as specified in RFC 9432.
-
-
-2) Does this description mean that the status is only displayed for an 
-IETF Stream RFC?  Does "External" include documents produced by other 
-streams (e.g., IRTF)? If so, may we update the text as follows?
-
-Original:
-   Status: IETF Document status or "External" if not documented in an
-   IETF document.
-
-Perhaps:
-   Status: IETF Stream RFC status or "External" if not documented in an
-   IETF Stream RFC.
--->
-
 <dl>
 <dt>Registry Name:</dt>
 <dd>DNS Catalog Zones Properties</dd>
@@ -646,7 +430,7 @@ Perhaps:
 <dt>Reference:</dt>
 <dd>RFC 9432</dd>
 <dt>Note:</dt>
-<dd>This registry does not apply to catalog zones version "1", but applies to catalog zones version "2" as specified in RFC 9432.</dd>
+<dd>This registry applies to Catalog Zones schema version "2" as specified in RFC 9432.</dd>
 </dl>
 <table>
 <name>DNS Catalog Zones Properties Registry</name>
@@ -702,7 +486,7 @@ Perhaps:
 <dt>Description:</dt>
 <dd>A human-readable short description or name for the property.</dd>
 <dt>Status:</dt>
-<dd>IETF Document status or "External" if not documented in an IETF Document.</dd>
+<dd>IETF Stream RFC status or "External" if not documented in an IETF Stream RFC.</dd>
 <dt>Reference:</dt>
 <dd>A stable reference to the document in which this property is defined.</dd>
 </dl>
@@ -751,7 +535,7 @@ Extending Catalog zones - another approach in automating maintenance
 <section anchor="catalog-zone-example"><name>Catalog Zone Example</name>
 <t>The following is a full example of a catalog zone containing three member zones with various properties:</t>
 
-<sourcecode type=""><![CDATA[
+<sourcecode type="dns-rr"><![CDATA[
 catalog.invalid.                                0  SOA   invalid. (
                         invalid. 1625079950 3600 600 2147483646 0 )
 catalog.invalid.                                0  NS    invalid.
@@ -796,17 +580,5 @@ fullname="Petr Spacek"/>, <contact fullname="Michael StJohns"/>, <contact fullna
 Strotmann"/>, and <contact fullname="Tim Wicinski"/> for reviewing earlier draft versions and offering         
 comments and suggestions.</t>
 </section>
-<!-- [rfced] Throughout the text, the terms "nameserver" and "name server" are
-used inconsistently. To match RFCs 6761, 8945, and 9103, we have updated
-each instance of "nameserver" to "name server". Please let us know any
-objections. -->
-
-<!-- [rfced] Please review the "Inclusive Language" portion of the online
-Style Guide
-<https://www.rfc-editor.org/styleguide/part2/#inclusive_language> and let
-us know if any changes are needed. Note that our script did not flag any
-words in particular, but this should still be reviewed as a best
-practice. -->
-
 </back>
 </rfc>
