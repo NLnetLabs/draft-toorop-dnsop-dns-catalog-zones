@@ -126,6 +126,8 @@ We don't take the suggestion but have updated the xml with: "Before the actual m
 
 Is that also more clear in your opinion?
 
+Also, the first sentence in the paragraph following this line had "associated states" (plural) instead of "associated state" (singular) as it is used in the rest of the text. We corrected this too in the attached updated xml.
+
 > 
 > 10) <!-- [rfced] Is "state" referring to "zone-associated state" in this instance?
 > To clarify, may we update the sentence as follows?
